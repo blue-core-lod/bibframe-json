@@ -755,6 +755,14 @@
       "@id": "http://id.loc.gov/ontologies/bflc/simplePlace",
       "@container": "@set"
     },
+    "bflc:simpleStatement": {
+      "@id": "http://id.loc.gov/ontologies/bflc/simpleStatement",
+      "@container": "@set"
+    },
+    "bflc:authoritativeLabel": {
+      "@id": "http://id.loc.gov/ontologies/bflc/authoritativeLabel",
+      "@container": "@set"
+    },
     "mads:authoritativeLabel": {
       "@id": "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
       "@container": "@set"

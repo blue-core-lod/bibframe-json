@@ -18,6 +18,203 @@
     }
   ],
   "$defs": {
+    "AdminMetadata": {
+      "additionalProperties": {
+        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
+        "type": "array"
+      },
+      "description": "How the record itself came to be, rather than what it describes.\n\nModelled for three things a consumer reads rather than for the block as a\nwhole, which is rendered property by property: `status`, which is where a\nstub record declares itself incomplete; `derived_from`, which links back to\nthe record this one was converted from; and the two reference-valued\nproperties that turn up here rather than on the resource.",
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "@Id"
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "title": "@Type",
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
+        "agent": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Agent",
+          "type": "array"
+        },
+        "date": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Date",
+          "type": "array"
+        },
+        "status": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Status",
+          "type": "array"
+        },
+        "derivedFrom": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Derivedfrom",
+          "type": "array"
+        },
+        "descriptionConventions": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Descriptionconventions",
+          "type": "array"
+        },
+        "generationProcess": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Generationprocess",
+          "type": "array"
+        },
+        "descriptionLevel": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Descriptionlevel",
+          "type": "array"
+        }
+      },
+      "title": "AdminMetadata",
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
+    },
+    "Classification": {
+      "additionalProperties": {
+        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
+        "type": "array"
+      },
+      "description": "A call number, and who assigned it.\n\nLC prints one as \"LCC: ML31 .C595 (Assigner: dlc)\": the kind, the number in\ntwo portions, then whoever assigned it and how far it is trusted.\n\nNote that bf:Classification itself is usually absent from @type -- a call\nnumber is typed ClassificationLcc or ClassificationDdc and nothing else --\nwhich is why `kind` looks for the first type that is not the base rather\nthan for a second one.",
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "@Id"
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "title": "@Type",
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
+        "classificationPortion": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Classificationportion",
+          "type": "array"
+        },
+        "itemPortion": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Itemportion",
+          "type": "array"
+        },
+        "assigner": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Assigner",
+          "type": "array"
+        },
+        "status": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Status",
+          "type": "array"
+        }
+      },
+      "title": "Classification",
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
+    },
     "Contribution": {
       "additionalProperties": {
         "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
@@ -51,6 +248,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "agent": {
           "items": {
             "$ref": "#/$defs/Ref"
@@ -67,7 +271,22 @@
         }
       },
       "title": "Contribution",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Identifier": {
       "additionalProperties": {
@@ -102,6 +321,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "rdf:value": {
           "items": {
             "$ref": "#/$defs/Text"
@@ -125,45 +351,22 @@
         }
       },
       "title": "Identifier",
-      "type": "object"
-    },
-    "Node": {
-      "additionalProperties": {
-        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
-        "type": "array"
-      },
-      "description": "Anything with a @type and properties: the shape all of these share.",
-      "properties": {
-        "@id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "@Id"
-        },
-        "@type": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "title": "@Type",
-              "type": "array"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
         }
       },
-      "title": "Node",
-      "type": "object"
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Ref": {
       "$comment": "A reference: a bare URI string, as @type: @id writes it, or a node.",
@@ -208,6 +411,13 @@
               },
               "title": "Rdfs:Label",
               "type": "array"
+            },
+            "source": {
+              "items": {
+                "$ref": "#/$defs/Ref"
+              },
+              "title": "Source",
+              "type": "array"
             }
           },
           "title": "Ref",
@@ -222,9 +432,248 @@
               }
             }
           },
-          "$comment": "A blank node carries no @id. The parser-assigned _:b0 labels are an artefact of framing rather than data, and leaving them in makes two identical values distinguishable by accident.\n\nNote the `required` beside the `properties`: without it the `not` is vacuously true for any object with no @id at all, and the rule rejects every node instead of the blank ones. That mistake was made twice while writing this."
+          "$comment": "A node, and one that keeps no @id if it is blank -- see forbid_blank_node_id, which every node definition shares."
         }
       ]
+    },
+    "Relation": {
+      "additionalProperties": {
+        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
+        "type": "array"
+      },
+      "description": "How one resource points at another, and what the pointing means.\n\n`relationship` names the kind, and a relation routinely names two at once --\n\"part of\" and \"holding of\" -- which is why it is a list and why LC files the\nrelation under both headings rather than choosing.\n\n`associated_resource` is the other end, and it is a Resource rather than a\nRef because a series relation frequently describes it in place: a bf:Title\nof its own, in two scripts, with no URI anywhere. Typed Resource and not\nWork deliberately -- either end can be any resource type, and a\nself-referential Work would make the generated schema a $ref to itself.",
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "@Id"
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "title": "@Type",
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
+        "relationship": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Relationship",
+          "type": "array"
+        },
+        "associatedResource": {
+          "items": {
+            "$ref": "#/$defs/Resource"
+          },
+          "title": "Associatedresource",
+          "type": "array"
+        },
+        "seriesEnumeration": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesenumeration",
+          "type": "array"
+        }
+      },
+      "title": "Relation",
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
+    },
+    "Resource": {
+      "additionalProperties": {
+        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
+        "type": "array"
+      },
+      "description": "What a Work, Instance, Hub and Item have in common.\n\nSharing a base is what lets one set of template partials serve all four --\n`{% include \"partials/titles.html\" %}` regardless of resource type.",
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "@Id"
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "title": "@Type",
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
+        "title": {
+          "items": {
+            "$ref": "#/$defs/Title"
+          },
+          "title": "Title",
+          "type": "array"
+        },
+        "note": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Note",
+          "type": "array"
+        },
+        "subject": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Subject",
+          "type": "array"
+        },
+        "identifiedBy": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "title": "Identifiedby",
+          "type": "array"
+        },
+        "adminMetadata": {
+          "items": {
+            "$ref": "#/$defs/AdminMetadata"
+          },
+          "title": "Adminmetadata",
+          "type": "array"
+        },
+        "contribution": {
+          "items": {
+            "$ref": "#/$defs/Contribution"
+          },
+          "title": "Contribution",
+          "type": "array"
+        },
+        "classification": {
+          "items": {
+            "$ref": "#/$defs/Classification"
+          },
+          "title": "Classification",
+          "type": "array"
+        },
+        "language": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Language",
+          "type": "array"
+        },
+        "genreForm": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Genreform",
+          "type": "array"
+        },
+        "relation": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relation",
+          "type": "array"
+        },
+        "seriesStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesstatement",
+          "type": "array"
+        },
+        "electronicLocator": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Electroniclocator",
+          "type": "array"
+        },
+        "bflc:aap": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Aap",
+          "type": "array"
+        },
+        "expressionOf": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Expressionof",
+          "type": "array"
+        }
+      },
+      "title": "Resource",
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Text": {
       "$comment": "A literal: a plain scalar, or a value object. The scalar branch exists because Text.accept_a_bare_string is a validator, and model_json_schema() emits no validators.",
@@ -317,6 +766,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "mainTitle": {
           "items": {
             "$ref": "#/$defs/Text"
@@ -347,7 +803,22 @@
         }
       },
       "title": "Title",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Work": {
       "additionalProperties": {
@@ -382,6 +853,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
@@ -412,7 +890,7 @@
         },
         "adminMetadata": {
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/AdminMetadata"
           },
           "title": "Adminmetadata",
           "type": "array"
@@ -424,23 +902,9 @@
           "title": "Contribution",
           "type": "array"
         },
-        "instanceOf": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Instanceof",
-          "type": "array"
-        },
-        "hasInstance": {
-          "items": {
-            "$ref": "#/$defs/Ref"
-          },
-          "title": "Hasinstance",
-          "type": "array"
-        },
         "classification": {
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/Classification"
           },
           "title": "Classification",
           "type": "array"
@@ -458,10 +922,67 @@
           },
           "title": "Genreform",
           "type": "array"
+        },
+        "relation": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relation",
+          "type": "array"
+        },
+        "seriesStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesstatement",
+          "type": "array"
+        },
+        "electronicLocator": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Electroniclocator",
+          "type": "array"
+        },
+        "bflc:aap": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Aap",
+          "type": "array"
+        },
+        "expressionOf": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Expressionof",
+          "type": "array"
+        },
+        "hasInstance": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Hasinstance",
+          "type": "array"
         }
       },
       "title": "Work",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "ProvisionActivity": {
       "additionalProperties": {
@@ -496,6 +1017,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "place": {
           "items": {
             "$ref": "#/$defs/Ref"
@@ -523,10 +1051,39 @@
           },
           "title": "Bflc:Simpleplace",
           "type": "array"
+        },
+        "bflc:simpleAgent": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simpleagent",
+          "type": "array"
+        },
+        "bflc:simpleStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simplestatement",
+          "type": "array"
         }
       },
       "title": "ProvisionActivity",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Instance": {
       "additionalProperties": {
@@ -561,6 +1118,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
@@ -591,7 +1155,7 @@
         },
         "adminMetadata": {
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/AdminMetadata"
           },
           "title": "Adminmetadata",
           "type": "array"
@@ -603,9 +1167,65 @@
           "title": "Contribution",
           "type": "array"
         },
+        "classification": {
+          "items": {
+            "$ref": "#/$defs/Classification"
+          },
+          "title": "Classification",
+          "type": "array"
+        },
+        "language": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Language",
+          "type": "array"
+        },
+        "genreForm": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Genreform",
+          "type": "array"
+        },
+        "relation": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relation",
+          "type": "array"
+        },
+        "seriesStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesstatement",
+          "type": "array"
+        },
+        "electronicLocator": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Electroniclocator",
+          "type": "array"
+        },
+        "bflc:aap": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Aap",
+          "type": "array"
+        },
+        "expressionOf": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Expressionof",
+          "type": "array"
+        },
         "instanceOf": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/Ref"
           },
           "title": "Instanceof",
           "type": "array"
@@ -633,7 +1253,22 @@
         }
       },
       "title": "Instance",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Hub": {
       "additionalProperties": {
@@ -668,6 +1303,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
@@ -698,7 +1340,7 @@
         },
         "adminMetadata": {
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/AdminMetadata"
           },
           "title": "Adminmetadata",
           "type": "array"
@@ -710,16 +1352,87 @@
           "title": "Contribution",
           "type": "array"
         },
+        "classification": {
+          "items": {
+            "$ref": "#/$defs/Classification"
+          },
+          "title": "Classification",
+          "type": "array"
+        },
+        "language": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Language",
+          "type": "array"
+        },
+        "genreForm": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Genreform",
+          "type": "array"
+        },
+        "relation": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relation",
+          "type": "array"
+        },
+        "seriesStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesstatement",
+          "type": "array"
+        },
+        "electronicLocator": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Electroniclocator",
+          "type": "array"
+        },
+        "bflc:aap": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Aap",
+          "type": "array"
+        },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
           "title": "Expressionof",
           "type": "array"
+        },
+        "hasExpression": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Hasexpression",
+          "type": "array"
         }
       },
       "title": "Hub",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     },
     "Item": {
       "additionalProperties": {
@@ -754,6 +1467,13 @@
           ],
           "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
         },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
@@ -784,7 +1504,7 @@
         },
         "adminMetadata": {
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/AdminMetadata"
           },
           "title": "Adminmetadata",
           "type": "array"
@@ -796,16 +1516,87 @@
           "title": "Contribution",
           "type": "array"
         },
+        "classification": {
+          "items": {
+            "$ref": "#/$defs/Classification"
+          },
+          "title": "Classification",
+          "type": "array"
+        },
+        "language": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Language",
+          "type": "array"
+        },
+        "genreForm": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Genreform",
+          "type": "array"
+        },
+        "relation": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relation",
+          "type": "array"
+        },
+        "seriesStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Seriesstatement",
+          "type": "array"
+        },
+        "electronicLocator": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Electroniclocator",
+          "type": "array"
+        },
+        "bflc:aap": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Aap",
+          "type": "array"
+        },
+        "expressionOf": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Expressionof",
+          "type": "array"
+        },
         "itemOf": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/Ref"
           },
           "title": "Itemof",
           "type": "array"
         }
       },
       "title": "Item",
-      "type": "object"
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
     }
   }
 }

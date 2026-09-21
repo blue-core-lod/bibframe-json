@@ -39,13 +39,18 @@ from bibframe_json.models import Hub, Instance, Item, Resource, Work
 DIALECT = "dialect"
 ONTOLOGY = "ontology"
 
-# Which model a record belongs to, by the type it claims. Order matters: a Work
-# and an Instance share a base, so the first match wins rather than the longest.
+# Which model a record belongs to, by the type it claims. The first match wins,
+# so the order is most specific first. A Hub carries @type ["Work", "Hub"] --
+# marc2bibframe2 types it both and framing keeps both -- so Work ahead of Hub
+# claimed every Hub, and Hub.expression_of was unreachable through load(). An
+# Instance and an Item are never also a Work, so that was the only ambiguous
+# pair; the ordering matters for the type that is a subclass in the data rather
+# than for the ones that share a base here.
 BY_TYPE: tuple[tuple[str, type[Resource]], ...] = (
-    ("Instance", Instance),
-    ("Work", Work),
     ("Hub", Hub),
+    ("Instance", Instance),
     ("Item", Item),
+    ("Work", Work),
 )
 
 

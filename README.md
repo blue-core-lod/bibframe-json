@@ -114,7 +114,7 @@ record = json.load(open("instance.json"))
 instance = bibframe_json.load(record)                            # a Work, Instance, Hub or Item
 
 instance.main_title                  # "Minority voices from the academic superstructure"
-instance.instance_of[0]              # "http://id.loc.gov/resources/works/23867197"
+instance.instance_of[0].uri          # "http://id.loc.gov/resources/works/23867197"
 
 [(i.kind, str(i.value[0]).strip())   # [("Lccn", "2024038899"),
  for i in instance.identified_by]    #  ("Isbn", "9781668499092")]
@@ -140,8 +140,14 @@ The models themselves are open. BIBFRAME has 226 properties and real records
 use 136, so an unmodeled one is kept and reachable rather than rejected:
 
 ```python
-work.get("bflc:aap")     # ["Prokhorov, A. M."]
-work.get("neverSeen")    # []
+work.aap[0]                    # "Prokhorov, A. M." -- bflc:aap has a field
+str(work.get("summary")[0])    # an unmodelled property, parsed the same way
+work.get("summary")[0].language        # "ru-cyrl", or None
+work.get("originPlace")[0].uri         # a reference, so it has somewhere to link
+work.get("neverSeen")          # []
+
+work.properties()        # every property it carries, modelled or not,
+                         # keyed as the record spells them
 ```
 
 `Work`, `Instance`, `Hub` and `Item` share a `Resource` base, so one set of
@@ -216,7 +222,7 @@ Blue Core keeps a referenced resource's description in its own row.
 ## What is generated, and what is not
 
 ```
-bibframe_json/context/bibframe.jsonld  generated   249 terms: @container: @set, @type: @id
+bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, @type: @id
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
 bibframe_json/schema/dialect.json      generated   from the models, plus three hand-written rules
 bibframe_json/models.py                written     Pydantic models and their helpers
@@ -226,10 +232,10 @@ generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-1
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
 uv run python generate/dialect.py          # dialect schema
-uv run pytest                              # 44 tests, no corpus or network
+uv run pytest                              # 98 tests, no corpus or network
 ```
 
-Enumerating 249 `@container` declarations is mechanical, so it is generated;
+Enumerating 251 `@container` declarations is mechanical, so it is generated;
 deciding which properties a template needs is editorial, so the models are
 written by hand. `rdflib` is a dev dependency — the ontology is read at build
 time and nothing at runtime parses RDF.

@@ -59,11 +59,34 @@ def test_an_unknown_schema_is_an_error_rather_than_a_path():
         (["Item"], Item),
         (["Monograph", "Text", "Work"], Work),
         ("Instance", Instance),
+        # A real Hub is typed both, in either order: marc2bibframe2 writes
+        # bf:Work alongside bf:Hub and framing keeps both. The specific type has
+        # to win, or every Hub loads as a Work and expression_of is unreachable.
+        (["Work", "Hub"], Hub),
+        (["Hub", "Work"], Hub),
     ],
 )
 def test_load_dispatches_on_type(types, expected):
     """Including a scalar @type, which a node with one type still carries."""
     assert isinstance(load({"@id": "https://x/1", "@type": types}), expected)
+
+
+def test_a_hub_typed_as_a_work_still_reads_as_a_hub():
+    """The field that was unreachable, on the record shape that hid it.
+
+    Worth asserting beyond the dispatch table above, because the cost of the old
+    ordering was not a wrong class name -- it was that Hub.expression_of, the
+    Hub-Work link, silently read as empty on every Hub in the corpus.
+    """
+    hub = load(
+        {
+            "@id": "https://x/hubs/1",
+            "@type": ["Work", "Hub"],
+            "expressionOf": [{"@id": "https://x/works/1"}],
+        }
+    )
+    assert isinstance(hub, Hub)
+    assert [ref.uri for ref in hub.expression_of] == ["https://x/works/1"]
 
 
 def test_load_says_so_when_it_cannot_tell_what_a_record_is():
@@ -200,3 +223,73 @@ def test_unmodelled_properties_must_still_be_arrays():
     findings = validate({**CLEAN, "bflc:aap": "not a list"}, ontology=False)
     assert [f.path for f in findings] == ["bflc:aap"]
     assert validate({**CLEAN, "bflc:aap": ["a list"]}, ontology=False) == []
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "https://bibframe-json.org/context/bibframe.jsonld",
+        {"@vocab": "http://id.loc.gov/ontologies/bibframe/"},
+        ["https://x/ctx.jsonld", {"@vocab": "http://x/"}],
+    ],
+)
+def test_a_context_is_not_a_property(value):
+    """A record may carry the context that produced its shape.
+
+    require_arrays has to exempt JSON-LD keywords, or validate() refuses the
+    very document the README recommends it as a gate for. @context is a
+    vocabulary rather than data and takes all three of these forms, none of
+    which is an array of values.
+
+    The stored Blue Core shape carries no context -- the ORM event pops it after
+    framing -- which is why this never reached the rendering path and went
+    unnoticed.
+    """
+    assert validate({**CLEAN, "@context": value}, ontology=False) == []
+
+
+def test_a_keyword_is_exempt_but_a_property_is_not():
+    """The exemption is for keywords only, and it is narrow on purpose.
+
+    @index is a keyword and passes; bflc:aap is a property and must still be an
+    array. Pinning both together is what stops the exemption being widened into
+    the array guarantee itself.
+    """
+    assert validate({**CLEAN, "@index": "vol. 2"}, ontology=False) == []
+    assert validate({**CLEAN, "bflc:aap": "not a list"}, ontology=False) != []
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["subject", "title", "contribution", "identifiedBy", "adminMetadata"],
+)
+def test_no_node_keeps_a_blank_node_id(field):
+    """README offers this as a guarantee of the shape, so it has to hold everywhere.
+
+    The rule lived inside wrap_ref, which reaches Ref-typed fields and no
+    others -- so subject and note were checked while title, contribution,
+    identifiedBy, provisionActivity, classification and adminMetadata were not.
+    The only test for it went through subject, which is why it looked covered.
+    """
+    findings = validate(
+        {**CLEAN, field: [{"@id": "_:b0", "@type": ["Thing"]}]}, ontology=False
+    )
+    assert "a blank node must not carry an @id" in [f.message for f in findings]
+
+
+def test_the_blank_node_rule_does_not_reject_every_node():
+    """The `required` beside the `properties` is what makes this pass.
+
+    Without it the `not` is vacuously true for an object carrying no @id, and
+    the rule rejects every node rather than the blank ones.
+    """
+    assert (
+        validate({**CLEAN, "subject": [{"@id": "https://x/s"}]}, ontology=False) == []
+    )
+    assert (
+        validate(
+            {**CLEAN, "title": [{"@type": ["Title"], "mainTitle": ["T"]}]},
+            ontology=False,
+        )
+        == []
+    )

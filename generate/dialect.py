@@ -43,9 +43,30 @@ def require_arrays(definition: dict) -> dict:
     Applied to node definitions only, not to Text. A value object's extra keys
     are JSON-LD keywords rather than BIBFRAME properties -- @index and the like
     -- and those are not arrays.
+
+    A keyword is exempt on a node too, for the same reason it is on a value
+    object: it is not a property. @context is the one that matters. It is a
+    vocabulary rather than data, it is a string or an object or an array of
+    both, and coercing it to an array would rewrite it into something no
+    processor can read -- which is why bluecore-models leaves it alone in its own
+    coercion. Without the exemption, validate() reported a record still carrying
+    the context that produced its shape as malformed for carrying it.
+
+    @id and @type are not caught here: they are declared properties in the
+    generated schema, and `properties` takes precedence over `patternProperties`.
     """
     return {
         **definition,
+        "patternProperties": {
+            **definition.get("patternProperties", {}),
+            "^@": {
+                "$comment": (
+                    "A JSON-LD keyword is not a property, so the array rule does "
+                    "not reach it. @context is the reason: it is a vocabulary "
+                    "rather than data."
+                )
+            },
+        },
         "additionalProperties": {
             "$comment": (
                 "A property with no field in the models is still a property, so "
@@ -126,6 +147,33 @@ def wrap_text(generated: dict) -> dict:
     }
 
 
+def forbid_blank_node_id(definition: dict) -> dict:
+    """A blank node carries no @id.
+
+    The parser-assigned _:b0 labels are an artefact of framing rather than data,
+    and leaving them in makes two identical values distinguishable by accident.
+
+    Note the `required` beside the `properties`: without it the `not` is
+    vacuously true for any object with no @id at all, and the rule rejects every
+    node instead of the blank ones. That mistake was made twice while writing
+    this.
+
+    Applied to every node definition. It used to live inside wrap_ref, so it
+    reached Ref-typed fields -- subject, note, extent -- and no others: a blank
+    node keeping its @id on a title, a contribution, an identifier, a provision
+    activity or an adminMetadata block went unreported, while README.md offers
+    "no blank node carries an @id" as a guarantee of the shape. The only test
+    for it went through subject, which is why it looked covered.
+    """
+    return {
+        **definition,
+        "not": {
+            "required": ["@id"],
+            "properties": {"@id": {"pattern": "^_:"}},
+        },
+    }
+
+
 def wrap_ref(generated: dict) -> dict:
     """The shapes a reference may take.
 
@@ -145,20 +193,10 @@ def wrap_ref(generated: dict) -> dict:
                 # it, so a node with one type carries a string and a node with
                 # two carries an array. Missing this rejected 60 of 300 real
                 # records on bf:extent and bf:note.
-                **tolerate_scalar_type(generated),
-                "not": {
-                    "required": ["@id"],
-                    "properties": {"@id": {"pattern": "^_:"}},
-                },
+                **forbid_blank_node_id(tolerate_scalar_type(generated)),
                 "$comment": (
-                    "A blank node carries no @id. The parser-assigned _:b0 "
-                    "labels are an artefact of framing rather than data, and "
-                    "leaving them in makes two identical values distinguishable "
-                    "by accident.\n\n"
-                    "Note the `required` beside the `properties`: without it the "
-                    "`not` is vacuously true for any object with no @id at all, "
-                    "and the rule rejects every node instead of the blank ones. "
-                    "That mistake was made twice while writing this."
+                    "A node, and one that keeps no @id if it is blank -- see "
+                    "forbid_blank_node_id, which every node definition shares."
                 ),
             },
         ],
@@ -181,19 +219,29 @@ def build() -> dict:
     for name, model in MODELS.items():
         schema = model.model_json_schema(by_alias=True, ref_template="#/$defs/{model}")
         defs.update(schema.pop("$defs", {}))
-        defs[name] = schema
+        # A self-referential model comes back as a bare $ref to its own
+        # definition, which $defs already holds. Assigning the wrapper would
+        # replace that definition with {"$ref": "#/$defs/Work"} -- a self-loop,
+        # and a silent one. No model here is self-referential today: Relation
+        # points at Resource, which is not one of the four. This keeps that a
+        # choice rather than an accident.
+        if set(schema) != {"$ref"}:
+            defs[name] = schema
 
     for name, wrap in WRAPPERS.items():
         if name not in defs:
             raise SystemExit(f"cannot wrap missing definition {name!r}")
         defs[name] = wrap(defs[name])
 
-    # every node-ish definition tolerates a scalar @type and requires that its
-    # unmodelled properties are arrays. Text is neither: it is a value object,
-    # whose extra keys are keywords rather than properties.
+    # every node-ish definition tolerates a scalar @type, requires that its
+    # unmodelled properties are arrays, and keeps no @id if it is blank. Text is
+    # none of the three: it is a value object, whose extra keys are keywords
+    # rather than properties and which has no @id to begin with.
     for name, definition in list(defs.items()):
         if name not in WRAPPERS:
-            defs[name] = require_arrays(tolerate_scalar_type(definition))
+            defs[name] = forbid_blank_node_id(
+                require_arrays(tolerate_scalar_type(definition))
+            )
 
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",

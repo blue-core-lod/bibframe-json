@@ -252,6 +252,11 @@ FOREIGN = {
         "simpleAgent",
         "simpleDate",
         "simplePlace",
+        # Read by consumers and previously undeclared, so it compacted to a bare
+        # value that require_arrays then reported as malformed -- a finding this
+        # context caused.
+        "simpleStatement",
+        "authoritativeLabel",
     ],
     "mads": [
         "authoritativeLabel",
