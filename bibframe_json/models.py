@@ -346,6 +346,25 @@ class Node(Shape):
     """Anything with a @type and properties: a node you describe rather than
     only point at."""
 
+    @model_validator(mode="before")
+    @classmethod
+    def accept_a_bare_label(cls, data: Any) -> Any:
+        """A bare string where a node belongs is that node's label.
+
+        bf:title and bf:contribution take a node, and records carry a plain
+        string there anyway. `Ref` has taken a bare string as a URI from the
+        start; a described node had no equivalent, so one bare title made the
+        whole record unparseable -- and a consumer with a fallback then lost
+        every field on the page, not just that one.
+
+        Read as a label rather than as a URI because that is what it is: the
+        readers this replaces called label_text on it, which returns a string
+        unchanged.
+        """
+        if isinstance(data, str):
+            return {"rdfs:label": [data]}
+        return data
+
 
 def _local(types: list[str], name: str) -> bool:
     """Whether any of these types is the named class.
@@ -517,6 +536,13 @@ class Resource(Node):
     language: list[Ref] = Field(default_factory=list)
     genre_form: list[Ref] = Field(default_factory=list, alias="genreForm")
 
+    # Up from Instance for the same reason as the three above: bf:provisionActivity
+    # has rdfs:domain bf:Instance, but a consumer renders whatever a record
+    # carries, and a Work holding one rendered it before these models existed.
+    provision_activity: list[ProvisionActivity] = Field(
+        default_factory=list, alias="provisionActivity"
+    )
+
     relation: list[Relation] = Field(default_factory=list)
     series_statement: list[Text] = Field(default_factory=list, alias="seriesStatement")
     electronic_locator: list[Ref] = Field(
@@ -627,9 +653,6 @@ class Work(Resource):
 
 class Instance(Resource):
     instance_of: list[Ref] = Field(default_factory=list, alias="instanceOf")
-    provision_activity: list[ProvisionActivity] = Field(
-        default_factory=list, alias="provisionActivity"
-    )
     extent: list[Ref] = Field(default_factory=list)
     publication_statement: list[Text] = Field(
         default_factory=list, alias="publicationStatement"

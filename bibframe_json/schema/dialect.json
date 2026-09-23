@@ -368,6 +368,107 @@
         }
       }
     },
+    "ProvisionActivity": {
+      "additionalProperties": {
+        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
+        "type": "array"
+      },
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "@Id"
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "title": "@Type",
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Rdfs:Label",
+          "type": "array"
+        },
+        "place": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Place",
+          "type": "array"
+        },
+        "date": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Date",
+          "type": "array"
+        },
+        "bflc:simpleDate": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simpledate",
+          "type": "array"
+        },
+        "bflc:simplePlace": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simpleplace",
+          "type": "array"
+        },
+        "bflc:simpleAgent": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simpleagent",
+          "type": "array"
+        },
+        "bflc:simpleStatement": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "title": "Bflc:Simplestatement",
+          "type": "array"
+        }
+      },
+      "title": "ProvisionActivity",
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+        }
+      },
+      "not": {
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      }
+    },
     "Ref": {
       "$comment": "A reference: a bare URI string, as @type: @id writes it, or a node.",
       "anyOf": [
@@ -619,6 +720,13 @@
             "$ref": "#/$defs/Ref"
           },
           "title": "Genreform",
+          "type": "array"
+        },
+        "provisionActivity": {
+          "items": {
+            "$ref": "#/$defs/ProvisionActivity"
+          },
+          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
@@ -923,6 +1031,13 @@
           "title": "Genreform",
           "type": "array"
         },
+        "provisionActivity": {
+          "items": {
+            "$ref": "#/$defs/ProvisionActivity"
+          },
+          "title": "Provisionactivity",
+          "type": "array"
+        },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
@@ -967,107 +1082,6 @@
         }
       },
       "title": "Work",
-      "type": "object",
-      "patternProperties": {
-        "^@": {
-          "$comment": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
-        }
-      },
-      "not": {
-        "required": [
-          "@id"
-        ],
-        "properties": {
-          "@id": {
-            "pattern": "^_:"
-          }
-        }
-      }
-    },
-    "ProvisionActivity": {
-      "additionalProperties": {
-        "$comment": "A property with no field in the models is still a property, so it is still an array. Without this the guarantee holds only for the properties that happen to be modelled.",
-        "type": "array"
-      },
-      "properties": {
-        "@id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "@Id"
-        },
-        "@type": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "title": "@Type",
-              "type": "array"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
-        },
-        "rdfs:label": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Rdfs:Label",
-          "type": "array"
-        },
-        "place": {
-          "items": {
-            "$ref": "#/$defs/Ref"
-          },
-          "title": "Place",
-          "type": "array"
-        },
-        "date": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Date",
-          "type": "array"
-        },
-        "bflc:simpleDate": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Bflc:Simpledate",
-          "type": "array"
-        },
-        "bflc:simplePlace": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Bflc:Simpleplace",
-          "type": "array"
-        },
-        "bflc:simpleAgent": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Bflc:Simpleagent",
-          "type": "array"
-        },
-        "bflc:simpleStatement": {
-          "items": {
-            "$ref": "#/$defs/Text"
-          },
-          "title": "Bflc:Simplestatement",
-          "type": "array"
-        }
-      },
-      "title": "ProvisionActivity",
       "type": "object",
       "patternProperties": {
         "^@": {
@@ -1188,6 +1202,13 @@
           "title": "Genreform",
           "type": "array"
         },
+        "provisionActivity": {
+          "items": {
+            "$ref": "#/$defs/ProvisionActivity"
+          },
+          "title": "Provisionactivity",
+          "type": "array"
+        },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
@@ -1228,13 +1249,6 @@
             "$ref": "#/$defs/Ref"
           },
           "title": "Instanceof",
-          "type": "array"
-        },
-        "provisionActivity": {
-          "items": {
-            "$ref": "#/$defs/ProvisionActivity"
-          },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "extent": {
@@ -1371,6 +1385,13 @@
             "$ref": "#/$defs/Ref"
           },
           "title": "Genreform",
+          "type": "array"
+        },
+        "provisionActivity": {
+          "items": {
+            "$ref": "#/$defs/ProvisionActivity"
+          },
+          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
@@ -1535,6 +1556,13 @@
             "$ref": "#/$defs/Ref"
           },
           "title": "Genreform",
+          "type": "array"
+        },
+        "provisionActivity": {
+          "items": {
+            "$ref": "#/$defs/ProvisionActivity"
+          },
+          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
