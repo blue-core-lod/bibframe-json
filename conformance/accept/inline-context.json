@@ -1,0 +1,12 @@
+{
+  "description": "a record may carry the context that produced its shape",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "@context": {
+      "@vocab": "http://id.loc.gov/ontologies/bibframe/"
+    }
+  }
+}

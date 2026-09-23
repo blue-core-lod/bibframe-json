@@ -1,9 +1,8 @@
-"""The models, the schema generated from them, and whether they agree.
+"""What the models do for a reader.
 
-That last one is the point. A published schema that accepts less than its own
-models do is worse than no schema, because a consumer trusts it — and the gap is
-easy to open, since a Pydantic validator never appears in
-`model_json_schema()`. `test_schema_and_models_agree` is the guard.
+Whether they agree with the schema is asserted in test_conformance.py, against
+the corpus, so that the question is put to any implementation rather than only
+to this one.
 """
 
 import json
@@ -11,7 +10,7 @@ import json
 import jsonschema
 import pytest
 
-from bibframe_json import EDTF, Instance, Item, Ref, Text, Work, schema, validate
+from bibframe_json import EDTF, Item, Ref, Text, Work, schema, validate
 
 DIALECT = schema("dialect")
 
@@ -19,116 +18,6 @@ DIALECT = schema("dialect")
 @pytest.fixture(scope="module")
 def dialect():
     return jsonschema.Draft202012Validator(DIALECT)
-
-
-# Records covering every shape the dialect tolerates. Used twice over: once for
-# the models, once for the schema, so the two are held to the same standard.
-ACCEPTED = {
-    "a reference another context wrote as a wrapper, not a bare URI": {
-        "@id": "https://x/1",
-        "@type": ["Instance"],
-        "instanceOf": [{"@id": "https://x/2"}],
-    },
-    "plain literals": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "title": [{"@type": ["Title"], "mainTitle": ["a title"]}],
-    },
-    "value object with a language": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "title": [
-            {
-                "@type": ["Title"],
-                "mainTitle": [{"@value": "Труды", "@language": "ru-cyrl"}],
-            }
-        ],
-    },
-    "value object with a datatype": {
-        "@id": "https://x/1",
-        "@type": ["Instance"],
-        "provisionActivity": [
-            {"@type": ["Publication"], "date": [{"@value": "199X", "@type": EDTF}]}
-        ],
-    },
-    "bare URI reference": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "instanceOf": ["https://x/2"],
-    },
-    "scalar @type, as bf:extent really carries it": {
-        "@id": "https://x/1",
-        "@type": ["Instance"],
-        "extent": [{"@type": "Extent", "rdfs:label": ["ix, 319 pages"]}],
-    },
-    "a node with two types": {
-        "@id": "https://x/1",
-        "@type": ["Instance"],
-        "note": [
-            {
-                "@type": ["Note", "http://id.loc.gov/vocabulary/mnotetype/biblio"],
-                "rdfs:label": ["Includes index."],
-            }
-        ],
-    },
-    "an unmodelled property": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "somethingElse": ["kept"],
-    },
-    "types the ontology would reject, which is not this schema's job": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "title": [{"@type": ["Agent"], "mainTitle": ["x"]}],
-    },
-}
-
-REJECTED = {
-    "a value object with both tags": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "title": [
-            {
-                "@type": ["Title"],
-                "mainTitle": [
-                    {"@value": "x", "@type": "xsd:string", "@language": "en"}
-                ],
-            }
-        ],
-    },
-    "a blank node keeping its @id": {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "subject": [{"@id": "_:b0"}],
-    },
-}
-
-
-@pytest.mark.parametrize("name", sorted(ACCEPTED))
-def test_schema_accepts(dialect, name):
-    assert list(dialect.iter_errors(ACCEPTED[name])) == []
-
-
-@pytest.mark.parametrize("name", sorted(REJECTED))
-def test_schema_rejects(dialect, name):
-    assert list(dialect.iter_errors(REJECTED[name])) != []
-
-
-@pytest.mark.parametrize("name", sorted(ACCEPTED))
-def test_schema_and_models_agree(dialect, name):
-    """Whatever the schema accepts, the models parse.
-
-    The gap this guards opened twice while being written. Both times the schema
-    was stricter than the models, because a `mode="before"` validator is
-    invisible to `model_json_schema()`: the bare-string literal, the bare-URI
-    reference, and the scalar @type are all coercions the models do and the
-    generated schema knew nothing about. The scalar @type alone rejected 60 of
-    300 real records.
-    """
-    record = ACCEPTED[name]
-    assert list(dialect.iter_errors(record)) == [], "schema accepts"
-    model = Instance if "Instance" in record["@type"] else Work
-    model.model_validate(record)
 
 
 # --- what the models are for -------------------------------------------------

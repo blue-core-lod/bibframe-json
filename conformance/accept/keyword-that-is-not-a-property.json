@@ -1,0 +1,10 @@
+{
+  "description": "@index is a keyword, so the array rule does not reach it",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "@index": "vol. 2"
+  }
+}

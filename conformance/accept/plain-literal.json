@@ -1,0 +1,19 @@
+{
+  "description": "a literal written bare rather than as a value object",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "a title"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "a reference as @type: @id writes one",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "instanceOf": [
+      "https://x/2"
+    ]
+  }
+}

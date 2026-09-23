@@ -1,0 +1,15 @@
+{
+  "description": "a Hub carries both, and is checked as a Hub",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work",
+      "Hub"
+    ],
+    "hasExpression": [
+      {
+        "@id": "https://x/2"
+      }
+    ]
+  }
+}

@@ -218,6 +218,25 @@ If you already know what you are holding, skip the dispatch and point at the
 type directly — `dialect.json#/$defs/Work` — which localises errors a little
 further still.
 
+## Checking an implementation
+
+`conformance/` holds documents with expected verdicts, as JSON rather than as
+anyone's test framework:
+
+```
+conformance/accept/<name>.json    must validate
+conformance/reject/<name>.json    must not, and the paths where it fails
+```
+
+Walk the two directories, validate each `document` against the dialect schema,
+compare the paths. Messages are not part of the contract — they are each
+implementation's own wording — but paths are, and the path is the part a
+cataloguer needs.
+
+A rule with no case there is a rule no other implementation has been asked to
+honour, so a new constraint wants a case as well as a schema change. See
+`conformance/README.md`.
+
 The dialect schema is structural: arrays, references, value objects, blank
 nodes. It says nothing about which BIBFRAME types may appear where, so a record
 can satisfy it and still put an `Agent` where a `Title` belongs.
@@ -252,13 +271,14 @@ bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, 
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
 bibframe_json/schema/dialect.json      generated   from the models, plus three hand-written rules
 bibframe_json/models.py                written     Pydantic models and their helpers
+conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
 
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
 uv run python generate/dialect.py          # dialect schema
-uv run pytest                              # 98 tests, no corpus or network
+uv run pytest                              # 126 tests
 ```
 
 Enumerating 251 `@container` declarations is mechanical, so it is generated;
