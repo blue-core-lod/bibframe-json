@@ -60,7 +60,7 @@ def require_arrays(definition: dict) -> dict:
         "patternProperties": {
             **definition.get("patternProperties", {}),
             "^@": {
-                "$comment": (
+                "description": (
                     "A JSON-LD keyword is not a property, so the array rule does "
                     "not reach it. @context is the reason: it is a vocabulary "
                     "rather than data."
@@ -68,10 +68,9 @@ def require_arrays(definition: dict) -> dict:
             },
         },
         "additionalProperties": {
-            "$comment": (
-                "A property with no field in the models is still a property, so "
-                "it is still an array. Without this the guarantee holds only for "
-                "the properties that happen to be modelled."
+            "description": (
+                "Every property is an array, even holding one value. This is the "
+                "guarantee the whole shape rests on."
             ),
             "type": "array",
         },
@@ -130,7 +129,11 @@ def wrap_text(generated: dict) -> dict:
             "model_json_schema() emits no validators."
         ),
         "anyOf": [
-            {"type": ["string", "number", "boolean"]},
+            {
+                "title": "a plain literal",
+                "description": "text, written bare rather than as a value object",
+                "type": ["string", "number", "boolean"],
+            },
             {
                 **generated,
                 "not": {"required": ["@type", "@language"]},
@@ -168,6 +171,7 @@ def forbid_blank_node_id(definition: dict) -> dict:
     return {
         **definition,
         "not": {
+            "description": "a blank node must not carry an @id",
             "required": ["@id"],
             "properties": {"@id": {"pattern": "^_:"}},
         },
@@ -186,7 +190,11 @@ def wrap_ref(generated: dict) -> dict:
             "A reference: a bare URI string, as @type: @id writes it, or a node."
         ),
         "anyOf": [
-            {"type": "string"},
+            {
+                "title": "a bare URI",
+                "description": "a reference, as @type: @id writes one",
+                "type": "string",
+            },
             {
                 # the object branch is a node, so it needs the scalar @type
                 # tolerance too -- @type is a keyword and the context cannot pin
@@ -205,6 +213,84 @@ def wrap_ref(generated: dict) -> dict:
 
 # The three coercions in models.py that model_json_schema() does not emit.
 WRAPPERS = {"Text": wrap_text, "Ref": wrap_ref}
+
+
+# Which definition a record is checked against, by the type it claims. Most
+# specific first, for the same reason validate.BY_TYPE is: a Hub carries
+# @type ["Work", "Hub"], so Work ahead of Hub would claim every Hub.
+DISPATCH: tuple[str, ...] = ("Hub", "Instance", "Item", "Work")
+
+
+def _claims(name: str) -> dict:
+    """Whether a record says it is this type.
+
+    Both spellings, because @type is a list under the current context and a
+    string before it -- and `contains` is an array keyword, so against a string
+    it is not merely false but vacuously true, which would send every scalar
+    @type down the first branch. `required` for the same reason: without it a
+    record carrying no @type at all satisfies `properties` vacuously.
+    """
+    return {
+        "required": ["@type"],
+        "properties": {
+            "@type": {
+                "anyOf": [
+                    {"type": "array", "contains": {"const": name}},
+                    {"const": name},
+                ]
+            }
+        },
+    }
+
+
+def dispatch_on_type(names: tuple[str, ...]) -> dict:
+    """Check a record against the one definition its @type names.
+
+    An if/then chain rather than an anyOf over the four types, following IIIF
+    v4's main.json. The difference is entirely in what a failure reports: under
+    anyOf a validator can only say the record matched no branch, and hands back
+    the whole document, so every consumer needs something like validate.py's
+    _causes() to find the real error. Dispatching first means the error is
+    reported against the branch that was actually taken, at the path it
+    happened -- which is what makes this schema usable from a language that has
+    no bibframe_json to wrap it.
+
+    The last name is the fallback, so a record claiming none of these is read
+    as one rather than rejected: the four are open and share a base, and
+    rejecting an unrecognised type is schema/ontology.json's business.
+    """
+    *rest, fallback = names
+    node: dict = {"$ref": f"#/$defs/{fallback}"}
+    for name in reversed(rest):
+        node = {"if": _claims(name), "then": {"$ref": f"#/$defs/{name}"}, "else": node}
+    return node
+
+
+def summarise(definition: dict) -> dict:
+    """Reduce every description to its first line.
+
+    `model_json_schema()` copies a model's whole docstring into `description`,
+    and those are written for someone reading models.py: paragraphs, backticks,
+    corpus counts, references to `__str__` and to bluecore_api. In a schema
+    meant to be read from any language, `description` is the one annotation
+    tooling reliably surfaces, so it wants the summary line and nothing else.
+
+    The reasoning is not lost -- it stays in models.py, with the reader it was
+    written for.
+    """
+    trimmed: dict = {}
+    for key, value in definition.items():
+        if key == "description" and isinstance(value, str):
+            trimmed[key] = value.strip().split("\n")[0]
+        elif isinstance(value, dict):
+            trimmed[key] = summarise(value)
+        elif isinstance(value, list):
+            trimmed[key] = [
+                summarise(item) if isinstance(item, dict) else item for item in value
+            ]
+        else:
+            trimmed[key] = value
+    return trimmed
 
 
 def build() -> dict:
@@ -242,6 +328,7 @@ def build() -> dict:
             defs[name] = forbid_blank_node_id(
                 require_arrays(tolerate_scalar_type(definition))
             )
+    defs = {name: summarise(definition) for name, definition in defs.items()}
 
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -257,12 +344,7 @@ def build() -> dict:
             "additionalProperties is not restricted, so a property with no field "
             "here passes rather than failing."
         ),
-        # anyOf, not oneOf. The four resource types are open and share a base,
-        # so a Work satisfies Instance as well; oneOf demands exactly one match
-        # and would reject every document. It is also what §2.2 of the plan warns
-        # about -- IIIF v3's 38 oneOf are why its validator needs 414 lines to
-        # work out which branch an error belongs to.
-        "anyOf": [{"$ref": f"#/$defs/{name}"} for name in MODELS],
+        **dispatch_on_type(DISPATCH),
         "$defs": defs,
     }
 

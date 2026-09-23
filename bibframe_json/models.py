@@ -390,6 +390,8 @@ def _subtype(types: list[str], base: str) -> str | None:
 
 
 class Title(Node):
+    """A title, or one of the variant forms of it a record carries."""
+
     main: list[Text] = Field(default_factory=list, alias="mainTitle")
     subtitle: list[Text] = Field(default_factory=list)
     part_number: list[Text] = Field(default_factory=list, alias="partNumber")
@@ -403,6 +405,8 @@ class Title(Node):
 
 
 class Contribution(Node):
+    """An agent's part in making the resource, and what that part was."""
+
     agent: list[Ref] = Field(default_factory=list)
     role: list[Ref] = Field(default_factory=list)
 
@@ -413,6 +417,8 @@ class Contribution(Node):
 
 
 class Identifier(Node):
+    """A number that names the resource, and the scheme it belongs to."""
+
     value: list[Text] = Field(default_factory=list, alias="rdf:value")
     qualifier: list[Text] = Field(default_factory=list)
     status: list[Ref] = Field(default_factory=list)
@@ -428,6 +434,8 @@ class Identifier(Node):
 
 
 class ProvisionActivity(Node):
+    """A publication, distribution or manufacture: who, where and when."""
+
     place: list[Ref] = Field(default_factory=list)
     date: list[Text] = Field(default_factory=list)
     simple_date: list[Text] = Field(default_factory=list, alias="bflc:simpleDate")
@@ -645,6 +653,8 @@ class Resource(Node):
 
 
 class Work(Resource):
+    """The thing itself, apart from any published edition of it."""
+
     has_instance: list[Ref] = Field(default_factory=list, alias="hasInstance")
     # No instance_of here: bf:instanceOf has rdfs:domain bf:Instance, so
     # schema/ontology.json reports it as a domain violation on a Work. A Work
@@ -652,6 +662,8 @@ class Work(Resource):
 
 
 class Instance(Resource):
+    """One published edition of a Work."""
+
     instance_of: list[Ref] = Field(default_factory=list, alias="instanceOf")
     extent: list[Ref] = Field(default_factory=list)
     publication_statement: list[Text] = Field(
@@ -660,12 +672,16 @@ class Instance(Resource):
 
 
 class Hub(Resource):
+    """The record gathering everything said about a single work."""
+
     # The inverse of Resource.expression_of, and Hub-only: only a Hub gathers
     # the Works that express it.
     has_expression: list[Ref] = Field(default_factory=list, alias="hasExpression")
 
 
 class Item(Resource):
+    """One physical or electronic copy of an Instance."""
+
     item_of: list[Ref] = Field(default_factory=list, alias="itemOf")
 
 

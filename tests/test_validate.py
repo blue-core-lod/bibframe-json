@@ -1,5 +1,6 @@
 """load() parses, validate() judges, and the schemas ship with the package."""
 
+import jsonschema
 import pytest
 from pydantic import ValidationError
 
@@ -293,3 +294,69 @@ def test_the_blank_node_rule_does_not_reject_every_node():
         )
         == []
     )
+
+
+# --- what a consumer outside Python gets -------------------------------------
+
+
+def test_a_failure_is_reported_at_the_path_it_happened():
+    """The guarantee a consumer with no bibframe_json depends on.
+
+    The root used to be an anyOf over the four resource types, so a stock
+    validator could only report that the document matched none of them, and
+    handed back the whole record. It dispatches on @type now, following IIIF
+    v4's main.json, and the error arrives at the path that caused it.
+
+    Asserted against jsonschema directly rather than through validate(), since
+    the point is what happens *without* the wrapper this package provides.
+    """
+    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    record = {
+        "@id": "https://x/1",
+        "@type": ["Work"],
+        "subject": [{"@id": "_:b0"}],
+        "bflc:aap": "not a list",
+    }
+    paths = {"/".join(str(p) for p in e.path) for e in dialect.iter_errors(record)}
+    assert paths == {"subject/0", "bflc:aap"}
+
+
+@pytest.mark.parametrize(
+    ("types", "claimed"),
+    [
+        (["Work"], "Work"),
+        ("Work", "Work"),
+        (["Hub"], "Hub"),
+        # a Hub is typed both, so the dispatch has to prefer the specific one
+        (["Work", "Hub"], "Hub"),
+        (["Hub", "Work"], "Hub"),
+        (["Instance"], "Instance"),
+        (["Item"], "Item"),
+    ],
+)
+def test_the_dispatch_reaches_the_type_the_record_claims(types, claimed):
+    """hasExpression is a typed reference on a Hub and merely an array
+    anywhere else, so a blank node in it fails only if we arrived at Hub.
+
+    Both spellings of @type, because `contains` is an array keyword: against a
+    string it is not false but vacuously true, which would send every scalar
+    @type down whichever branch came first.
+    """
+    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    record = {"@id": "https://x/1", "@type": types, "hasExpression": [{"@id": "_:b0"}]}
+    reached_hub = bool(list(dialect.iter_errors(record)))
+    assert reached_hub == (claimed == "Hub")
+
+
+def test_every_definition_says_what_it_is():
+    """description is the one annotation tooling reliably surfaces, and
+    $comment is specified as not for end users.
+
+    One line each: model_json_schema copies a whole docstring in, and those are
+    written for someone reading models.py.
+    """
+    for name, definition in schema(DIALECT)["$defs"].items():
+        body = definition["anyOf"][1] if "anyOf" in definition else definition
+        described = body.get("description", "")
+        assert described, name
+        assert "\n" not in described, name

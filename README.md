@@ -192,6 +192,32 @@ schema("ontology")    # BIBFRAME's domains and ranges, as constraints
 context()             # the JSON-LD context that produces the shape
 ```
 
+## Using the schemas without Python
+
+They are draft 2020-12, self-contained, and reference nothing outside
+themselves, so any validator will run them:
+
+```sh
+check-jsonschema --schemafile dialect.json record.json
+```
+
+The root dispatches on `@type` with `if`/`then`, so a failure is reported
+against the resource type the record claims and at the path it happened, rather
+than as "the document matched none of four types". Every definition carries a
+one-line `description`, and so do the rules with something to explain — a
+validator that surfaces annotations will show them.
+
+What does not travel is the last mile of message quality. A reference may be a
+bare URI or a node, and a literal may be a bare string or a value object, so
+both are an `anyOf`; when one fails, a validator can only say the value matched
+neither branch. Finding the branch that was *meant* takes a short walk into
+`error.context`, which is what `validate()` does in `_causes()`. Around fifteen
+lines in any language, and worth writing if you are validating at scale.
+
+If you already know what you are holding, skip the dispatch and point at the
+type directly — `dialect.json#/$defs/Work` — which localises errors a little
+further still.
+
 The dialect schema is structural: arrays, references, value objects, blank
 nodes. It says nothing about which BIBFRAME types may appear where, so a record
 can satisfy it and still put an `Agent` where a `Title` belongs.
