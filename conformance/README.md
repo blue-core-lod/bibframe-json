@@ -66,8 +66,54 @@ uv run pytest tests/test_conformance.py
 Against any other, with any validator: walk the two directories, validate each
 `document` against `schema/dialect.json`, and compare the paths.
 
-## Adding a case
+## What the corpus is used for
 
-One file, named for the rule rather than the record. A rule the corpus does not
-cover is a rule no other implementation has been asked to honour, so new
-constraints want a case here as well as a schema change.
+Three things, and the third is the reason it is JSON rather than test code.
+
+**It checks this implementation.** `tests/test_conformance.py` runs every case
+against `schema/dialect.json` and against the Python reader, on every commit.
+
+**It is the specification, in practice.** The `description` in each file is the
+shortest statement of that rule anywhere in the repository — shorter than the
+schema, shorter than the prose. `ls reject/` is a fair answer to "what does
+this dialect actually require?"
+
+**It is how a second implementation proves it agrees.** A schema tells you what
+one validator thinks; a corpus tells two validators whether they think the same
+thing. Nothing here is Python, so a reader in Ruby, JavaScript, Java or XSLT
+can be held to exactly the same standard.
+
+## Please add cases
+
+This is the most useful contribution anyone can make to this repository, and it
+needs no Python.
+
+**If you have a record this shape handles badly** — it is rejected and you
+believe it should not be, or accepted and you believe it should not be — that
+is a case. Add the document, say what you expected, and open a pull request.
+Even without the fix, the case is the valuable half: it turns a disagreement
+about BIBFRAME into something two implementations can be measured against.
+
+**If you are implementing this shape in another language** and hit something
+ambiguous, the ambiguity is a missing case. Add one.
+
+**If you are adding or changing a rule here**, add a case with it. A rule the
+corpus does not cover is a rule no other implementation has been asked to
+honour, and nothing will notice when it silently stops holding.
+
+### How
+
+One file, named for the rule rather than for the record it came from —
+`blank-node-with-an-id`, not `hub-62a26d82`. Trim the document to the smallest
+thing that shows the point, and change any real URIs to `https://x/1` unless
+the actual URI is what the case is about.
+
+```sh
+cp conformance/reject/blank-node-with-an-id.json conformance/reject/my-case.json
+$EDITOR conformance/reject/my-case.json
+uv run pytest tests/test_conformance.py          # if you have Python to hand
+```
+
+If you do not, that is fine: open the pull request and CI will tell you whether
+the paths in `errors` match. Getting them wrong is not a problem — being
+unsure is not a reason to leave the case out.
