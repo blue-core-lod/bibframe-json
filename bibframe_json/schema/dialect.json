@@ -96,8 +96,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -105,7 +104,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -118,56 +116,48 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "agent": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Agent",
           "type": "array"
         },
         "date": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Date",
           "type": "array"
         },
         "status": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Status",
           "type": "array"
         },
         "derivedFrom": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Derivedfrom",
           "type": "array"
         },
         "descriptionConventions": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Descriptionconventions",
           "type": "array"
         },
         "generationProcess": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Generationprocess",
           "type": "array"
         },
         "descriptionLevel": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Descriptionlevel",
           "type": "array"
         }
       },
@@ -206,8 +196,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -215,7 +204,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -228,35 +216,30 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "classificationPortion": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Classificationportion",
           "type": "array"
         },
         "itemPortion": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Itemportion",
           "type": "array"
         },
         "assigner": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Assigner",
           "type": "array"
         },
         "status": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Status",
           "type": "array"
         }
       },
@@ -295,8 +278,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -304,7 +286,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -317,21 +298,18 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "agent": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Agent",
           "type": "array"
         },
         "role": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Role",
           "type": "array"
         }
       },
@@ -370,8 +348,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -379,7 +356,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -392,28 +368,24 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "rdf:value": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdf:Value",
           "type": "array"
         },
         "qualifier": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Qualifier",
           "type": "array"
         },
         "status": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Status",
           "type": "array"
         }
       },
@@ -452,8 +424,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -461,7 +432,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -474,49 +444,42 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "place": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Place",
           "type": "array"
         },
         "date": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Date",
           "type": "array"
         },
         "bflc:simpleDate": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Simpledate",
           "type": "array"
         },
         "bflc:simplePlace": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Simpleplace",
           "type": "array"
         },
         "bflc:simpleAgent": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Simpleagent",
           "type": "array"
         },
         "bflc:simpleStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Simplestatement",
           "type": "array"
         }
       },
@@ -560,8 +523,7 @@
                   "type": "null"
                 }
               ],
-              "default": null,
-              "title": "@Id"
+              "default": null
             },
             "@type": {
               "anyOf": [
@@ -569,7 +531,6 @@
                   "items": {
                     "type": "string"
                   },
-                  "title": "@Type",
                   "type": "array"
                 },
                 {
@@ -582,14 +543,12 @@
               "items": {
                 "$ref": "#/$defs/Text"
               },
-              "title": "Rdfs:Label",
               "type": "array"
             },
             "source": {
               "items": {
                 "$ref": "#/$defs/Ref"
               },
-              "title": "Source",
               "type": "array"
             }
           },
@@ -626,8 +585,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -635,7 +593,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -648,28 +605,24 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "relationship": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Relationship",
           "type": "array"
         },
         "associatedResource": {
           "items": {
             "$ref": "#/$defs/Resource"
           },
-          "title": "Associatedresource",
           "type": "array"
         },
         "seriesEnumeration": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesenumeration",
           "type": "array"
         }
       },
@@ -708,8 +661,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -717,7 +669,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -730,112 +681,96 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
           },
-          "title": "Title",
           "type": "array"
         },
         "note": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Note",
           "type": "array"
         },
         "subject": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Subject",
           "type": "array"
         },
         "identifiedBy": {
           "items": {
             "$ref": "#/$defs/Identifier"
           },
-          "title": "Identifiedby",
           "type": "array"
         },
         "adminMetadata": {
           "items": {
             "$ref": "#/$defs/AdminMetadata"
           },
-          "title": "Adminmetadata",
           "type": "array"
         },
         "contribution": {
           "items": {
             "$ref": "#/$defs/Contribution"
           },
-          "title": "Contribution",
           "type": "array"
         },
         "classification": {
           "items": {
             "$ref": "#/$defs/Classification"
           },
-          "title": "Classification",
           "type": "array"
         },
         "language": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Language",
           "type": "array"
         },
         "genreForm": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Genreform",
           "type": "array"
         },
         "provisionActivity": {
           "items": {
             "$ref": "#/$defs/ProvisionActivity"
           },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
           },
-          "title": "Relation",
           "type": "array"
         },
         "seriesStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesstatement",
           "type": "array"
         },
         "electronicLocator": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Electroniclocator",
           "type": "array"
         },
         "bflc:aap": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Aap",
           "type": "array"
         },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Expressionof",
           "type": "array"
         }
       },
@@ -875,7 +810,6 @@
           "description": "A literal that still knows its language and datatype.",
           "properties": {
             "@value": {
-              "title": "@Value",
               "type": "string"
             },
             "@language": {
@@ -887,8 +821,7 @@
                   "type": "null"
                 }
               ],
-              "default": null,
-              "title": "@Language"
+              "default": null
             },
             "@type": {
               "anyOf": [
@@ -899,8 +832,7 @@
                   "type": "null"
                 }
               ],
-              "default": null,
-              "title": "@Type"
+              "default": null
             }
           },
           "required": [
@@ -934,8 +866,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -943,7 +874,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -956,35 +886,30 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "mainTitle": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Maintitle",
           "type": "array"
         },
         "subtitle": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Subtitle",
           "type": "array"
         },
         "partNumber": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Partnumber",
           "type": "array"
         },
         "partName": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Partname",
           "type": "array"
         }
       },
@@ -1023,8 +948,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -1032,7 +956,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -1045,119 +968,102 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
           },
-          "title": "Title",
           "type": "array"
         },
         "note": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Note",
           "type": "array"
         },
         "subject": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Subject",
           "type": "array"
         },
         "identifiedBy": {
           "items": {
             "$ref": "#/$defs/Identifier"
           },
-          "title": "Identifiedby",
           "type": "array"
         },
         "adminMetadata": {
           "items": {
             "$ref": "#/$defs/AdminMetadata"
           },
-          "title": "Adminmetadata",
           "type": "array"
         },
         "contribution": {
           "items": {
             "$ref": "#/$defs/Contribution"
           },
-          "title": "Contribution",
           "type": "array"
         },
         "classification": {
           "items": {
             "$ref": "#/$defs/Classification"
           },
-          "title": "Classification",
           "type": "array"
         },
         "language": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Language",
           "type": "array"
         },
         "genreForm": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Genreform",
           "type": "array"
         },
         "provisionActivity": {
           "items": {
             "$ref": "#/$defs/ProvisionActivity"
           },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
           },
-          "title": "Relation",
           "type": "array"
         },
         "seriesStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesstatement",
           "type": "array"
         },
         "electronicLocator": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Electroniclocator",
           "type": "array"
         },
         "bflc:aap": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Aap",
           "type": "array"
         },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Expressionof",
           "type": "array"
         },
         "hasInstance": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Hasinstance",
           "type": "array"
         }
       },
@@ -1196,8 +1102,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -1205,7 +1110,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -1218,133 +1122,114 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
           },
-          "title": "Title",
           "type": "array"
         },
         "note": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Note",
           "type": "array"
         },
         "subject": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Subject",
           "type": "array"
         },
         "identifiedBy": {
           "items": {
             "$ref": "#/$defs/Identifier"
           },
-          "title": "Identifiedby",
           "type": "array"
         },
         "adminMetadata": {
           "items": {
             "$ref": "#/$defs/AdminMetadata"
           },
-          "title": "Adminmetadata",
           "type": "array"
         },
         "contribution": {
           "items": {
             "$ref": "#/$defs/Contribution"
           },
-          "title": "Contribution",
           "type": "array"
         },
         "classification": {
           "items": {
             "$ref": "#/$defs/Classification"
           },
-          "title": "Classification",
           "type": "array"
         },
         "language": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Language",
           "type": "array"
         },
         "genreForm": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Genreform",
           "type": "array"
         },
         "provisionActivity": {
           "items": {
             "$ref": "#/$defs/ProvisionActivity"
           },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
           },
-          "title": "Relation",
           "type": "array"
         },
         "seriesStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesstatement",
           "type": "array"
         },
         "electronicLocator": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Electroniclocator",
           "type": "array"
         },
         "bflc:aap": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Aap",
           "type": "array"
         },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Expressionof",
           "type": "array"
         },
         "instanceOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Instanceof",
           "type": "array"
         },
         "extent": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Extent",
           "type": "array"
         },
         "publicationStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Publicationstatement",
           "type": "array"
         }
       },
@@ -1383,8 +1268,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -1392,7 +1276,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -1405,119 +1288,102 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
           },
-          "title": "Title",
           "type": "array"
         },
         "note": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Note",
           "type": "array"
         },
         "subject": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Subject",
           "type": "array"
         },
         "identifiedBy": {
           "items": {
             "$ref": "#/$defs/Identifier"
           },
-          "title": "Identifiedby",
           "type": "array"
         },
         "adminMetadata": {
           "items": {
             "$ref": "#/$defs/AdminMetadata"
           },
-          "title": "Adminmetadata",
           "type": "array"
         },
         "contribution": {
           "items": {
             "$ref": "#/$defs/Contribution"
           },
-          "title": "Contribution",
           "type": "array"
         },
         "classification": {
           "items": {
             "$ref": "#/$defs/Classification"
           },
-          "title": "Classification",
           "type": "array"
         },
         "language": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Language",
           "type": "array"
         },
         "genreForm": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Genreform",
           "type": "array"
         },
         "provisionActivity": {
           "items": {
             "$ref": "#/$defs/ProvisionActivity"
           },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
           },
-          "title": "Relation",
           "type": "array"
         },
         "seriesStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesstatement",
           "type": "array"
         },
         "electronicLocator": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Electroniclocator",
           "type": "array"
         },
         "bflc:aap": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Aap",
           "type": "array"
         },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Expressionof",
           "type": "array"
         },
         "hasExpression": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Hasexpression",
           "type": "array"
         }
       },
@@ -1556,8 +1422,7 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "@Id"
+          "default": null
         },
         "@type": {
           "anyOf": [
@@ -1565,7 +1430,6 @@
               "items": {
                 "type": "string"
               },
-              "title": "@Type",
               "type": "array"
             },
             {
@@ -1578,119 +1442,102 @@
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Rdfs:Label",
           "type": "array"
         },
         "title": {
           "items": {
             "$ref": "#/$defs/Title"
           },
-          "title": "Title",
           "type": "array"
         },
         "note": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Note",
           "type": "array"
         },
         "subject": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Subject",
           "type": "array"
         },
         "identifiedBy": {
           "items": {
             "$ref": "#/$defs/Identifier"
           },
-          "title": "Identifiedby",
           "type": "array"
         },
         "adminMetadata": {
           "items": {
             "$ref": "#/$defs/AdminMetadata"
           },
-          "title": "Adminmetadata",
           "type": "array"
         },
         "contribution": {
           "items": {
             "$ref": "#/$defs/Contribution"
           },
-          "title": "Contribution",
           "type": "array"
         },
         "classification": {
           "items": {
             "$ref": "#/$defs/Classification"
           },
-          "title": "Classification",
           "type": "array"
         },
         "language": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Language",
           "type": "array"
         },
         "genreForm": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Genreform",
           "type": "array"
         },
         "provisionActivity": {
           "items": {
             "$ref": "#/$defs/ProvisionActivity"
           },
-          "title": "Provisionactivity",
           "type": "array"
         },
         "relation": {
           "items": {
             "$ref": "#/$defs/Relation"
           },
-          "title": "Relation",
           "type": "array"
         },
         "seriesStatement": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Seriesstatement",
           "type": "array"
         },
         "electronicLocator": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Electroniclocator",
           "type": "array"
         },
         "bflc:aap": {
           "items": {
             "$ref": "#/$defs/Text"
           },
-          "title": "Bflc:Aap",
           "type": "array"
         },
         "expressionOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Expressionof",
           "type": "array"
         },
         "itemOf": {
           "items": {
             "$ref": "#/$defs/Ref"
           },
-          "title": "Itemof",
           "type": "array"
         }
       },

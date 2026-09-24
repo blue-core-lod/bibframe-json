@@ -269,11 +269,24 @@ Blue Core keeps a referenced resource's description in its own row.
 ```
 bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, @type: @id
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
-bibframe_json/schema/dialect.json      generated   from the models, plus three hand-written rules
+bibframe_json/schema/dialect/          generated   one file per definition, plus main.json
+bibframe_json/schema/dialect.json      generated   the same schema, bundled
 bibframe_json/models.py                written     Pydantic models and their helpers
 conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
+
+The dialect comes in two forms from one build. `schema/dialect/` is one file
+per definition, following [IIIF v4's
+layout](https://github.com/IIIF/presentation-validator/tree/main/schema/v4):
+`Title.json` is a page you can read, it is addressable on its own, and the
+files reference each other relatively, so `{"$ref": "Ref.json"}` resolves
+against wherever the directory is served from. Start at `main.json`.
+
+`schema/dialect.json` is the same schema with the definitions inlined, for
+anyone who would rather not resolve references across files. The two are
+checked against each other over the whole conformance corpus, so either is
+safe to depend on.
 
 ```
 uv run python generate/from_ontology.py    # context + ontology schema

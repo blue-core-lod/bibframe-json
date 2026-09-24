@@ -28,6 +28,8 @@ from bibframe_json.models import Hub, Instance, Item, Work
 
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE.parent / "bibframe_json" / "schema" / "dialect.json"
+SPLIT = HERE.parent / "bibframe_json" / "schema" / "dialect"
+BASE = "https://bibframe-json.org/schema/dialect/"
 
 MODELS = {"Work": Work, "Instance": Instance, "Hub": Hub, "Item": Item}
 
@@ -266,6 +268,45 @@ def dispatch_on_type(names: tuple[str, ...]) -> dict:
     return node
 
 
+def _untitled(node: object) -> object:
+    """Every title stripped, at any depth -- for the inside of one property."""
+    if isinstance(node, dict):
+        return {k: _untitled(v) for k, v in node.items() if k != "title"}
+    if isinstance(node, list):
+        return [_untitled(item) for item in node]
+    return node
+
+
+def drop_field_titles(definition: dict) -> dict:
+    """Remove the titles Pydantic invents for fields.
+
+    `model_json_schema()` gives every field a title derived from its Python
+    name, so the schema carries "Maintitle" for mainTitle, "Rdfs:Label" for
+    rdfs:label and "@Id" for @id -- 173 of them, each a mangling of the key it
+    sits under and none of them telling a reader anything the key does not.
+
+    Only inside `properties`, where the key is already the name. A definition's
+    own title is the class name and is worth keeping.
+    """
+    trimmed: dict = {}
+    for key, value in definition.items():
+        if key == "properties" and isinstance(value, dict):
+            trimmed[key] = {
+                name: _untitled(field) if isinstance(field, dict) else field
+                for name, field in value.items()
+            }
+        elif isinstance(value, dict):
+            trimmed[key] = drop_field_titles(value)
+        elif isinstance(value, list):
+            trimmed[key] = [
+                drop_field_titles(item) if isinstance(item, dict) else item
+                for item in value
+            ]
+        else:
+            trimmed[key] = value
+    return trimmed
+
+
 def summarise(definition: dict) -> dict:
     """Reduce every description to its first line.
 
@@ -328,7 +369,10 @@ def build() -> dict:
             defs[name] = forbid_blank_node_id(
                 require_arrays(tolerate_scalar_type(definition))
             )
-    defs = {name: summarise(definition) for name, definition in defs.items()}
+    defs = {
+        name: drop_field_titles(summarise(definition))
+        for name, definition in defs.items()
+    }
 
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -349,11 +393,72 @@ def build() -> dict:
     }
 
 
+def relativise(definition: dict) -> dict:
+    """`#/$defs/Work` becomes `Work.json`, throughout one definition."""
+    rewritten = _relativise(definition)
+    assert isinstance(rewritten, dict)  # a dict in, a dict out
+    return rewritten
+
+
+def _relativise(node: object) -> object:
+    """Rewrite `#/$defs/Work` to `Work.json`, throughout.
+
+    A relative $ref resolves against the enclosing $id, so inside
+    `.../dialect/Instance.json` a reference to `Ref.json` means
+    `.../dialect/Ref.json`. That is what lets the definitions be files without
+    any of them naming where they live.
+    """
+    if isinstance(node, dict):
+        return {
+            key: f"{value.removeprefix('#/$defs/')}.json"
+            if key == "$ref" and isinstance(value, str) and value.startswith("#/$defs/")
+            else _relativise(value)
+            for key, value in node.items()
+        }
+    if isinstance(node, list):
+        return [_relativise(item) for item in node]
+    return node
+
+
+def write_split(schema: dict) -> int:
+    """One file per definition, plus main.json, following IIIF v4's layout.
+
+    The bundle in dialect.json is the same schema with the definitions inlined,
+    and both are written from this one build so they cannot drift. The split
+    files are the ones to read -- Title.json is a page, `#/$defs/Title` inside
+    26KB is not -- and each is addressable on its own, which is what makes a
+    definition citable in a conversation about what the shape means.
+    """
+    SPLIT.mkdir(exist_ok=True)
+    for stale in SPLIT.glob("*.json"):
+        stale.unlink()
+
+    defs = schema["$defs"]
+    for name, definition in defs.items():
+        body = {
+            "$schema": schema["$schema"],
+            "$id": f"{BASE}{name}.json",
+            **relativise(definition),
+        }
+        (SPLIT / f"{name}.json").write_text(
+            json.dumps(body, indent=2, ensure_ascii=False) + "\n"
+        )
+
+    root = {k: v for k, v in schema.items() if k != "$defs"}
+    main = {**relativise(root), "$id": f"{BASE}main.json"}
+    (SPLIT / "main.json").write_text(
+        json.dumps(main, indent=2, ensure_ascii=False) + "\n"
+    )
+    return len(defs) + 1
+
+
 def main() -> None:
     schema = build()
     OUTPUT.write_text(json.dumps(schema, indent=2, ensure_ascii=False) + "\n")
+    written = write_split(schema)
     text = json.dumps(schema)
-    print(f"wrote {OUTPUT.relative_to(HERE.parent)}")
+    print(f"wrote {SPLIT.relative_to(HERE.parent)}/  {written} files")
+    print(f"wrote {OUTPUT.relative_to(HERE.parent)}  (the same schema, bundled)")
     print(f"  {len(schema['$defs'])} definitions, {len(text):,} bytes")
     print(
         f"  oneOf {text.count('"oneOf"')}, allOf {text.count('"allOf"')}, "

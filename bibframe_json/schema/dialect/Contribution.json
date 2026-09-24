@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bibframe-json.org/schema/dialect/Contribution.json",
+  "additionalProperties": {
+    "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
+    "type": "array"
+  },
+  "description": "An agent's part in making the resource, and what that part was.",
+  "properties": {
+    "@id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "@type": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+    },
+    "rdfs:label": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "agent": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "role": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "Contribution",
+  "type": "object",
+  "patternProperties": {
+    "^@": {
+      "description": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+    }
+  },
+  "not": {
+    "description": "a blank node must not carry an @id",
+    "required": [
+      "@id"
+    ],
+    "properties": {
+      "@id": {
+        "pattern": "^_:"
+      }
+    }
+  }
+}

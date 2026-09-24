@@ -33,6 +33,7 @@ dependencies = [
 dev = [
     { name = "pytest" },
     { name = "rdflib" },
+    { name = "referencing" },
     { name = "ruff" },
     { name = "ty" },
 ]
@@ -47,6 +48,7 @@ requires-dist = [
 dev = [
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "rdflib", specifier = ">=7.1.3" },
+    { name = "referencing" },
     { name = "ruff", specifier = ">=0.9.6" },
     { name = "ty", specifier = ">=0.0.1a1" },
 ]

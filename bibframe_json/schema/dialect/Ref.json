@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bibframe-json.org/schema/dialect/Ref.json",
+  "$comment": "A reference: a bare URI string, as @type: @id writes it, or a node.",
+  "anyOf": [
+    {
+      "title": "a bare URI",
+      "description": "a reference, as @type: @id writes one",
+      "type": "string"
+    },
+    {
+      "additionalProperties": true,
+      "description": "Something the record points at rather than describes.",
+      "properties": {
+        "@id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+        },
+        "rdfs:label": {
+          "items": {
+            "$ref": "Text.json"
+          },
+          "type": "array"
+        },
+        "source": {
+          "items": {
+            "$ref": "Ref.json"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Ref",
+      "type": "object",
+      "not": {
+        "description": "a blank node must not carry an @id",
+        "required": [
+          "@id"
+        ],
+        "properties": {
+          "@id": {
+            "pattern": "^_:"
+          }
+        }
+      },
+      "$comment": "A node, and one that keeps no @id if it is blank -- see forbid_blank_node_id, which every node definition shares."
+    }
+  ]
+}
