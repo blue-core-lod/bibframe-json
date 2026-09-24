@@ -1,69 +1,33 @@
 """A predictable, opinionated JSON shape for BIBFRAME.
 
-Two entry points, doing two different things:
+The shape itself is the artifact, and none of it is Python: a JSON-LD context
+that produces it, two JSON Schemas that check it, and a corpus of documents
+with expected verdicts so an implementation in any language can prove it
+agrees. What is here is the tooling that maintains those and one way of using
+them.
 
-    load(record)        parse into a Work, Instance, Hub or Item for reading
-    validate(record)    check conformance against the shipped JSON Schemas
+    validate(record)    check a record against the shipped schemas
+    schema(name)        "dialect" -- the shape -- or "ontology"
+    context()           the JSON-LD context that produces the shape
 
-See bibframe_json.validate for why those are not the same.
+Reading a record into objects is a separate job and deliberately not one this
+package does. See conformance/README.md.
 """
 
-from bibframe_json.models import (
-    EDTF,
-    XSD_DATE,
-    XSD_DATETIME,
-    AdminMetadata,
-    Classification,
-    Contribution,
-    Hub,
-    Identifier,
-    Instance,
-    Item,
-    Node,
-    ProvisionActivity,
-    Ref,
-    Relation,
-    Resource,
-    Shape,
-    Text,
-    Title,
-    Work,
-)
 from bibframe_json.validate import (
     DIALECT,
     ONTOLOGY,
     Finding,
     context,
-    load,
     schema,
     validate,
 )
 
 __all__ = [
     "DIALECT",
-    "EDTF",
     "ONTOLOGY",
-    "XSD_DATE",
-    "XSD_DATETIME",
-    "AdminMetadata",
-    "Classification",
-    "Contribution",
     "Finding",
-    "Hub",
-    "Identifier",
-    "Instance",
-    "Item",
-    "Node",
-    "ProvisionActivity",
-    "Ref",
-    "Relation",
-    "Resource",
-    "Shape",
-    "Text",
-    "Title",
-    "Work",
     "context",
-    "load",
     "schema",
     "validate",
 ]

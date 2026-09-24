@@ -64,14 +64,14 @@ jobs:
         run: uv run pytest
 
       # Worth running on a dependency bump specifically, not just on a source
-      # change. The artifacts are whatever pyld and pydantic emit, so an upgrade
+      # change. The artifacts are whatever rdflib emits, so an upgrade
       # to either can alter them without a line of this repo changing -- which
       # is exactly the drift nobody would otherwise notice.
       - name: Generated artifacts match their generators
         if: steps.check_changes.outputs.changed == 'true'
         run: |
           uv run python generate/from_ontology.py
-          uv run python generate/dialect.py
+          uv run python generate/bundle.py
           git diff --exit-code bibframe_json/context bibframe_json/schema
 
       - name: Bump patch version

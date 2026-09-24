@@ -1,21 +1,13 @@
-"""load() parses, validate() judges, and the schemas ship with the package."""
+"""validate() judges, and the schemas ship with the package.
+
+Parsing a record into objects is a separate job and no longer one this
+package does; the dispatch tests that lived here moved with the models.
+"""
 
 import jsonschema
 import pytest
-from pydantic import ValidationError
 
-from bibframe_json import (
-    DIALECT,
-    ONTOLOGY,
-    Hub,
-    Instance,
-    Item,
-    Work,
-    context,
-    load,
-    schema,
-    validate,
-)
+from bibframe_json import DIALECT, ONTOLOGY, context, schema, validate
 
 CLEAN = {
     "@id": "https://bcld.info/works/1",
@@ -46,76 +38,6 @@ def test_context_loads_through_the_package():
 def test_an_unknown_schema_is_an_error_rather_than_a_path():
     with pytest.raises(ValueError, match="no such schema"):
         schema("nonesuch")
-
-
-# --- load(): parsing ---------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    ("types", "expected"),
-    [
-        (["Work"], Work),
-        (["Instance"], Instance),
-        (["Hub"], Hub),
-        (["Item"], Item),
-        (["Monograph", "Text", "Work"], Work),
-        ("Instance", Instance),
-        # A real Hub is typed both, in either order: marc2bibframe2 writes
-        # bf:Work alongside bf:Hub and framing keeps both. The specific type has
-        # to win, or every Hub loads as a Work and expression_of is unreachable.
-        (["Work", "Hub"], Hub),
-        (["Hub", "Work"], Hub),
-    ],
-)
-def test_load_dispatches_on_type(types, expected):
-    """Including a scalar @type, which a node with one type still carries."""
-    assert isinstance(load({"@id": "https://x/1", "@type": types}), expected)
-
-
-def test_a_hub_typed_as_a_work_still_reads_as_a_hub():
-    """The field that was unreachable, on the record shape that hid it.
-
-    Worth asserting beyond the dispatch table above, because the cost of the old
-    ordering was not a wrong class name -- it was that Hub.expression_of, the
-    Hub-Work link, silently read as empty on every Hub in the corpus.
-    """
-    hub = load(
-        {
-            "@id": "https://x/hubs/1",
-            "@type": ["Work", "Hub"],
-            "expressionOf": [{"@id": "https://x/works/1"}],
-        }
-    )
-    assert isinstance(hub, Hub)
-    assert [ref.uri for ref in hub.expression_of] == ["https://x/works/1"]
-
-
-def test_load_says_so_when_it_cannot_tell_what_a_record_is():
-    with pytest.raises(ValueError, match="no model for"):
-        load({"@id": "https://x/1", "@type": ["Topic"]})
-
-
-def test_parsing_is_not_validating():
-    """The point of having two functions.
-
-    This record parses happily and breaks two rules: a blank node keeping its
-    @id, and mainTitle on a Work rather than on a Title. Parsing checks field
-    types and accepts the rest, since of 136 properties in real records only
-    about a dozen have fields.
-    """
-    record = {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "subject": [{"@id": "_:b0"}],
-        "mainTitle": ["on a Work, which breaks its domain"],
-    }
-    assert isinstance(load(record), Work), "parses"
-    assert validate(record), "and does not conform"
-
-
-def test_something_unparseable_raises():
-    with pytest.raises(ValidationError):
-        load({"@id": "https://x/1", "@type": ["Work"], "title": [[1, 2]]})
 
 
 # --- validate(): judging -----------------------------------------------------
@@ -189,12 +111,13 @@ def test_the_type_noise_from_a_failing_anyof_is_dropped():
     assert len(findings) == 1, [str(f) for f in findings]
 
 
-def test_validate_reports_what_the_models_let_through():
-    """The other half of test_the_models_parse_rather_than_judge.
+def test_validate_reports_the_rules_nothing_else_enforces():
+    """These two are stated in the schema and nowhere else.
 
-    Those two rules are enforced in exactly one place each, and this is it. If
-    the models ever start rejecting them, the pair of tests will disagree and
-    say so.
+    A reader is expected to accept both -- they are defects in the shape, not
+    in the JSON -- so being told about them is the only way anyone finds out.
+    The corresponding cases in conformance/ say the same thing to every
+    implementation.
     """
     record = {
         **CLEAN,
@@ -208,7 +131,6 @@ def test_validate_reports_what_the_models_let_through():
             }
         ],
     }
-    load(record)  # parses
     messages = [f.message for f in validate(record, ontology=False)]
     assert any("blank node" in m for m in messages), messages
     assert any("at most one of @type or @language" in m for m in messages), messages

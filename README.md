@@ -98,68 +98,25 @@ so `199X` is not a date that can be parsed as one.
 
 ## From Python
 
-To simplify usage of the data from Python, Pydantic models are included that
-provide helper properties for accessing the data without needing to hunt and
-peck in the JSON.
-
-`load()` takes a `dict` of parsed JSON and returns the model for whatever the
-record says it is:
-
 ```python
 import json
 
 import bibframe_json
 
 record = json.load(open("instance.json"))
-instance = bibframe_json.load(record)                            # a Work, Instance, Hub or Item
 
-instance.main_title                  # "Minority voices from the academic superstructure"
-instance.instance_of[0].uri          # "http://id.loc.gov/resources/works/23867197"
-
-[(i.kind, str(i.value[0]).strip())   # [("Lccn", "2024038899"),
- for i in instance.identified_by]    #  ("Isbn", "9781668499092")]
-
-instance.provision_activity[0].simple_place[0]     # "Hershey, PA"
+for finding in bibframe_json.validate(record, ontology=False):
+    print(finding)
 ```
 
-Literals behave as text but remember what they are:
-
-```python
-title = instance.main_title
-str(title)            # the text, and what {{ title }} renders in a template
-title.language        # "ru-cyrl", or None
-
-work.titles_in(None)         # the romanised forms
-work.titles_in("ru-cyrl")    # the vernacular ones
-
-date = instance.provision_activity[0].date[0]
-date.approximate      # True for EDTF: 199X, 1970?, intervals
-```
-
-The models themselves are open. BIBFRAME has 226 properties and real records
-use 136, so an unmodeled one is kept and reachable rather than rejected:
-
-```python
-work.aap[0]                    # "Prokhorov, A. M." -- bflc:aap has a field
-str(work.get("summary")[0])    # an unmodelled property, parsed the same way
-work.get("summary")[0].language        # "ru-cyrl", or None
-work.get("originPlace")[0].uri         # a reference, so it has somewhere to link
-work.get("neverSeen")          # []
-
-work.properties()        # every property it carries, modelled or not,
-                         # keyed as the record spells them
-```
-
-`Work`, `Instance`, `Hub` and `Item` share a `Resource` base, so one set of
-template partials serves all four.
-
-If you want a particular type rather than whatever the record claims, the models
-take a dict or JSON text directly:
-
-```python
-Instance.model_validate(record)          # a dict
-Instance.model_validate_json(text)       # JSON text, no json.loads needed
-```
+That is the whole API, plus `schema()` and `context()`. Reading a record into
+objects is a separate job and not one this package does: it describes a shape
+so that a reader in any language can be written against it, and shipping one
+reader in one language would make that reader the specification. The Pydantic
+models this started with now live in
+[bluecore_api](https://github.com/blue-core-lod/bluecore_api), which is the
+application they were shaped by, and they are held to `conformance/` like
+anyone else's.
 
 ## Validating
 
@@ -269,9 +226,8 @@ Blue Core keeps a referenced resource's description in its own row.
 ```
 bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, @type: @id
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
-bibframe_json/schema/dialect/          generated   one file per definition, plus main.json
-bibframe_json/schema/dialect.json      generated   the same schema, bundled
-bibframe_json/models.py                written     Pydantic models and their helpers
+bibframe_json/schema/dialect/          written     one file per definition, plus main.json
+bibframe_json/schema/dialect.json      generated   the same schema, bundled from those
 conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
@@ -290,28 +246,39 @@ safe to depend on.
 
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
-uv run python generate/dialect.py          # dialect schema
-uv run pytest                              # 126 tests
+uv run python generate/bundle.py           # dialect.json, from schema/dialect/
+uv run pytest                              # 110 tests, no corpus or network
 ```
 
-Enumerating 251 `@container` declarations is mechanical, so it is generated;
-deciding which properties a template needs is editorial, so the models are
-written by hand. `rdflib` is a dev dependency — the ontology is read at build
-time and nothing at runtime parses RDF.
+Enumerating 251 `@container` declarations is mechanical, so it is generated
+from the ontology; deciding which dozen properties are worth naming in the
+schema is editorial, so `schema/dialect/` is written by hand. `rdflib` is a dev
+dependency — the ontology is read at build time and nothing at runtime parses
+RDF. The only runtime dependency is `jsonschema`.
 
-Three rules in `schema/dialect.json` are hand-written rather than emitted by
-Pydantic, because a Pydantic validator never appears in `model_json_schema()`:
-that a literal may be a bare string, that a reference may be a bare URI, and that
-`@type` may be a string. Without them the schema rejects what its own models
-accept.
+The dialect was generated from Pydantic models until those moved to the
+application that reads them. That arrangement guaranteed the schema could never
+accept less than the reader did, which is a real thing to lose — `conformance/`
+is what replaces it, and it holds any implementation to the same standard
+rather than only the one the schema came from.
+
+It also means the rules every node carries — that unmodelled properties are
+still arrays, that a keyword is not a property, that a blank node keeps no
+`@id`, that `@type` may be a string — are no longer merged in by one function
+at build time. Each definition carries them itself, and
+`tests/test_split_schema.py` checks that each one does: a definition written
+without them would validate less than its siblings and nothing else would
+notice. Both times a rule has gone missing here it was exactly that shape of
+mistake.
 
 ## Status
 
-This is meant to be updated both as BIBFRAME changes and as needs for making
-the data more accessible from Python change. Please send issues and PRs when
-things are needed. The project is being built primarily for use cases in the
-[Blue Core] project, but the overarching goal is to make BIBFRAME more
-accessible as JSON.
+This is meant to be updated as BIBFRAME changes and as the shape is found
+wanting. Please send issues and PRs — and if you have a record this shape
+handles badly, the most useful thing you can send is a case in `conformance/`,
+which needs no Python at all. The project is built primarily for use cases in
+the [Blue Core] project, but the overarching goal is to make BIBFRAME more
+shareable as JSON, in any language.
 
 [BIBFRAME]: https://bibframe.org
 [Blue Core]: https://bluecore.info/

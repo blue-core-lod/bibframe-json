@@ -91,3 +91,61 @@ def test_the_files_reference_each_other_relatively():
         for ref in json.loads(contents).get("$defs", {}):
             raise AssertionError(f"{path.name} still carries $defs: {ref}")
         assert "#/$defs/" not in contents, path.name
+
+
+# --- the rules every node has to carry ---------------------------------------
+
+# Text is a value object and none of these reach it: its extra keys are
+# keywords rather than properties, and it has no @id to keep.
+VALUE_OBJECT = "Text"
+
+
+def node_definitions() -> list[pathlib.Path]:
+    return [
+        path
+        for path in sorted(SPLIT.glob("*.json"))
+        if path.stem not in {"main", VALUE_OBJECT}
+    ]
+
+
+def body(contents: dict) -> dict:
+    """A wrapped definition's node branch, or the definition itself.
+
+    Ref is `a bare URI string, or a node`, and the rules apply to the node.
+    """
+    return contents["anyOf"][1] if "anyOf" in contents else contents
+
+
+@pytest.mark.parametrize("path", node_definitions(), ids=lambda p: p.stem)
+def test_every_node_carries_the_shared_rules(path):
+    """What used to be applied by a function at build time.
+
+    While these files were generated from Pydantic models, three rules were
+    merged into every node definition by one loop, and getting them right once
+    got them right everywhere. The files are hand-maintained now, so a
+    definition added by copying a sibling will have them and a definition
+    written from scratch may not -- and the failure is silent, because a
+    schema missing a rule still validates, just less.
+
+    Both times a rule went missing it was this shape of mistake: the
+    blank-node rule reached only Ref-typed fields, and the array rule reached
+    everything but Ref.
+    """
+    node = body(json.loads(path.read_text()))
+
+    array_rule = node.get("additionalProperties")
+    assert isinstance(array_rule, dict) and array_rule.get("type") == "array", (
+        "every unmodelled property is still an array"
+    )
+    assert "^@" in node.get("patternProperties", {}), (
+        "a JSON-LD keyword is not a property, so the array rule must not reach it"
+    )
+    blank = node.get("not", {})
+    assert blank.get("required") == ["@id"], "a blank node must not carry an @id"
+    assert blank.get("properties", {}).get("@id", {}).get("pattern") == "^_:", (
+        "and the rule needs the pattern beside the required, or it rejects every node"
+    )
+    scalar = node.get("properties", {}).get("@type", {}).get("anyOf")
+    assert scalar and {"type": "string"} in scalar, (
+        "@type is a string when a node has one type"
+    )

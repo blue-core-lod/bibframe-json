@@ -6,10 +6,12 @@ That is the point. A schema alone does not tell a second implementation whether
 it agrees with the first; a corpus of documents with expected verdicts does.
 
 It also replaces the guarantee that generation used to provide. While the
-dialect schema was emitted from the Pydantic models, a test could assert the
-two agreed by construction. The corpus asserts it by example instead, which is
-weaker in principle and stronger in practice: it holds for any implementation
-in any language, not only for the one the schema was generated from.
+dialect schema was emitted from Pydantic models, a test could assert the two
+agreed by construction. Those models now live in the application that reads
+them, and the corpus asserts the same thing by example instead -- weaker in
+principle, and holding for any implementation in any language rather than only
+for the one the schema was generated from. bluecore_api runs the same corpus
+against its models; see tests/schemas/ there.
 """
 
 import json
@@ -18,7 +20,7 @@ import pathlib
 import jsonschema
 import pytest
 
-from bibframe_json import DIALECT, load, schema, validate
+from bibframe_json import DIALECT, schema, validate
 
 CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 
@@ -65,33 +67,14 @@ def test_the_schema_rejects_what_it_should(dialect, case):
     assert found == sorted(expected["errors"])
 
 
-@pytest.mark.parametrize("case", cases("accept"), ids=lambda p: p.stem)
-def test_the_models_parse_what_the_schema_accepts(case):
-    """A published schema that accepts less than its own reader does is worse
-    than no schema, because a consumer trusts it.
-
-    The gap opened twice while this was being written, both times because a
-    `mode="before"` validator is invisible to `model_json_schema()`. It is the
-    same direction every time: the schema stricter than the models.
-    """
-    load(read(case)["document"])
-
-
 @pytest.mark.parametrize("case", cases("reject"), ids=lambda p: p.stem)
-def test_the_models_still_read_what_the_schema_refuses(case):
-    """Parsing and judging are different, and the corpus has to show it.
+def test_validate_reports_every_rejection(case):
+    """The wrapper agrees with the raw schema, and says something about it.
 
-    Every rejected document here is still readable -- these are defects in the
-    shape, not in the JSON -- and load() is deliberately permissive about all
-    of them. A consumer that wants to be told calls validate().
+    iter_errors is what a consumer in another language sees; validate() adds
+    the message. Both have to fire, or the corpus is checking the schema and
+    not the thing this package actually offers.
     """
-    document = read(case)["document"]
-    load(document)
-    assert validate(document, ontology=False), "validate() reports what load() allows"
-
-
-def test_every_case_is_described():
-    """The description is what a reader of the corpus learns the rule from."""
-    for verdict in ("accept", "reject"):
-        for case in cases(verdict):
-            assert read(case).get("description"), case.name
+    findings = validate(read(case)["document"], ontology=False)
+    assert findings
+    assert all(finding.is_error for finding in findings)

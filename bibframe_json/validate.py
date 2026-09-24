@@ -1,17 +1,6 @@
 """Validate a record against the shipped JSON Schemas.
 
-Two different things are easy to confuse, and the names here try to keep them
-apart.
-
-`load()` **parses**. It turns a dict into a Work, Instance, Hub or Item so you
-can read it with attributes instead of subscripts. Pydantic's method for that is
-called `model_validate`, which is unfortunate: it checks field types and coerces
-the shapes real data comes in, and it is deliberately permissive about
-everything else. An unmodelled property passes through untouched, and of 136
-properties in real records only about a dozen have fields. Parsing something
-successfully says very little about whether it is well formed.
-
-`validate()` **checks conformance**, against the two JSON Schemas in
+`validate()` checks a record against the two JSON Schemas in
 `bibframe_json/schema/`. That is where the guarantees live:
 
     dialect    the shape: arrays, references, value objects, blank nodes.
@@ -22,8 +11,9 @@ successfully says very little about whether it is well formed.
                is often the one that is behind, and four constraints are
                excluded outright for that reason.
 
-So `load()` for reading and `validate()` for judging. A record can parse
-perfectly and still fail both schemas.
+Reading a record is a separate job, and not one this package does: it
+describes the shape rather than providing a way of working with it. A reader
+in any language is held to the same standard by `conformance/`.
 """
 
 import json
@@ -34,24 +24,8 @@ from typing import Any, NamedTuple
 
 import jsonschema
 
-from bibframe_json.models import Hub, Instance, Item, Resource, Work
-
 DIALECT = "dialect"
 ONTOLOGY = "ontology"
-
-# Which model a record belongs to, by the type it claims. The first match wins,
-# so the order is most specific first. A Hub carries @type ["Work", "Hub"] --
-# marc2bibframe2 types it both and framing keeps both -- so Work ahead of Hub
-# claimed every Hub, and Hub.expression_of was unreachable through load(). An
-# Instance and an Item are never also a Work, so that was the only ambiguous
-# pair; the ordering matters for the type that is a subclass in the data rather
-# than for the ones that share a base here.
-BY_TYPE: tuple[tuple[str, type[Resource]], ...] = (
-    ("Hub", Hub),
-    ("Instance", Instance),
-    ("Item", Item),
-    ("Work", Work),
-)
 
 
 class Finding(NamedTuple):
@@ -206,29 +180,26 @@ def validate(
                     explained.add((layer, path))
 
     # A failing anyOf reports every branch, so a node rejected for carrying an
-    # @id also reports "is not of type string" from the branch that wanted a bare
-    # URI. Where a path has a real explanation, the type complaint is noise.
+    # @id also reports "is not of type string" from the branch that wanted a
+    # bare URI. Where a path has a real explanation, the type complaint is
+    # noise.
+    #
+    # And a type complaint about a whole value is noise when something inside
+    # that value failed too: the branch that got further in is the one the
+    # record was meant to match. A reference carrying a malformed property
+    # reports "that property is not an array" at the property, and the outer
+    # "this is not a string" only says it was not the other kind of reference.
+    # Both are type failures, so neither explains the other by the rule above.
+    inside = {(layer, path) for layer, path, _, _ in raw}
+
+    def something_failed_inside(layer: str, path: str) -> bool:
+        return any(
+            other == layer and where.startswith(f"{path}/") for other, where in inside
+        )
+
     return [
         Finding(layer, path, message)
         for layer, path, message, validator in raw
-        if not (validator == "type" and (layer, path) in explained)
+        if validator != "type"
+        or not ((layer, path) in explained or something_failed_inside(layer, path))
     ]
-
-
-def load(record: dict[str, Any]) -> Resource:
-    """Parse a record into the model for whatever it says it is.
-
-    Reading, not judging -- see the module docstring. Raises pydantic's
-    ValidationError if the record cannot be parsed at all, which is a lower bar
-    than conforming: call validate() for that.
-    """
-    types = record.get("@type") or []
-    if isinstance(types, str):
-        types = [types]
-    for name, model in BY_TYPE:
-        if name in types:
-            return model.model_validate(record)
-    raise ValueError(
-        f"no model for {types or 'a record with no @type'}; expected one of "
-        f"{', '.join(name for name, _ in BY_TYPE)}"
-    )

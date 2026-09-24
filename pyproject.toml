@@ -7,7 +7,6 @@ requires-python = ">=3.12"
 license = "MIT"
 dependencies = [
     "jsonschema>=4.23",
-    "pydantic>=2.9",
 ]
 
 [dependency-groups]
