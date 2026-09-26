@@ -199,12 +199,15 @@ def test_only_always_reference_properties_are_coerced_to_id():
     """@type: @id writes a reference as a bare URI string.
 
     Applied only where a property is *always* a bare reference. On one that
-    sometimes embeds a node it would produce a mix of strings and objects, which
-    is the same inconsistency in different clothing.
+    sometimes embeds a node it would produce a mix of strings and objects,
+    which is the same inconsistency in different clothing.
 
-    hasInstance is deliberately absent despite cbd-01.md listing it among the
-    reference-only properties: measured over 200 records it is a string 262
-    times, a node with a URI 61 times, and a node with no URI 39 times.
+    This is cbd-01.md's list, minus rdf:type. schema/cbd.json requires these to
+    be bare strings, so a context in the same repository that produced nodes
+    would contradict it. hasInstance was excluded here for a while on the
+    strength of a measurement over CBD documents, where a referenced Instance
+    is in the document by definition and so is never a bare reference in the
+    RDF -- the wrong population for the question. See from_ontology.py.
     """
     coerced = {
         key
@@ -213,14 +216,13 @@ def test_only_always_reference_properties_are_coerced_to_id():
     }
     assert coerced == {
         "instanceOf",
+        "hasInstance",
         "itemOf",
         "hasItem",
         "electronicLocator",
         "generationProcess",
         "descriptionLevel",
-    }
-    assert "hasInstance" not in coerced
-    assert "dcterms:isPartOf" not in coerced
+    }, "cbd-01.md's list, minus rdf:type which is @type"
 
 
 def test_list_valued_properties_get_no_container():

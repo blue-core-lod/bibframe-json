@@ -13,3 +13,8 @@ dist/
 # written by hand, one per rule, that say what the shape requires.
 corpus/
 
+# LC's description of how they serialize CBD documents. Reference material,
+# not ours to redistribute; conformance/cbd/ is where its rules are written
+# down in a form this repository owns.
+cbd-01.md
+

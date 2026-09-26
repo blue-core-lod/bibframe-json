@@ -2,16 +2,62 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bibframe-json.org/schema/cbd.json",
   "title": "A Concise Bounded Description",
-  "description": "One Instance, the Work it instantiates, and the resources they name, in a single document.",
-  "$comment": "A CBD is an array of resources and not a different kind of thing, so this is an envelope and nothing more: each member is checked by dialect.json, exactly as a resource on its own would be. Written by hand rather than generated, because there is nothing here to derive.\n\nTwo differences from a stored record, neither of which needs saying. bf:hasInstance and bf:instanceOf embed the whole node rather than holding a bare URI, because the other resource is in the document -- and the dialect already allows that, since a reference is open and an embedded resource is a reference carrying more. And a description node keeps no @id: framing several resources at once makes a processor label them, and those labels address nothing outside the document, which the dialect already forbids.\n\nThe reference to dialect.json is relative, so it resolves against wherever these are served from, and the definitions exist in one place rather than two.",
+  "description": "One Instance, the Work it instantiates, any Items, and the resources they name, in a single document.",
+  "$comment": "cbd-01.md is LC's description of how they serialize a CBD, and it describes RDF/XML. This says the same things about JSON-LD.\n\nA CBD is an array of resources rather than a different kind of thing, so most of this is an envelope: each member is checked by dialect.json, exactly as a resource on its own would be. The reference to it is relative, so the definitions exist in one place rather than in two bundles.\n\nWhat a CBD adds is two rules. The principal resources are Works, Instances and Items; a Hub is only principal in the 'decomposed' form, which is a different document, and a Hub referenced from a CBD stays nested and is not editable there. And the object properties below stay simple URIs while every other one is 'decomposed' -- embedded where it is used. In RDF/XML those are an rdf:resource attribute; here they are a bare string, which is the same statement.\n\nLC's own .cbd.jsonld does not look like this, and neither does bluecore_api's: both serve expanded JSON-LD, a flat array of nodes with full property URIs and no nesting, which is an RDF dump rather than something anyone would read. The RDF/XML is the serialization that was specified, and this is an attempt to specify the JSON-LD as carefully.",
   "type": "object",
   "required": ["@graph"],
   "properties": {
     "@graph": {
-      "description": "The resources described, each a Work, Instance, Hub or Item.",
+      "description": "The resources described, each a Work, Instance or Item.",
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "dialect.json" }
+      "items": {
+        "allOf": [
+          { "$ref": "dialect.json" },
+          { "$ref": "#/$defs/principal" },
+          { "$ref": "#/$defs/references" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "principal": {
+      "title": "A principal resource",
+      "description": "A CBD holds Works, Instances and Items. A Hub is principal only in the decomposed form; one referenced from a CBD stays nested.",
+      "required": ["@type"],
+      "properties": {
+        "@type": {
+          "anyOf": [
+            {
+              "type": "array",
+              "contains": {
+                "enum": ["Work", "Instance", "Item"]
+              }
+            },
+            { "enum": ["Work", "Instance", "Item"] }
+          ]
+        }
+      }
+    },
+    "references": {
+      "title": "The properties that stay simple URIs",
+      "description": "Every other object property is decomposed -- embedded where it is used. These are written as a bare string, which is rdf:resource in the RDF/XML.",
+      "$comment": "rdf:type is on this list in cbd-01.md and is not repeated here: it is @type, which is a URI by definition.\n\nA bare string rather than a node with only an @id, because a reference that is sometimes one and sometimes the other is the inconsistency this shape exists to remove. dialect.json permits both, since a stored record is framed by a processor that may write either; a CBD is assembled deliberately, so it can be asked for the one.",
+      "properties": {
+        "instanceOf": { "$ref": "#/$defs/uris" },
+        "hasInstance": { "$ref": "#/$defs/uris" },
+        "itemOf": { "$ref": "#/$defs/uris" },
+        "hasItem": { "$ref": "#/$defs/uris" },
+        "electronicLocator": { "$ref": "#/$defs/uris" },
+        "generationProcess": { "$ref": "#/$defs/uris" },
+        "descriptionLevel": { "$ref": "#/$defs/uris" },
+        "dcterms:isPartOf": { "$ref": "#/$defs/uris" }
+      }
+    },
+    "uris": {
+      "description": "An array of URIs, each written bare.",
+      "type": "array",
+      "items": { "type": "string" }
     }
   }
 }

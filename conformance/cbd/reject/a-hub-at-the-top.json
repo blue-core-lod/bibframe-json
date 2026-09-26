@@ -1,0 +1,16 @@
+{
+  "description": "a Hub is principal only in the decomposed form; one referenced from a CBD stays nested and is not editable there",
+  "document": {
+    "@graph": [
+      {
+        "@id": "https://x/hubs/1",
+        "@type": [
+          "Hub"
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/@graph/0/@type"
+  ]
+}

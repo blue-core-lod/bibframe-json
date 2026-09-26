@@ -1,0 +1,31 @@
+{
+  "description": "and embedding one is wrong even though it says the same thing: a reference that is sometimes a string and sometimes a node is the inconsistency this shape exists to remove",
+  "document": {
+    "@graph": [
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ],
+        "hasInstance": [
+          {
+            "@id": "https://x/instances/1"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/@graph/0/hasInstance/0"
+  ]
+}

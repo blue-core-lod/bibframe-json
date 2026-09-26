@@ -293,7 +293,8 @@
       "@container": "@set"
     },
     "hasInstance": {
-      "@container": "@set"
+      "@container": "@set",
+      "@type": "@id"
     },
     "hasItem": {
       "@container": "@set",

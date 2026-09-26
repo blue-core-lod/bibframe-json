@@ -99,13 +99,44 @@ def fetch(kind: str, uris: list[str]) -> int:
     return written
 
 
-# Work, Instance and Item stay at the top of a CBD and everything else nests
-# inside them -- the arrangement cbd.py already makes for the XML serialization.
+# cbd-01.md, LC's description of how they serialize a CBD, written as a frame.
+#
+# Work, Instance and Item are principal and stay at the top; a Hub is only
+# principal in the "decomposed" form, which is a different document. Every
+# other object property is decomposed -- embedded where it is used -- except
+# the ones below, which stay simple URIs. In the RDF/XML those are an
+# rdf:resource attribute; here they are a bare string, which is the same
+# statement.
+#
+# Saying so in the frame rather than only in the context matters: @type: @id
+# compacts a node that has nothing but an @id, and @embed: "@always" gives it
+# more than that, so without @embed: "@never" the reference is embedded anyway.
+# bluecore_api's cbd.xml already gets this right; its cbd.jsonld is served
+# expanded, and so is LC's, which is what makes writing this down worth doing.
 BF = "http://id.loc.gov/ontologies/bibframe/"
+DCTERMS = "http://purl.org/dc/terms/"
+BARE_REFERENCES = (
+    "instanceOf",
+    "hasInstance",
+    "itemOf",
+    "hasItem",
+    "electronicLocator",
+    "generationProcess",
+    "descriptionLevel",
+)
 CBD_FRAME = {
-    "@context": CONTEXT,
+    "@context": {
+        **CONTEXT,
+        "dcterms": DCTERMS,
+        **{t: {"@id": f"{BF}{t}", "@type": "@id"} for t in BARE_REFERENCES},
+        "dcterms:isPartOf": {"@id": f"{DCTERMS}isPartOf", "@type": "@id"},
+    },
     "@type": [f"{BF}Work", f"{BF}Instance", f"{BF}Item"],
     "@embed": "@always",
+    # or framing fills every property the frame names with null
+    "@omitDefault": True,
+    **{t: {"@embed": "@never", "@omitDefault": True} for t in BARE_REFERENCES},
+    "dcterms:isPartOf": {"@embed": "@never", "@omitDefault": True},
 }
 
 
