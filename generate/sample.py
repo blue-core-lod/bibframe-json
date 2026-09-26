@@ -35,7 +35,8 @@ import pathlib
 import time
 import urllib.request
 
-from bluecore_models.utils.graph import CONTEXT, frame_jsonld
+from bluecore_models.utils.graph import CONTEXT, _as_arrays, frame_jsonld
+from pyld import jsonld
 
 HERE = pathlib.Path(__file__).resolve().parent
 CORPUS = HERE.parent / "corpus"
@@ -92,6 +93,79 @@ def fetch(kind: str, uris: list[str]) -> int:
             continue
         (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.json").write_text(
             json.dumps(reframe(record), indent=2, ensure_ascii=False) + "\n"
+        )
+        written += 1
+        time.sleep(PAUSE)
+    return written
+
+
+# Work, Instance and Item stay at the top of a CBD and everything else nests
+# inside them -- the arrangement cbd.py already makes for the XML serialization.
+BF = "http://id.loc.gov/ontologies/bibframe/"
+CBD_FRAME = {
+    "@context": CONTEXT,
+    "@type": [f"{BF}Work", f"{BF}Instance", f"{BF}Item"],
+    "@embed": "@always",
+}
+
+
+def strip_blank_ids(node: object) -> object:
+    """Drop the @id pyld assigns to a node that has none of its own.
+
+    Framing several resources at once makes pyld label every description node
+    _:b0, _:b1 and so on, because the same node could be referenced from more
+    than one of them. The dialect says a blank node carries no @id, for the
+    reason those labels exist: they are an artefact of this serialization and
+    address nothing outside it, so keeping them makes two identical values
+    distinguishable by accident.
+
+    With them stripped every CBD member validates as a per-resource document,
+    which is the whole finding: a CBD is an array of resources and not a
+    different kind of thing. With them in place, none of them does.
+
+    The same labels turn up in stored records that describe something in place
+    -- a Work whose bf:relation embeds another Work -- so this belongs in
+    bluecore-models beside _as_arrays rather than here.
+    """
+    if isinstance(node, dict):
+        return {
+            key: strip_blank_ids(value)
+            for key, value in node.items()
+            if not (key == "@id" and isinstance(value, str) and value.startswith("_:"))
+        }
+    if isinstance(node, list):
+        return [strip_blank_ids(item) for item in node]
+    return node
+
+
+def cbds(uris: list[str]) -> int:
+    """The CBD each Instance serves, framed into a shape worth reading.
+
+    `.cbd.jsonld` is served expanded: a flat array of nodes with full property
+    URIs, no @context and no nesting -- the opposite of the stored shape, and
+    not something anyone would want to consume. Framing it against the same
+    context gives `@graph` holding one entry per Work, Instance and Item, each
+    in the per-resource shape, with vocabulary terms and description nodes
+    nested inside. So a CBD is an array of resources rather than a different
+    kind of document, which is most of what a schema for it would say.
+
+    The other half is what changes: in a stored record `hasInstance` and
+    `instanceOf` are bare URIs, because the other resource is a row of its
+    own. Here they embed the whole node, because it is in the document. Both
+    are right, and no single schema can say both.
+    """
+    into = CORPUS / "cbd"
+    into.mkdir(parents=True, exist_ok=True)
+    written = 0
+    for uri in uris:
+        try:
+            expanded = get(f"{uri}.cbd.jsonld")
+        except (OSError, ValueError) as error:
+            print(f"  skipped {uri}: {error}")
+            continue
+        framed = strip_blank_ids(_as_arrays(jsonld.frame(expanded, CBD_FRAME)))
+        (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.cbd.json").write_text(
+            json.dumps(framed, indent=2, ensure_ascii=False) + "\n"
         )
         written += 1
         time.sleep(PAUSE)
