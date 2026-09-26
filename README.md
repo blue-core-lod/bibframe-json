@@ -8,10 +8,12 @@ parse it as JSON without needing an RDF processing library, and knowledge of
 the RDF data model. But perhaps it will also function as a gateway for people
 who want to take a step beyond the JSON to learn more.
 
-BIBFRAME is large and loosely constrained, and there are many ways to write it as
-RDF and JSON-LD. bibframe-json describes one shape, documents what that shape guarantees, and gives
-you models for reading it without walking dictionaries by hand. The shape is the
-framed JSON-LD Blue Core stores per resource: a Work, Instance, Hub or Item.
+BIBFRAME is large and loosely constrained, and there are many ways to write it
+as RDF and JSON-LD. bibframe-json describes one shape, documents what that
+shape guarantees, and ships the context that produces it, the JSON Schemas that
+check it, and a corpus of documents with expected verdicts so that a reader in
+any language can be held to it. The shape is the framed JSON-LD Blue Core
+stores per resource: a Work, Instance, Hub or Item.
 
 bibframe-json follows the [LOUD](https://linked.art/loud/) principles, and the
 `@container: @set` rule from
@@ -120,10 +122,11 @@ anyone else's.
 
 ## Validating
 
-`load()` **parses**; `validate()` **judges**. They are not the same, and the
-difference is worth keeping in mind: parsing checks field types and quietly
-accepts the rest, since of the 136 properties in real records only about a dozen
-have fields. A record can load perfectly and still be malformed.
+A reader **parses**; `validate()` **judges**. They are not the same, and the
+difference is worth keeping in mind: parsing a record into objects checks the
+fields that reader declares and quietly accepts the rest, and of the 136
+properties in real records only about a dozen are worth declaring. A record can
+parse perfectly and still be malformed.
 
 ```python
 for finding in bibframe_json.validate(record):
@@ -274,6 +277,39 @@ resource: 99.8% of assertions conform in a CBD from id.loc.gov, while in a store
 per-resource record only 39% of node values carry a `@type` a range can check —
 Blue Core keeps a referenced resource's description in its own row.
 
+## Documentation
+
+`generate/site.py` builds a documentation site and deploys it from CI. It does
+two things, and the second is the one that matters:
+
+```sh
+uv run python generate/site.py    # into site/, gitignored
+```
+
+The pages hold almost no prose of their own — each pulls a named section out of
+this README, inlines a Markdown file, or reads a table out of the schemas, so
+there is one copy of every sentence and the examples are the files the tests
+run against.
+
+And it copies the context, the schemas and the conformance corpus in at the
+paths their own `$id`s name. That is what turns
+`https://bibframe-json.org/schema/dialect/Work.json` from a string in a field
+called `$id` into a file a validator can fetch, and what makes
+`{"$ref": "Ref.json"}` resolve over the network the way it already resolves on
+disk. `tests/test_site.py` fails if any `$id` and its served path disagree.
+
+**That domain is not registered yet**, so the `$id`s currently identify without
+locating — which JSON Schema permits, and which costs nothing until someone
+wants to fetch one. Two ways to finish it: point `bibframe-json.org` at GitHub
+Pages, or move everything to the project page with
+
+```sh
+uv run python generate/site.py --rebase https://edsu.github.io/bibframe-json
+```
+
+which rewrites every `$id`, fixture and page at once. The test is what keeps
+that from being a sweep you can half-finish.
+
 ## What is generated, and what is not
 
 ```
@@ -284,6 +320,8 @@ bibframe_json/schema/dialect.json      generated   the same schema, bundled from
 bibframe_json/schema/cbd.json          written     a CBD, referencing dialect.json
 example/cbd.json                       written     a real CBD, and what its shape is for
 conformance/                           written     documents and verdicts, for any implementation
+docs/                                  written     six pages, mostly directives into the above
+site/                                  generated   the pages, and the artifacts at their own URLs
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
 
@@ -301,8 +339,9 @@ safe to depend on.
 
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
-uv run python generate/bundle.py           # dialect.json and cbd.json, bundled
-uv run pytest                              # 146 tests, no corpus or network
+uv run python generate/bundle.py           # dialect.json, bundled from schema/dialect/
+uv run python generate/site.py             # the documentation site
+uv run pytest                              # 154 tests, no corpus or network
 ```
 
 Enumerating 251 `@container` declarations is mechanical, so it is generated

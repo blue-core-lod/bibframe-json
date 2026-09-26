@@ -1,0 +1,122 @@
+/* Plain CSS, no build step and nothing fetched from anywhere else: a page
+   about a data format should be readable with the network off. */
+
+:root {
+    --ink: #1b1b1b;
+    --quiet: #5a5a5a;
+    --rule: #dcdcd4;
+    --paper: #fdfdfb;
+    --link: #0b5c8a;
+    --code-bg: #f4f3ee;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 1.5rem;
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+nav { display: flex; flex-wrap: wrap; gap: 0 1.1rem; font-size: 0.92rem; }
+nav a { color: var(--quiet); text-decoration: none; }
+nav a:hover { color: var(--link); text-decoration: underline; }
+
+main { max-width: 52rem; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+
+a { color: var(--link); }
+
+h1 { font-size: 1.9rem; line-height: 1.2; margin: 1.5rem 0 1rem; }
+h2 { font-size: 1.3rem; margin: 2.5rem 0 0.75rem; }
+h3 { font-size: 1.05rem; margin: 2rem 0 0.5rem; }
+
+/* The pages lean on these: almost every section opens with the sentence that
+   states the claim, and the rest is why. */
+h2 + p, h3 + p { margin-top: 0.4rem; }
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    line-height: 1.45;
+}
+
+pre code { background: none; padding: 0; font-size: 0.82rem; }
+
+blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--rule);
+    color: var(--quiet);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.25rem 0;
+    font-size: 0.92rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 0.45rem 0.7rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+}
+
+th { font-weight: 600; }
+
+/* A definition table is mostly short names against long sentences. */
+td:first-child { white-space: nowrap; }
+
+footer {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-top: 1px solid var(--rule);
+    color: var(--quiet);
+    font-size: 0.9rem;
+}
+
+footer p { margin: 0; }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #e8e6e1;
+        --quiet: #a3a09a;
+        --rule: #3a3a36;
+        --paper: #1a1a19;
+        --link: #74b8dd;
+        --code-bg: #24241f;
+    }
+}

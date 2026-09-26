@@ -18,3 +18,7 @@ corpus/
 # down in a form this repository owns.
 cbd-01.md
 
+# The documentation site, assembled by generate/site.py and deployed from CI.
+# It is a copy of artifacts that are already in the repository, so checking it
+# in would mean two copies of every schema and a way for them to disagree.
+site/

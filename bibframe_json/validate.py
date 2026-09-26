@@ -193,9 +193,9 @@ def validate(
     on; ontology-only is the interesting report to run across a corpus.
 
     Which structural schema applies is worked out from the document -- a CBD
-    carries @graph and a resource does not -- and `kind=CBD` says so outright
-    where that guess cannot help, since a CBD missing its @graph is
-    indistinguishable from a resource.
+    embeds its Work where a stored record names it -- and `kind=CBD` says so
+    outright where that guess cannot help, since a CBD whose Work has gone
+    missing is indistinguishable from a stored record.
 
     Findings are deduplicated by path and message, because an anyOf can surface
     the same cause through more than one branch.

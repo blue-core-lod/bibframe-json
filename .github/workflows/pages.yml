@@ -1,0 +1,56 @@
+# The site is built here rather than checked in, so git holds one copy of each
+# schema instead of two. generate/site.py copies the context, the schemas and
+# the conformance corpus in at the paths their own $ids name, which is what
+# makes those $ids resolvable and `{"$ref": "Ref.json"}` work over the network.
+name: Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# The defaults for a Pages deployment: read the repository, write the site, and
+# mint the token deploy-pages exchanges for one.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and the newest wins: a queued build of an older
+# commit would publish a site the repository has moved past.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build
+        run: uv run python generate/site.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
