@@ -194,6 +194,27 @@ A rule with no case there is a rule no other implementation has been asked to
 honour, so a new constraint wants a case as well as a schema change. See
 `conformance/README.md`.
 
+## Measuring against real records
+
+`conformance/` says what the shape requires. To find out what the data
+actually does, there is a fetcher:
+
+```sh
+uv run python generate/sample.py --count 60    # into corpus/, gitignored
+```
+
+It pulls recent Works and Instances from the Activity Streams change feed and
+reframes each one through `bluecore_models.frame_jsonld`, which is what the
+ORM applies on write — so the sample is the shape the database holds rather
+than whatever a row happens to contain today. That distinction is not
+academic: sampled straight from the API, a third of stage was still in the
+pre-coercion shape, with 41 of 51 properties appearing as a bare value in some
+record. Reframed, the same 120 records went from 39 rejections to one.
+
+The corpus is not checked in. It is whatever stage held on the day, and it
+goes stale as soon as the catalogue moves; a finding worth keeping belongs in
+`conformance/` as a case.
+
 The dialect schema is structural: arrays, references, value objects, blank
 nodes. It says nothing about which BIBFRAME types may appear where, so a record
 can satisfy it and still put an `Agent` where a `Title` belongs.
