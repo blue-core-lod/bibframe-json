@@ -1,23 +1,21 @@
 {
-  "description": "the smallest real CBD: one Instance and the Work it instantiates",
+  "description": "the smallest CBD: an Instance whose Work is embedded rather than named",
   "document": {
-    "@graph": [
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
       {
-        "@id": "https://x/instances/1",
         "@type": [
-          "Instance"
+          "Title"
         ],
-        "title": [
-          {
-            "@type": [
-              "Title"
-            ],
-            "mainTitle": [
-              "A work"
-            ]
-          }
+        "mainTitle": [
+          "A work"
         ]
-      },
+      }
+    ],
+    "instanceOf": [
       {
         "@id": "https://x/works/1",
         "@type": [

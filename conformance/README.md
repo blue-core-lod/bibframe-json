@@ -35,8 +35,14 @@ under `reject/`.
 
 1. Every document under `<schema>/accept/` validates against that schema.
 2. Every document under `<schema>/reject/` does not.
-3. For each rejected document, the failures are reported at exactly the paths
-   in `errors` — no more and no fewer.
+3. For each rejected document, the set of paths reported is exactly the set in
+   `errors` — no more and no fewer.
+
+`errors` is a set rather than a list. How many failures land on a single path
+depends on how the schema happens to be written — an `allOf` of three
+subschemas that each reject the root reports it three times — and that is not a
+fact about the document, so it is not something to hold another implementation
+to. Which paths fail is.
 
 Paths are [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901) into
 the document.

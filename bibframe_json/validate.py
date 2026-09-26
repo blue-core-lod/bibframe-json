@@ -162,6 +162,20 @@ def _describe(error: jsonschema.ValidationError) -> str:
     return error.message
 
 
+def _embeds_its_work(record: object) -> bool:
+    """Whether bf:instanceOf holds a Work rather than a URI naming one.
+
+    The one structural difference between a stored record and a CBD, so it is
+    what tells them apart. A bare URI is a reference to a row elsewhere; an
+    object is the Work itself, which is what makes a CBD self-explaining.
+    """
+    if not isinstance(record, dict):
+        return False
+    instance_of = record.get("instanceOf")
+    values = instance_of if isinstance(instance_of, list) else [instance_of]
+    return any(isinstance(value, dict) for value in values)
+
+
 def validate(
     record: dict[str, Any],
     *,
@@ -192,18 +206,15 @@ def validate(
     seen: set[tuple[str, str, str]] = set()
     explained: set[tuple[str, str]] = set()
 
-    # A document carrying @graph is a Concise Bounded Description -- several
-    # resources together -- and the structural schema for one is the envelope
-    # rather than the per-resource dialect. Decided by looking, because a
-    # caller asking "is this well formed" should not have to say which kind it
-    # holds and the answer is in the document.
+    # A record whose bf:instanceOf embeds the Work rather than naming it is a
+    # Concise Bounded Description, and the structural schema for one says so.
+    # Decided by looking, because a caller asking "is this well formed" should
+    # not have to say which kind it holds and the answer is in the document.
     #
-    # `kind` overrides that, and is worth having for the case the guess cannot
-    # reach: a CBD that has lost its @graph looks exactly like a resource, so
-    # asking for CBD is the only way to be told.
-    structural = kind or (
-        CBD if isinstance(record, dict) and "@graph" in record else DIALECT
-    )
+    # `kind` overrides that, and is worth having where the guess cannot help:
+    # a CBD whose Work has gone missing looks exactly like a stored record, so
+    # asking for CBD is the only way to be told about it.
+    structural = kind or (CBD if _embeds_its_work(record) else DIALECT)
     layers = [
         name for name, wanted in ((structural, dialect), (ONTOLOGY, ontology)) if wanted
     ]

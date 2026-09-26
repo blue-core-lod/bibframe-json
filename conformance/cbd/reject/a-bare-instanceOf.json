@@ -1,0 +1,25 @@
+{
+  "description": "that is a stored record, where the Work is a row of its own; a CBD embeds it",
+  "document": {
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
+      "https://x/works/1"
+    ]
+  },
+  "errors": [
+    "/instanceOf/0"
+  ]
+}

@@ -1,7 +1,21 @@
 {
-  "description": "a CBD reaches Items where a record has them",
+  "description": "an Item is described in place too, under the Instance that holds it",
   "document": {
-    "@graph": [
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
       {
         "@id": "https://x/works/1",
         "@type": [
@@ -17,23 +31,9 @@
             ]
           }
         ]
-      },
-      {
-        "@id": "https://x/instances/1",
-        "@type": [
-          "Instance"
-        ],
-        "title": [
-          {
-            "@type": [
-              "Title"
-            ],
-            "mainTitle": [
-              "A work"
-            ]
-          }
-        ]
-      },
+      }
+    ],
+    "hasItem": [
       {
         "@id": "https://x/items/1",
         "@type": [

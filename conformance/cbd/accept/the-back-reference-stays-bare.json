@@ -1,7 +1,6 @@
 {
-  "description": "naming the context rather than inlining it keeps the document about the record",
+  "description": "the embedded Work points back at the Instance by URI, which is how a JSON-LD processor breaks the cycle",
   "document": {
-    "@context": "https://bibframe-json.org/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"
@@ -31,6 +30,9 @@
               "A work"
             ]
           }
+        ],
+        "hasInstance": [
+          "https://x/instances/1"
         ]
       }
     ]

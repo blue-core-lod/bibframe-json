@@ -1,7 +1,6 @@
 {
-  "description": "naming the context rather than inlining it keeps the document about the record",
+  "description": "the dialect reaches inside: a blank node keeping its @id is wrong wherever it is",
   "document": {
-    "@context": "https://bibframe-json.org/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"
@@ -31,8 +30,16 @@
               "A work"
             ]
           }
+        ],
+        "subject": [
+          {
+            "@id": "_:b0"
+          }
         ]
       }
     ]
-  }
+  },
+  "errors": [
+    "/instanceOf/0/subject/0"
+  ]
 }

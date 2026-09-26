@@ -1,5 +1,5 @@
 {
-  "description": "cbd-01.md: instanceOf, hasInstance, itemOf, hasItem, electronicLocator, generationProcess, descriptionLevel and dcterms:isPartOf stay simple URIs, where every other object property is embedded",
+  "description": "principal resources side by side under @graph is LC's RDF/XML arrangement, which XML needs because it has no root and JSON does not",
   "document": {
     "@graph": [
       {
@@ -16,9 +16,6 @@
               "A work"
             ]
           }
-        ],
-        "instanceOf": [
-          "https://x/works/1"
         ]
       },
       {
@@ -35,11 +32,11 @@
               "A work"
             ]
           }
-        ],
-        "hasInstance": [
-          "https://x/instances/1"
         ]
       }
     ]
-  }
+  },
+  "errors": [
+    "/"
+  ]
 }

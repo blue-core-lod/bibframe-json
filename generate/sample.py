@@ -38,6 +38,8 @@ import urllib.request
 from bluecore_models.utils.graph import CONTEXT, _as_arrays, frame_jsonld
 from pyld import jsonld
 
+from bibframe_json import context
+
 HERE = pathlib.Path(__file__).resolve().parent
 CORPUS = HERE.parent / "corpus"
 PAUSE = 0.1  # a courtesy to a shared staging box, not a rate limit
@@ -99,45 +101,24 @@ def fetch(kind: str, uris: list[str]) -> int:
     return written
 
 
-# cbd-01.md, LC's description of how they serialize a CBD, written as a frame.
-#
-# Work, Instance and Item are principal and stay at the top; a Hub is only
-# principal in the "decomposed" form, which is a different document. Every
-# other object property is decomposed -- embedded where it is used -- except
-# the ones below, which stay simple URIs. In the RDF/XML those are an
-# rdf:resource attribute; here they are a bare string, which is the same
-# statement.
-#
-# Saying so in the frame rather than only in the context matters: @type: @id
-# compacts a node that has nothing but an @id, and @embed: "@always" gives it
-# more than that, so without @embed: "@never" the reference is embedded anyway.
-# bluecore_api's cbd.xml already gets this right; its cbd.jsonld is served
-# expanded, and so is LC's, which is what makes writing this down worth doing.
-BF = "http://id.loc.gov/ontologies/bibframe/"
-DCTERMS = "http://purl.org/dc/terms/"
-BARE_REFERENCES = (
-    "instanceOf",
-    "hasInstance",
-    "itemOf",
-    "hasItem",
-    "electronicLocator",
-    "generationProcess",
-    "descriptionLevel",
-)
-CBD_FRAME = {
-    "@context": {
-        **CONTEXT,
-        "dcterms": DCTERMS,
-        **{t: {"@id": f"{BF}{t}", "@type": "@id"} for t in BARE_REFERENCES},
-        "dcterms:isPartOf": {"@id": f"{DCTERMS}isPartOf", "@type": "@id"},
-    },
-    "@type": [f"{BF}Work", f"{BF}Instance", f"{BF}Item"],
-    "@embed": "@always",
-    # or framing fills every property the frame names with null
-    "@omitDefault": True,
-    **{t: {"@embed": "@never", "@omitDefault": True} for t in BARE_REFERENCES},
-    "dcterms:isPartOf": {"@embed": "@never", "@omitDefault": True},
-}
+def cbd_frame(uri: str) -> dict:
+    """A frame producing the CBD shape schema/cbd.json describes.
+
+    Rooted at the Instance rather than holding every principal resource as a
+    sibling: LC's cbd-01.md arranges them side by side under one rdf:RDF,
+    which is what XML needs because it has no root, and JSON has one. See
+    example/README.md for what that buys and what it costs.
+
+    @embed: "@once" so a resource reachable by two paths is described the
+    first time and referenced after, and @omitDefault so framing does not
+    fill every property the frame names with null.
+    """
+    return {
+        "@context": context()["@context"],
+        "@id": uri,
+        "@embed": "@once",
+        "@omitDefault": True,
+    }
 
 
 def strip_blank_ids(node: object) -> object:
@@ -173,17 +154,10 @@ def cbds(uris: list[str]) -> int:
     """The CBD each Instance serves, framed into a shape worth reading.
 
     `.cbd.jsonld` is served expanded: a flat array of nodes with full property
-    URIs, no @context and no nesting -- the opposite of the stored shape, and
-    not something anyone would want to consume. Framing it against the same
-    context gives `@graph` holding one entry per Work, Instance and Item, each
-    in the per-resource shape, with vocabulary terms and description nodes
-    nested inside. So a CBD is an array of resources rather than a different
-    kind of document, which is most of what a schema for it would say.
-
-    The other half is what changes: in a stored record `hasInstance` and
-    `instanceOf` are bare URIs, because the other resource is a row of its
-    own. Here they embed the whole node, because it is in the document. Both
-    are right, and no single schema can say both.
+    URIs, no @context and no nesting -- an RDF dump rather than something
+    anyone would consume, and LC's own is the same. Framing it gives the shape
+    schema/cbd.json describes: the Instance, with its Work embedded and
+    everything else described where it is referenced.
     """
     into = CORPUS / "cbd"
     into.mkdir(parents=True, exist_ok=True)
@@ -194,7 +168,14 @@ def cbds(uris: list[str]) -> int:
         except (OSError, ValueError) as error:
             print(f"  skipped {uri}: {error}")
             continue
-        framed = strip_blank_ids(_as_arrays(jsonld.frame(expanded, CBD_FRAME)))
+        # _as_arrays after framing, not instead of it: @container: @set covers
+        # the terms the context declares and nothing else, so a property it has
+        # never heard of -- bflc:catalogerId, Sinopia's hasResourceTemplate --
+        # compacts to a bare value. 57 of 59 records tripped on exactly that.
+        resource = uri.replace("/api/", "/")
+        framed = strip_blank_ids(
+            _as_arrays(jsonld.frame(expanded, cbd_frame(resource)))
+        )
         (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.cbd.json").write_text(
             json.dumps(framed, indent=2, ensure_ascii=False) + "\n"
         )

@@ -1,0 +1,65 @@
+{
+  "description": "a Work reached through bf:relation is described under the relation, not hoisted to the top -- which is where it is in the graph",
+  "document": {
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ],
+        "relation": [
+          {
+            "@type": [
+              "Relation"
+            ],
+            "relationship": [
+              "https://x/rel/otherphysicalformat"
+            ],
+            "associatedResource": [
+              {
+                "@id": "https://x/works/2",
+                "@type": [
+                  "Work"
+                ],
+                "title": [
+                  {
+                    "@type": [
+                      "Title"
+                    ],
+                    "mainTitle": [
+                      "A work"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "@context": "https://bibframe-json.org/context/bibframe.jsonld",
+  "@id": "https://stage.bcld.info/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4",
+  "@type": [
+    "Instance"
+  ],
+  "identifiedBy": [
+    {
+      "@type": [
+        "Isbn"
+      ],
+      "rdf:value": [
+        "9783319071862"
+      ]
+    }
+  ],
+  "instanceOf": [
+    {
+      "@id": "https://stage.bcld.info/works/4be57b41-d67e-4064-a6ac-5161e89dc963",
+      "@type": [
+        "Work"
+      ],
+      "bflc:aap": [
+        "The Conceptual Structure of Reality"
+      ],
+      "bflc:aap-normalized": [
+        "theconceptualstructureofreality"
+      ],
+      "hasInstance": [
+        "https://stage.bcld.info/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4"
+      ],
+      "title": [
+        {
+          "@type": [
+            "Title"
+          ],
+          "mainTitle": [
+            "The Conceptual Structure of Reality"
+          ]
+        }
+      ]
+    }
+  ],
+  "title": [
+    {
+      "@type": [
+        "Title"
+      ],
+      "mainTitle": [
+        "The Conceptual Structure of Reality"
+      ]
+    }
+  ]
+}

@@ -1,10 +1,9 @@
 {
-  "description": "naming the context rather than inlining it keeps the document about the record",
+  "description": "a CBD is bounded by an Instance. A Hub or a Work is described by the decomposed form, which is a different document",
   "document": {
-    "@context": "https://bibframe-json.org/context/bibframe.jsonld",
-    "@id": "https://x/instances/1",
+    "@id": "https://x/works/1",
     "@type": [
-      "Instance"
+      "Work"
     ],
     "title": [
       {
@@ -34,5 +33,8 @@
         ]
       }
     ]
-  }
+  },
+  "errors": [
+    "/@type"
+  ]
 }

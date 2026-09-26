@@ -75,12 +75,15 @@ def test_each_schema_rejects_what_it_should(name, case):
 
     Asserting where, not only that: a schema can reject a document for the
     wrong reason and look correct from a pass/fail count.
+
+    The set of paths, not the list. How many failures land on one path depends
+    on how the schema is written -- an allOf of three subschemas that each
+    reject the root reports it three times -- and that is not a fact about the
+    document, so it is not something to hold another implementation to.
     """
     expected = read(case)
-    found = sorted(
-        pointer(e) for e in validator(name).iter_errors(expected["document"])
-    )
-    assert found == sorted(expected["errors"])
+    found = {pointer(e) for e in validator(name).iter_errors(expected["document"])}
+    assert found == set(expected["errors"])
 
 
 @pytest.mark.parametrize(("name", "case"), every("reject"), ids=label)
@@ -104,31 +107,29 @@ def test_validate_accepts_what_the_schema_accepts(name, case):
     assert validate(read(case)["document"], ontology=False, kind=name) == []
 
 
-def test_a_cbd_is_checked_as_a_cbd_and_a_resource_as_a_resource():
-    """validate() decides by looking, since the answer is in the document."""
-    resource = {"@id": "https://x/1", "@type": ["Work"]}
-    cbd = {"@graph": [resource]}
-    assert validate(resource, ontology=False) == [], "guessed as a resource"
-    assert validate(cbd, ontology=False) == [], "guessed as a CBD"
-    # a resource is not a CBD: the envelope is the one thing the cbd schema
-    # requires, and a resource does not carry it
-    assert validate(resource, ontology=False, kind=CBD)
+def test_a_stored_record_is_not_a_cbd():
+    """The two differ by one thing, and it is the thing worth checking.
 
-
-def test_the_dialect_does_not_reject_a_cbd():
-    """Worth pinning, because it is a consequence rather than a decision.
-
-    The dialect is open by design -- a property with no definition passes --
-    and @graph is a keyword, so the array rule does not reach it either. A CBD
-    therefore satisfies the per-resource schema as a Work carrying one unusual
-    keyword. Rejecting it would mean requiring @type on every resource, which
-    is a real tightening with data behind it and not something to slip in.
-
-    So the guess in validate() is what separates them, and asking for the
-    wrong `kind` is only caught in one direction.
+    A stored record names the Work it instantiates, because the Work is a row
+    of its own. A CBD embeds it. Both are the same resource otherwise, and
+    both satisfy the per-resource dialect -- a CBD is a resource, it just
+    carries more.
     """
-    cbd = {"@graph": [{"@id": "https://x/1", "@type": ["Work"]}]}
-    assert validate(cbd, ontology=False, kind=DIALECT) == []
+    stored = {
+        "@id": "https://x/instances/1",
+        "@type": ["Instance"],
+        "instanceOf": ["https://x/works/1"],
+    }
+    cbd = {
+        "@id": "https://x/instances/1",
+        "@type": ["Instance"],
+        "instanceOf": [{"@id": "https://x/works/1", "@type": ["Work"]}],
+    }
+
+    assert validate(stored, ontology=False) == []
+    assert validate(cbd, ontology=False) == []
+    assert validate(stored, ontology=False, kind=CBD), "the Work is only named"
+    assert validate(cbd, ontology=False, kind=CBD) == []
 
 
 def test_every_case_is_described():

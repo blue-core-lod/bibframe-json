@@ -151,28 +151,23 @@ schema("ontology")    # BIBFRAME's domains and ranges, as constraints
 context()             # the JSON-LD context that produces the shape
 ```
 
-There are two structural schemas because there are two kinds of document. A
-stored record is one resource, and `bf:hasInstance` there is a bare URI: the
-Instance is a record of its own. A Concise Bounded Description holds an
-Instance, its Work and what they name, and `bf:hasInstance` embeds the whole
-node, because it is in the document. Measured over 25 CBDs from a running
-system, 29 occurrences of `hasInstance` and 26 of `instanceOf`, not one of them
-a bare reference; in the stored records, the reverse.
+There are two structural schemas because there are two kinds of document, and
+they differ by one thing. A stored record names the Work it instantiates —
+`"instanceOf": ["https://.../works/1"]` — because the Work is a row of its own.
+A Concise Bounded Description embeds it, so the document explains the Instance
+without fetching anything. `schema("cbd")` is that claim and little else; see
+`example/` for a real one and for what the difference buys.
 
-`schema("cbd")` is 1.5K, because a CBD turns out to be an array of resources
-and not a different kind of thing:
+LC specified the RDF/XML serialization of a CBD and left the JSON-LD as an RDF
+dump — `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes. This is
+a proposal for the JSON-LD, and it takes the one liberty XML could not: the
+document is rooted at the Instance rather than holding every resource as a
+sibling.
 
-```json
-{ "type": "object",
-  "required": ["@graph"],
-  "properties": {
-    "@graph": { "type": "array", "minItems": 1, "items": { "$ref": "dialect.json" } } } }
-```
-
-That reference is relative and deliberately not inlined, so the definitions
-exist in one place rather than in two bundles. A validator therefore needs
-both files and something to resolve between them — `registry()` is that, and
-about five lines in any language:
+`schema("cbd")` references `dialect.json` rather than inlining it, so the
+definitions exist in one place. A validator therefore needs both files and
+something to resolve between them — `registry()` is that, and about five lines
+in any language:
 
 ```python
 import jsonschema
@@ -181,9 +176,8 @@ from bibframe_json import CBD, registry, schema
 jsonschema.Draft202012Validator(schema(CBD), registry=registry())
 ```
 
-`validate()` works out which schema applies by looking for `@graph`, and takes
-`kind="cbd"` where that guess cannot help — a CBD that has lost its `@graph`
-looks exactly like a resource.
+`validate()` works out which schema applies by looking at the document, and
+takes `kind="cbd"` to say outright.
 
 ## Using the schemas without Python
 
@@ -287,7 +281,8 @@ bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, 
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
 bibframe_json/schema/dialect/          written     one resource, one file per definition
 bibframe_json/schema/dialect.json      generated   the same schema, bundled from those
-bibframe_json/schema/cbd.json          written     the envelope, referencing dialect.json
+bibframe_json/schema/cbd.json          written     a CBD, referencing dialect.json
+example/cbd.json                       written     a real CBD, and what its shape is for
 conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
@@ -307,7 +302,7 @@ safe to depend on.
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
 uv run python generate/bundle.py           # dialect.json and cbd.json, bundled
-uv run pytest                              # 145 tests, no corpus or network
+uv run pytest                              # 146 tests, no corpus or network
 ```
 
 Enumerating 251 `@container` declarations is mechanical, so it is generated
