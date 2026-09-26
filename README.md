@@ -146,6 +146,7 @@ from bibframe_json import context, schema
 
 schema("dialect")     # one resource
 schema("cbd")         # a document holding several of them
+registry()            # the schemas, for resolving between them
 schema("ontology")    # BIBFRAME's domains and ranges, as constraints
 context()             # the JSON-LD context that produces the shape
 ```
@@ -158,17 +159,29 @@ node, because it is in the document. Measured over 25 CBDs from a running
 system, 29 occurrences of `hasInstance` and 26 of `instanceOf`, not one of them
 a bare reference; in the stored records, the reverse.
 
-`schema("cbd")` is small, because a CBD turns out to be an array of resources
+`schema("cbd")` is 1.5K, because a CBD turns out to be an array of resources
 and not a different kind of thing:
 
 ```json
 { "type": "object",
   "required": ["@graph"],
   "properties": {
-    "@graph": { "type": "array", "minItems": 1, "items": { "$ref": "../dialect/main.json" } } } }
+    "@graph": { "type": "array", "minItems": 1, "items": { "$ref": "dialect.json" } } } }
 ```
 
-`validate()` works out which applies by looking for `@graph`, and takes
+That reference is relative and deliberately not inlined, so the definitions
+exist in one place rather than in two bundles. A validator therefore needs
+both files and something to resolve between them — `registry()` is that, and
+about five lines in any language:
+
+```python
+import jsonschema
+from bibframe_json import CBD, registry, schema
+
+jsonschema.Draft202012Validator(schema(CBD), registry=registry())
+```
+
+`validate()` works out which schema applies by looking for `@graph`, and takes
 `kind="cbd"` where that guess cannot help — a CBD that has lost its `@graph`
 looks exactly like a resource.
 
@@ -274,8 +287,7 @@ bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, 
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
 bibframe_json/schema/dialect/          written     one resource, one file per definition
 bibframe_json/schema/dialect.json      generated   the same schema, bundled from those
-bibframe_json/schema/cbd/main.json     written     the envelope for several resources
-bibframe_json/schema/cbd.json          generated   the envelope with the dialect inlined
+bibframe_json/schema/cbd.json          written     the envelope, referencing dialect.json
 conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```

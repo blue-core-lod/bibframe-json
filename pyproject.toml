@@ -7,6 +7,9 @@ requires-python = ">=3.12"
 license = "MIT"
 dependencies = [
     "jsonschema>=4.23",
+    # cbd.json references dialect.json rather than inlining it, so resolving
+    # between the shipped schemas is part of reading them
+    "referencing",
 ]
 
 [dependency-groups]
@@ -15,7 +18,6 @@ dev = [
     # read at build time and nothing parses RDF at runtime.
     # a hard dependency of jsonschema, imported directly by the split-schema
     # test to resolve $refs between files
-    "referencing",
     # only to reframe corpus/ into the shape Blue Core stores. Nothing in the
     # package imports it, and nothing needs to: it is the authority on what
     # that shape is, so producing a sample of it should go through the same

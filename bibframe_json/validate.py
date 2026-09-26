@@ -23,6 +23,7 @@ from importlib.resources import files
 from typing import Any, NamedTuple
 
 import jsonschema
+from referencing import Registry, Resource
 
 DIALECT = "dialect"
 CBD = "cbd"
@@ -77,8 +78,28 @@ def context() -> dict[str, Any]:
 
 
 @cache
+def registry() -> Registry:
+    """The shipped schemas, addressable by their own $id.
+
+    Hand this to a validator to check against one of them yourself:
+
+        jsonschema.Draft202012Validator(schema("cbd"), registry=registry())
+
+    cbd.json says `{"$ref": "dialect.json"}` rather than carrying a copy of
+    every definition, so something has to resolve that. A relative reference
+    resolves against the enclosing $id, which is how the split dialect files
+    refer to each other too, and this registry is what turns those URIs back
+    into the files on disk. Nothing is fetched.
+    """
+    known: Registry = Registry()
+    for name in (DIALECT, CBD, ONTOLOGY):
+        known = Resource.from_contents(schema(name)) @ known
+    return known
+
+
+@cache
 def _validator(name: str) -> jsonschema.protocols.Validator:
-    return jsonschema.Draft202012Validator(schema(name))
+    return jsonschema.Draft202012Validator(schema(name), registry=registry())
 
 
 def _causes(error: jsonschema.ValidationError, depth: int = 0) -> Iterator:

@@ -24,7 +24,7 @@ import pathlib
 import jsonschema
 import pytest
 
-from bibframe_json import CBD, DIALECT, schema, validate
+from bibframe_json import CBD, DIALECT, registry, schema, validate
 
 CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 SCHEMAS = (DIALECT, CBD)
@@ -58,7 +58,9 @@ def pointer(error: jsonschema.ValidationError) -> str:
 
 
 def validator(name: str) -> jsonschema.protocols.Validator:
-    return jsonschema.Draft202012Validator(schema(name))
+    """With the registry: cbd.json references dialect.json rather than
+    carrying a copy of it, so something has to resolve that."""
+    return jsonschema.Draft202012Validator(schema(name), registry=registry())
 
 
 @pytest.mark.parametrize(("name", "case"), every("accept"), ids=label)

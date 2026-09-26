@@ -9,6 +9,7 @@ them.
     validate(record)    check a record against the shipped schemas
     schema(name)        "dialect" for one resource, "cbd" for a document
                         holding several, or "ontology"
+    registry()          the shipped schemas, for resolving between them
     context()           the JSON-LD context that produces the shape
 
 Reading a record into objects is a separate job and deliberately not one this
@@ -21,6 +22,7 @@ from bibframe_json.validate import (
     ONTOLOGY,
     Finding,
     context,
+    registry,
     schema,
     validate,
 )
@@ -31,6 +33,7 @@ __all__ = [
     "ONTOLOGY",
     "Finding",
     "context",
+    "registry",
     "schema",
     "validate",
 ]
