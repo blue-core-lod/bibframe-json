@@ -1,0 +1,39 @@
+{
+  "description": "the smallest real CBD: one Instance and the Work it instantiates",
+  "document": {
+    "@graph": [
+      {
+        "@id": "https://x/instances/1",
+        "@type": [
+          "Instance"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      },
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

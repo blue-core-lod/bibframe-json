@@ -1,0 +1,9 @@
+{
+  "description": "a description of nothing is not a description",
+  "document": {
+    "@graph": []
+  },
+  "errors": [
+    "/@graph"
+  ]
+}

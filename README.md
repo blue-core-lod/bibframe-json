@@ -144,10 +144,33 @@ plain JSON Schema, usable from any language:
 ```python
 from bibframe_json import context, schema
 
-schema("dialect")     # the shape
+schema("dialect")     # one resource
+schema("cbd")         # a document holding several of them
 schema("ontology")    # BIBFRAME's domains and ranges, as constraints
 context()             # the JSON-LD context that produces the shape
 ```
+
+There are two structural schemas because there are two kinds of document. A
+stored record is one resource, and `bf:hasInstance` there is a bare URI: the
+Instance is a record of its own. A Concise Bounded Description holds an
+Instance, its Work and what they name, and `bf:hasInstance` embeds the whole
+node, because it is in the document. Measured over 25 CBDs from a running
+system, 29 occurrences of `hasInstance` and 26 of `instanceOf`, not one of them
+a bare reference; in the stored records, the reverse.
+
+`schema("cbd")` is small, because a CBD turns out to be an array of resources
+and not a different kind of thing:
+
+```json
+{ "type": "object",
+  "required": ["@graph"],
+  "properties": {
+    "@graph": { "type": "array", "minItems": 1, "items": { "$ref": "../dialect/main.json" } } } }
+```
+
+`validate()` works out which applies by looking for `@graph`, and takes
+`kind="cbd"` where that guess cannot help — a CBD that has lost its `@graph`
+looks exactly like a resource.
 
 ## Using the schemas without Python
 
@@ -181,8 +204,10 @@ further still.
 anyone's test framework:
 
 ```
-conformance/accept/<name>.json    must validate
-conformance/reject/<name>.json    must not, and the paths where it fails
+conformance/dialect/accept/<name>.json    one resource, must validate
+conformance/dialect/reject/<name>.json    must not, and the paths where it fails
+conformance/cbd/accept/<name>.json        a CBD, must validate
+conformance/cbd/reject/<name>.json        must not
 ```
 
 Walk the two directories, validate each `document` against the dialect schema,
@@ -247,8 +272,10 @@ Blue Core keeps a referenced resource's description in its own row.
 ```
 bibframe_json/context/bibframe.jsonld  generated   251 terms: @container: @set, @type: @id
 bibframe_json/schema/ontology.json     generated   150 range + 110 domain constraints
-bibframe_json/schema/dialect/          written     one file per definition, plus main.json
+bibframe_json/schema/dialect/          written     one resource, one file per definition
 bibframe_json/schema/dialect.json      generated   the same schema, bundled from those
+bibframe_json/schema/cbd/main.json     written     the envelope for several resources
+bibframe_json/schema/cbd.json          generated   the envelope with the dialect inlined
 conformance/                           written     documents and verdicts, for any implementation
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```
@@ -267,8 +294,8 @@ safe to depend on.
 
 ```
 uv run python generate/from_ontology.py    # context + ontology schema
-uv run python generate/bundle.py           # dialect.json, from schema/dialect/
-uv run pytest                              # 110 tests, no corpus or network
+uv run python generate/bundle.py           # dialect.json and cbd.json, bundled
+uv run pytest                              # 145 tests, no corpus or network
 ```
 
 Enumerating 251 `@container` declarations is mechanical, so it is generated

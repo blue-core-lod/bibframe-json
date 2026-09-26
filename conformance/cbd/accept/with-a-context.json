@@ -1,0 +1,40 @@
+{
+  "description": "a CBD may name the context that produced its shape",
+  "document": {
+    "@context": "https://bibframe-json.org/context/bibframe.jsonld",
+    "@graph": [
+      {
+        "@id": "https://x/instances/1",
+        "@type": [
+          "Instance"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      },
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

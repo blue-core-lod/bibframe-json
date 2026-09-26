@@ -25,13 +25,15 @@ from typing import Any, NamedTuple
 import jsonschema
 
 DIALECT = "dialect"
+CBD = "cbd"
 ONTOLOGY = "ontology"
 
 
 class Finding(NamedTuple):
     """One thing wrong with a record.
 
-    `layer` is "dialect" or "ontology", and it is the part a caller most needs:
+    `layer` is "dialect", "cbd" or "ontology", and it is the part a caller most
+    needs:
     a dialect finding is a defect in the shape, an ontology finding is a
     disagreement with BIBFRAME that may well be the ontology's fault.
     """
@@ -42,7 +44,7 @@ class Finding(NamedTuple):
 
     @property
     def is_error(self) -> bool:
-        return self.layer == DIALECT
+        return self.layer in (DIALECT, CBD)
 
     def __str__(self) -> str:
         where = self.path or "the record"
@@ -57,7 +59,7 @@ def schema(name: str) -> dict[str, Any]:
     from an installed package and not only from a checkout. The schemas live
     inside bibframe_json/ for the same reason.
     """
-    if name not in (DIALECT, ONTOLOGY):
+    if name not in (DIALECT, CBD, ONTOLOGY):
         raise ValueError(f"no such schema: {name!r}")
     text = (files("bibframe_json") / "schema" / f"{name}.json").read_text()
     return json.loads(text)
@@ -144,6 +146,7 @@ def validate(
     *,
     dialect: bool = True,
     ontology: bool = True,
+    kind: str | None = None,
 ) -> list[Finding]:
     """Check a record against the schemas, and say what is wrong.
 
@@ -154,6 +157,11 @@ def validate(
     useful gate in a pipeline, since those are the guarantees a consumer depends
     on; ontology-only is the interesting report to run across a corpus.
 
+    Which structural schema applies is worked out from the document -- a CBD
+    carries @graph and a resource does not -- and `kind=CBD` says so outright
+    where that guess cannot help, since a CBD missing its @graph is
+    indistinguishable from a resource.
+
     Findings are deduplicated by path and message, because an anyOf can surface
     the same cause through more than one branch.
     """
@@ -163,8 +171,20 @@ def validate(
     seen: set[tuple[str, str, str]] = set()
     explained: set[tuple[str, str]] = set()
 
+    # A document carrying @graph is a Concise Bounded Description -- several
+    # resources together -- and the structural schema for one is the envelope
+    # rather than the per-resource dialect. Decided by looking, because a
+    # caller asking "is this well formed" should not have to say which kind it
+    # holds and the answer is in the document.
+    #
+    # `kind` overrides that, and is worth having for the case the guess cannot
+    # reach: a CBD that has lost its @graph looks exactly like a resource, so
+    # asking for CBD is the only way to be told.
+    structural = kind or (
+        CBD if isinstance(record, dict) and "@graph" in record else DIALECT
+    )
     layers = [
-        name for name, wanted in ((DIALECT, dialect), (ONTOLOGY, ontology)) if wanted
+        name for name, wanted in ((structural, dialect), (ONTOLOGY, ontology)) if wanted
     ]
     for layer in layers:
         for error in _validator(layer).iter_errors(record):

@@ -27,10 +27,19 @@ CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 
 
 def documents() -> list[tuple[str, dict, bool]]:
+    """Every per-resource case, whichever verdict it expects.
+
+    The dialect cases only: the split files are the per-resource schema, and a
+    CBD is checked against the envelope in schema/cbd.json.
+    """
     cases = []
     for verdict, valid in (("accept", True), ("reject", False)):
-        for path in sorted((CORPUS / verdict).glob("*.json")):
+        for path in sorted((CORPUS / "dialect" / verdict).glob("*.json")):
             cases.append((path.stem, json.loads(path.read_text())["document"], valid))
+    # an empty list here makes pytest skip the parametrized tests rather than
+    # fail them, which is how this stopped checking anything when the corpus
+    # was reorganised and nothing said so
+    assert cases, f"no dialect cases found under {CORPUS}"
     return cases
 
 

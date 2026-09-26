@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bibframe-json.org/schema/cbd/main.json",
+  "title": "A Concise Bounded Description",
+  "description": "One Instance, the Work it instantiates, and the resources they name, in a single document.",
+  "$comment": "A CBD is an array of resources and not a different kind of thing, so this is an envelope and nothing more: each member is checked against the per-resource dialect exactly as it would be on its own.\n\nTwo differences from a stored record, neither of which needs saying here. bf:hasInstance and bf:instanceOf embed the whole node rather than holding a bare URI, because the other resource is in the document; the dialect already allows that, since a reference is open and an embedded resource is a reference carrying more. And a description node keeps no @id: framing several resources at once makes a processor label them, and those labels address nothing outside the document, which is the rule the dialect already states.",
+  "type": "object",
+  "required": ["@graph"],
+  "properties": {
+    "@graph": {
+      "description": "The resources described, each a Work, Instance, Hub or Item.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "../dialect/main.json" }
+    }
+  }
+}

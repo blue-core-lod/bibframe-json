@@ -23,8 +23,11 @@ import json
 import pathlib
 
 HERE = pathlib.Path(__file__).resolve().parent
-SPLIT = HERE.parent / "bibframe_json" / "schema" / "dialect"
-OUTPUT = HERE.parent / "bibframe_json" / "schema" / "dialect.json"
+SCHEMA = HERE.parent / "bibframe_json" / "schema"
+SPLIT = SCHEMA / "dialect"
+OUTPUT = SCHEMA / "dialect.json"
+CBD_SPLIT = SCHEMA / "cbd"
+CBD_OUTPUT = SCHEMA / "cbd.json"
 
 # Written into each file so it can be served and referenced on its own; the
 # bundle has one $id of its own and needs none of them.
@@ -72,6 +75,24 @@ def build() -> dict:
     }
 
 
+def build_cbd(dialect: dict) -> dict:
+    """The CBD envelope with the dialect inlined.
+
+    `schema/cbd/main.json` points at `../dialect/main.json` for its members,
+    which is the readable arrangement and needs a resolver. This is the same
+    schema in one file: the dispatch substituted where that reference was, and
+    the definitions it needs carried along.
+    """
+    envelope = json.loads((CBD_SPLIT / "main.json").read_text())
+    members = {k: v for k, v in dialect.items() if k not in {"$id", "$schema", "$defs"}}
+    envelope["properties"]["@graph"]["items"] = members
+    return {
+        **{k: v for k, v in envelope.items() if k != "$id"},
+        "$id": "https://bibframe-json.org/schema/cbd.json",
+        "$defs": dialect["$defs"],
+    }
+
+
 def main() -> None:
     bundle = build()
     OUTPUT.write_text(json.dumps(bundle, indent=2, ensure_ascii=False) + "\n")
@@ -81,6 +102,10 @@ def main() -> None:
     )
     print(f"wrote {OUTPUT.relative_to(HERE.parent)}")
     print(f"  {len(bundle['$defs'])} definitions, {len(text):,} bytes")
+
+    cbd = build_cbd(bundle)
+    CBD_OUTPUT.write_text(json.dumps(cbd, indent=2, ensure_ascii=False) + "\n")
+    print(f"wrote {CBD_OUTPUT.relative_to(HERE.parent)}  (from cbd/main.json)")
 
 
 if __name__ == "__main__":

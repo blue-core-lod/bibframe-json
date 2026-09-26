@@ -5,9 +5,16 @@ against the one in this repository. It is JSON, not Python: the point is that a
 second implementation, in any language, can prove it agrees.
 
 ```
-accept/<name>.json    a document that must validate
-reject/<name>.json    a document that must not, and where it fails
+dialect/accept/<name>.json    one resource, which must validate
+dialect/reject/<name>.json    one resource, which must not, and where it fails
+cbd/accept/<name>.json        a Concise Bounded Description, which must validate
+cbd/reject/<name>.json        ... which must not
 ```
+
+A directory per schema, because a document is either one resource or a
+description holding several, and the structural rules differ. `dialect/` cases
+are checked against `schema/dialect.json` and `cbd/` cases against
+`schema/cbd.json`.
 
 Every case is one self-contained file. There is no manifest to keep in step
 with the documents.
@@ -26,8 +33,8 @@ under `reject/`.
 
 ## What conformance means
 
-1. Every document under `accept/` validates against `schema/dialect.json`.
-2. Every document under `reject/` does not.
+1. Every document under `<schema>/accept/` validates against that schema.
+2. Every document under `<schema>/reject/` does not.
 3. For each rejected document, the failures are reported at exactly the paths
    in `errors` — no more and no fewer.
 
@@ -47,8 +54,8 @@ wrong reason and still look right from a count of passes and failures.
 If you are also writing a reader rather than only a validator, two further
 properties hold, and `tests/test_conformance.py` asserts both:
 
-- every document under `accept/` **parses**
-- every document under `reject/` **also parses**
+- every document under `dialect/accept/` **parses**
+- every document under `dialect/reject/` **also parses**
 
 The second is not a mistake. These are defects in the shape, not in the JSON:
 a blank node keeping its `@id` is still perfectly readable. Parsing and judging
@@ -63,8 +70,8 @@ Against this implementation:
 uv run pytest tests/test_conformance.py
 ```
 
-Against any other, with any validator: walk the two directories, validate each
-`document` against `schema/dialect.json`, and compare the paths.
+Against any other, with any validator: walk each schema's two directories,
+validate every `document` against that schema, and compare the paths.
 
 ## What the corpus is used for
 
@@ -109,8 +116,9 @@ thing that shows the point, and change any real URIs to `https://x/1` unless
 the actual URI is what the case is about.
 
 ```sh
-cp conformance/reject/blank-node-with-an-id.json conformance/reject/my-case.json
-$EDITOR conformance/reject/my-case.json
+cp conformance/dialect/reject/blank-node-with-an-id.json \
+   conformance/dialect/reject/my-case.json
+$EDITOR conformance/dialect/reject/my-case.json
 uv run pytest tests/test_conformance.py          # if you have Python to hand
 ```
 
