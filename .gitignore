@@ -4,3 +4,21 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 dist/
+.DS_Store
+
+# A sample of real records, fetched by generate/sample.py to measure things
+# about the data rather than about the shape. Not checked in: it is whatever
+# stage happened to hold on the day, it goes stale the moment the catalogue
+# moves, and conformance/ is the part that belongs in the repository -- cases
+# written by hand, one per rule, that say what the shape requires.
+corpus/
+
+# LC's description of how they serialize CBD documents. Reference material,
+# not ours to redistribute; conformance/cbd/ is where its rules are written
+# down in a form this repository owns.
+cbd-01.md
+
+# The documentation site, assembled by generate/site.py and deployed from CI.
+# It is a copy of artifacts that are already in the repository, so checking it
+# in would mean two copies of every schema and a way for them to disagree.
+site/

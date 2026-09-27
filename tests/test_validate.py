@@ -1,20 +1,13 @@
-"""load() parses, validate() judges, and the schemas ship with the package."""
+"""validate() judges, and the schemas ship with the package.
 
+Parsing a record into objects is a separate job and no longer one this
+package does; the dispatch tests that lived here moved with the models.
+"""
+
+import jsonschema
 import pytest
-from pydantic import ValidationError
 
-from bibframe_json import (
-    DIALECT,
-    ONTOLOGY,
-    Hub,
-    Instance,
-    Item,
-    Work,
-    context,
-    load,
-    schema,
-    validate,
-)
+from bibframe_json import DIALECT, ONTOLOGY, context, schema, validate
 
 CLEAN = {
     "@id": "https://bcld.info/works/1",
@@ -45,53 +38,6 @@ def test_context_loads_through_the_package():
 def test_an_unknown_schema_is_an_error_rather_than_a_path():
     with pytest.raises(ValueError, match="no such schema"):
         schema("nonesuch")
-
-
-# --- load(): parsing ---------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    ("types", "expected"),
-    [
-        (["Work"], Work),
-        (["Instance"], Instance),
-        (["Hub"], Hub),
-        (["Item"], Item),
-        (["Monograph", "Text", "Work"], Work),
-        ("Instance", Instance),
-    ],
-)
-def test_load_dispatches_on_type(types, expected):
-    """Including a scalar @type, which a node with one type still carries."""
-    assert isinstance(load({"@id": "https://x/1", "@type": types}), expected)
-
-
-def test_load_says_so_when_it_cannot_tell_what_a_record_is():
-    with pytest.raises(ValueError, match="no model for"):
-        load({"@id": "https://x/1", "@type": ["Topic"]})
-
-
-def test_parsing_is_not_validating():
-    """The point of having two functions.
-
-    This record parses happily and breaks two rules: a blank node keeping its
-    @id, and mainTitle on a Work rather than on a Title. Parsing checks field
-    types and accepts the rest, since of 136 properties in real records only
-    about a dozen have fields.
-    """
-    record = {
-        "@id": "https://x/1",
-        "@type": ["Work"],
-        "subject": [{"@id": "_:b0"}],
-        "mainTitle": ["on a Work, which breaks its domain"],
-    }
-    assert isinstance(load(record), Work), "parses"
-    assert validate(record), "and does not conform"
-
-
-def test_something_unparseable_raises():
-    with pytest.raises(ValidationError):
-        load({"@id": "https://x/1", "@type": ["Work"], "title": [[1, 2]]})
 
 
 # --- validate(): judging -----------------------------------------------------
@@ -165,12 +111,13 @@ def test_the_type_noise_from_a_failing_anyof_is_dropped():
     assert len(findings) == 1, [str(f) for f in findings]
 
 
-def test_validate_reports_what_the_models_let_through():
-    """The other half of test_the_models_parse_rather_than_judge.
+def test_validate_reports_the_rules_nothing_else_enforces():
+    """These two are stated in the schema and nowhere else.
 
-    Those two rules are enforced in exactly one place each, and this is it. If
-    the models ever start rejecting them, the pair of tests will disagree and
-    say so.
+    A reader is expected to accept both -- they are defects in the shape, not
+    in the JSON -- so being told about them is the only way anyone finds out.
+    The corresponding cases in conformance/ say the same thing to every
+    implementation.
     """
     record = {
         **CLEAN,
@@ -184,7 +131,6 @@ def test_validate_reports_what_the_models_let_through():
             }
         ],
     }
-    load(record)  # parses
     messages = [f.message for f in validate(record, ontology=False)]
     assert any("blank node" in m for m in messages), messages
     assert any("at most one of @type or @language" in m for m in messages), messages
@@ -200,3 +146,139 @@ def test_unmodelled_properties_must_still_be_arrays():
     findings = validate({**CLEAN, "bflc:aap": "not a list"}, ontology=False)
     assert [f.path for f in findings] == ["bflc:aap"]
     assert validate({**CLEAN, "bflc:aap": ["a list"]}, ontology=False) == []
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
+        {"@vocab": "http://id.loc.gov/ontologies/bibframe/"},
+        ["https://x/ctx.jsonld", {"@vocab": "http://x/"}],
+    ],
+)
+def test_a_context_is_not_a_property(value):
+    """A record may carry the context that produced its shape.
+
+    require_arrays has to exempt JSON-LD keywords, or validate() refuses the
+    very document the README recommends it as a gate for. @context is a
+    vocabulary rather than data and takes all three of these forms, none of
+    which is an array of values.
+
+    The stored Blue Core shape carries no context -- the ORM event pops it after
+    framing -- which is why this never reached the rendering path and went
+    unnoticed.
+    """
+    assert validate({**CLEAN, "@context": value}, ontology=False) == []
+
+
+def test_a_keyword_is_exempt_but_a_property_is_not():
+    """The exemption is for keywords only, and it is narrow on purpose.
+
+    @index is a keyword and passes; bflc:aap is a property and must still be an
+    array. Pinning both together is what stops the exemption being widened into
+    the array guarantee itself.
+    """
+    assert validate({**CLEAN, "@index": "vol. 2"}, ontology=False) == []
+    assert validate({**CLEAN, "bflc:aap": "not a list"}, ontology=False) != []
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["subject", "title", "contribution", "identifiedBy", "adminMetadata"],
+)
+def test_no_node_keeps_a_blank_node_id(field):
+    """README offers this as a guarantee of the shape, so it has to hold everywhere.
+
+    The rule lived inside wrap_ref, which reaches Ref-typed fields and no
+    others -- so subject and note were checked while title, contribution,
+    identifiedBy, provisionActivity, classification and adminMetadata were not.
+    The only test for it went through subject, which is why it looked covered.
+    """
+    findings = validate(
+        {**CLEAN, field: [{"@id": "_:b0", "@type": ["Thing"]}]}, ontology=False
+    )
+    assert "a blank node must not carry an @id" in [f.message for f in findings]
+
+
+def test_the_blank_node_rule_does_not_reject_every_node():
+    """The `required` beside the `properties` is what makes this pass.
+
+    Without it the `not` is vacuously true for an object carrying no @id, and
+    the rule rejects every node rather than the blank ones.
+    """
+    assert (
+        validate({**CLEAN, "subject": [{"@id": "https://x/s"}]}, ontology=False) == []
+    )
+    assert (
+        validate(
+            {**CLEAN, "title": [{"@type": ["Title"], "mainTitle": ["T"]}]},
+            ontology=False,
+        )
+        == []
+    )
+
+
+# --- what a consumer outside Python gets -------------------------------------
+
+
+def test_a_failure_is_reported_at_the_path_it_happened():
+    """The guarantee a consumer with no bibframe_json depends on.
+
+    The root used to be an anyOf over the four resource types, so a stock
+    validator could only report that the document matched none of them, and
+    handed back the whole record. It dispatches on @type now, following IIIF
+    v4's main.json, and the error arrives at the path that caused it.
+
+    Asserted against jsonschema directly rather than through validate(), since
+    the point is what happens *without* the wrapper this package provides.
+    """
+    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    record = {
+        "@id": "https://x/1",
+        "@type": ["Work"],
+        "subject": [{"@id": "_:b0"}],
+        "bflc:aap": "not a list",
+    }
+    paths = {"/".join(str(p) for p in e.path) for e in dialect.iter_errors(record)}
+    assert paths == {"subject/0", "bflc:aap"}
+
+
+@pytest.mark.parametrize(
+    ("types", "claimed"),
+    [
+        (["Work"], "Work"),
+        ("Work", "Work"),
+        (["Hub"], "Hub"),
+        # a Hub is typed both, so the dispatch has to prefer the specific one
+        (["Work", "Hub"], "Hub"),
+        (["Hub", "Work"], "Hub"),
+        (["Instance"], "Instance"),
+        (["Item"], "Item"),
+    ],
+)
+def test_the_dispatch_reaches_the_type_the_record_claims(types, claimed):
+    """hasExpression is a typed reference on a Hub and merely an array
+    anywhere else, so a blank node in it fails only if we arrived at Hub.
+
+    Both spellings of @type, because `contains` is an array keyword: against a
+    string it is not false but vacuously true, which would send every scalar
+    @type down whichever branch came first.
+    """
+    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    record = {"@id": "https://x/1", "@type": types, "hasExpression": [{"@id": "_:b0"}]}
+    reached_hub = bool(list(dialect.iter_errors(record)))
+    assert reached_hub == (claimed == "Hub")
+
+
+def test_every_definition_says_what_it_is():
+    """description is the one annotation tooling reliably surfaces, and
+    $comment is specified as not for end users.
+
+    One line each: model_json_schema copies a whole docstring in, and those are
+    written for someone reading models.py.
+    """
+    for name, definition in schema(DIALECT)["$defs"].items():
+        body = definition["anyOf"][1] if "anyOf" in definition else definition
+        described = body.get("description", "")
+        assert described, name
+        assert "\n" not in described, name

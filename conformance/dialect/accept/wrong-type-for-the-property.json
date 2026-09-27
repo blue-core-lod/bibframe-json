@@ -1,0 +1,19 @@
+{
+  "description": "the ontology's business, not the dialect's",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Agent"
+        ],
+        "mainTitle": [
+          "x"
+        ]
+      }
+    ]
+  }
+}

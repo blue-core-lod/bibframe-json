@@ -1,0 +1,26 @@
+{
+  "description": "a value object carries at most one of @type or @language",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          {
+            "@value": "x",
+            "@type": "xsd:string",
+            "@language": "en"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/title/0/mainTitle/0"
+  ]
+}

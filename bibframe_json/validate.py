@@ -1,17 +1,6 @@
 """Validate a record against the shipped JSON Schemas.
 
-Two different things are easy to confuse, and the names here try to keep them
-apart.
-
-`load()` **parses**. It turns a dict into a Work, Instance, Hub or Item so you
-can read it with attributes instead of subscripts. Pydantic's method for that is
-called `model_validate`, which is unfortunate: it checks field types and coerces
-the shapes real data comes in, and it is deliberately permissive about
-everything else. An unmodelled property passes through untouched, and of 136
-properties in real records only about a dozen have fields. Parsing something
-successfully says very little about whether it is well formed.
-
-`validate()` **checks conformance**, against the two JSON Schemas in
+`validate()` checks a record against the two JSON Schemas in
 `bibframe_json/schema/`. That is where the guarantees live:
 
     dialect    the shape: arrays, references, value objects, blank nodes.
@@ -22,8 +11,9 @@ successfully says very little about whether it is well formed.
                is often the one that is behind, and four constraints are
                excluded outright for that reason.
 
-So `load()` for reading and `validate()` for judging. A record can parse
-perfectly and still fail both schemas.
+Reading a record is a separate job, and not one this package does: it
+describes the shape rather than providing a way of working with it. A reader
+in any language is held to the same standard by `conformance/`.
 """
 
 import json
@@ -33,26 +23,25 @@ from importlib.resources import files
 from typing import Any, NamedTuple
 
 import jsonschema
-
-from bibframe_json.models import Hub, Instance, Item, Resource, Work
+from referencing import Registry, Resource
 
 DIALECT = "dialect"
+CBD = "cbd"
 ONTOLOGY = "ontology"
 
-# Which model a record belongs to, by the type it claims. Order matters: a Work
-# and an Instance share a base, so the first match wins rather than the longest.
-BY_TYPE: tuple[tuple[str, type[Resource]], ...] = (
-    ("Instance", Instance),
-    ("Work", Work),
-    ("Hub", Hub),
-    ("Item", Item),
-)
+# Where context() is published. A document that names its context rather than
+# inlining it -- which is what a document leaving your system should do -- has
+# to name this exact URL, because a relative $ref and a context reference both
+# resolve against where the file actually is. Anything that writes it needs
+# the same string, so there is one.
+CONTEXT_URL = "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
 
 
 class Finding(NamedTuple):
     """One thing wrong with a record.
 
-    `layer` is "dialect" or "ontology", and it is the part a caller most needs:
+    `layer` is "dialect", "cbd" or "ontology", and it is the part a caller most
+    needs:
     a dialect finding is a defect in the shape, an ontology finding is a
     disagreement with BIBFRAME that may well be the ontology's fault.
     """
@@ -63,7 +52,7 @@ class Finding(NamedTuple):
 
     @property
     def is_error(self) -> bool:
-        return self.layer == DIALECT
+        return self.layer in (DIALECT, CBD)
 
     def __str__(self) -> str:
         where = self.path or "the record"
@@ -78,7 +67,7 @@ def schema(name: str) -> dict[str, Any]:
     from an installed package and not only from a checkout. The schemas live
     inside bibframe_json/ for the same reason.
     """
-    if name not in (DIALECT, ONTOLOGY):
+    if name not in (DIALECT, CBD, ONTOLOGY):
         raise ValueError(f"no such schema: {name!r}")
     text = (files("bibframe_json") / "schema" / f"{name}.json").read_text()
     return json.loads(text)
@@ -96,8 +85,28 @@ def context() -> dict[str, Any]:
 
 
 @cache
+def registry() -> Registry:
+    """The shipped schemas, addressable by their own $id.
+
+    Hand this to a validator to check against one of them yourself:
+
+        jsonschema.Draft202012Validator(schema("cbd"), registry=registry())
+
+    cbd.json says `{"$ref": "dialect.json"}` rather than carrying a copy of
+    every definition, so something has to resolve that. A relative reference
+    resolves against the enclosing $id, which is how the split dialect files
+    refer to each other too, and this registry is what turns those URIs back
+    into the files on disk. Nothing is fetched.
+    """
+    known: Registry = Registry()
+    for name in (DIALECT, CBD, ONTOLOGY):
+        known = Resource.from_contents(schema(name)) @ known
+    return known
+
+
+@cache
 def _validator(name: str) -> jsonschema.protocols.Validator:
-    return jsonschema.Draft202012Validator(schema(name))
+    return jsonschema.Draft202012Validator(schema(name), registry=registry())
 
 
 def _causes(error: jsonschema.ValidationError, depth: int = 0) -> Iterator:
@@ -160,11 +169,26 @@ def _describe(error: jsonschema.ValidationError) -> str:
     return error.message
 
 
+def _embeds_its_work(record: object) -> bool:
+    """Whether bf:instanceOf holds a Work rather than a URI naming one.
+
+    The one structural difference between a stored record and a CBD, so it is
+    what tells them apart. A bare URI is a reference to a row elsewhere; an
+    object is the Work itself, which is what makes a CBD self-explaining.
+    """
+    if not isinstance(record, dict):
+        return False
+    instance_of = record.get("instanceOf")
+    values = instance_of if isinstance(instance_of, list) else [instance_of]
+    return any(isinstance(value, dict) for value in values)
+
+
 def validate(
     record: dict[str, Any],
     *,
     dialect: bool = True,
     ontology: bool = True,
+    kind: str | None = None,
 ) -> list[Finding]:
     """Check a record against the schemas, and say what is wrong.
 
@@ -175,6 +199,11 @@ def validate(
     useful gate in a pipeline, since those are the guarantees a consumer depends
     on; ontology-only is the interesting report to run across a corpus.
 
+    Which structural schema applies is worked out from the document -- a CBD
+    embeds its Work where a stored record names it -- and `kind=CBD` says so
+    outright where that guess cannot help, since a CBD whose Work has gone
+    missing is indistinguishable from a stored record.
+
     Findings are deduplicated by path and message, because an anyOf can surface
     the same cause through more than one branch.
     """
@@ -184,8 +213,17 @@ def validate(
     seen: set[tuple[str, str, str]] = set()
     explained: set[tuple[str, str]] = set()
 
+    # A record whose bf:instanceOf embeds the Work rather than naming it is a
+    # Concise Bounded Description, and the structural schema for one says so.
+    # Decided by looking, because a caller asking "is this well formed" should
+    # not have to say which kind it holds and the answer is in the document.
+    #
+    # `kind` overrides that, and is worth having where the guess cannot help:
+    # a CBD whose Work has gone missing looks exactly like a stored record, so
+    # asking for CBD is the only way to be told about it.
+    structural = kind or (CBD if _embeds_its_work(record) else DIALECT)
     layers = [
-        name for name, wanted in ((DIALECT, dialect), (ONTOLOGY, ontology)) if wanted
+        name for name, wanted in ((structural, dialect), (ONTOLOGY, ontology)) if wanted
     ]
     for layer in layers:
         for error in _validator(layer).iter_errors(record):
@@ -201,29 +239,26 @@ def validate(
                     explained.add((layer, path))
 
     # A failing anyOf reports every branch, so a node rejected for carrying an
-    # @id also reports "is not of type string" from the branch that wanted a bare
-    # URI. Where a path has a real explanation, the type complaint is noise.
+    # @id also reports "is not of type string" from the branch that wanted a
+    # bare URI. Where a path has a real explanation, the type complaint is
+    # noise.
+    #
+    # And a type complaint about a whole value is noise when something inside
+    # that value failed too: the branch that got further in is the one the
+    # record was meant to match. A reference carrying a malformed property
+    # reports "that property is not an array" at the property, and the outer
+    # "this is not a string" only says it was not the other kind of reference.
+    # Both are type failures, so neither explains the other by the rule above.
+    inside = {(layer, path) for layer, path, _, _ in raw}
+
+    def something_failed_inside(layer: str, path: str) -> bool:
+        return any(
+            other == layer and where.startswith(f"{path}/") for other, where in inside
+        )
+
     return [
         Finding(layer, path, message)
         for layer, path, message, validator in raw
-        if not (validator == "type" and (layer, path) in explained)
+        if validator != "type"
+        or not ((layer, path) in explained or something_failed_inside(layer, path))
     ]
-
-
-def load(record: dict[str, Any]) -> Resource:
-    """Parse a record into the model for whatever it says it is.
-
-    Reading, not judging -- see the module docstring. Raises pydantic's
-    ValidationError if the record cannot be parsed at all, which is a lower bar
-    than conforming: call validate() for that.
-    """
-    types = record.get("@type") or []
-    if isinstance(types, str):
-        types = [types]
-    for name, model in BY_TYPE:
-        if name in types:
-            return model.model_validate(record)
-    raise ValueError(
-        f"no model for {types or 'a record with no @type'}; expected one of "
-        f"{', '.join(name for name, _ in BY_TYPE)}"
-    )

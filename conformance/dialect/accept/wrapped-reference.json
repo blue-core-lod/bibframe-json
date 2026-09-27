@@ -1,0 +1,14 @@
+{
+  "description": "the same reference as another context frames it",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Instance"
+    ],
+    "instanceOf": [
+      {
+        "@id": "https://x/2"
+      }
+    ]
+  }
+}

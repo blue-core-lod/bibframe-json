@@ -1,0 +1,180 @@
+{
+  "@id": "https://bibframe.example/instances/fb857a3a-f454-4392-ba6d-a3653c12be47",
+  "@type": [
+    "Instance"
+  ],
+  "adminMetadata": [
+    {
+      "@type": [
+        "AdminMetadata"
+      ],
+      "agent": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/organizations/cbc"
+        }
+      ],
+      "date": [
+        {
+          "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "@value": "2026-09-25T17:31:41.841439+00:00"
+        }
+      ],
+      "derivedFrom": [
+        {
+          "@id": "http://example.org/DK-328764#Instance"
+        }
+      ],
+      "status": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/mstatus/c"
+        }
+      ]
+    },
+    {
+      "@type": [
+        "AdminMetadata"
+      ],
+      "bflc:catalogerId": [
+        "8f2b24e3-eaa5-4e32-99de-ba80a2b7f860"
+      ],
+      "date": [
+        "2026-09-25"
+      ],
+      "descriptionAuthentication": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/marcauthen/pcc"
+        }
+      ],
+      "descriptionLanguage": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/languages/eng"
+        }
+      ],
+      "descriptionLevel": [
+        {
+          "@id": "http://id.loc.gov/ontologies/bibframe-2-6-0/"
+        }
+      ]
+    }
+  ],
+  "carrier": [
+    {
+      "@id": "http://id.loc.gov/vocabulary/carriers/nc"
+    }
+  ],
+  "dimensions": [
+    "23 cm"
+  ],
+  "editionStatement": [
+    "2nd revised edition"
+  ],
+  "extent": [
+    {
+      "@type": [
+        "Extent"
+      ],
+      "rdfs:label": [
+        "lxii, 355 pages"
+      ]
+    }
+  ],
+  "identifiedBy": [
+    {
+      "@type": [
+        "Isbn"
+      ],
+      "qualifier": [
+        "hardback"
+      ],
+      "rdf:value": [
+        "9788183155984"
+      ]
+    }
+  ],
+  "instanceOf": [
+    "https://bibframe.example/works/9937996a-1083-4357-b05f-4be85f7b7354"
+  ],
+  "issuance": [
+    {
+      "@id": "http://id.loc.gov/vocabulary/issuance/mono"
+    }
+  ],
+  "media": [
+    {
+      "@id": "http://id.loc.gov/vocabulary/mediaTypes/n"
+    }
+  ],
+  "note": [
+    {
+      "@type": [
+        "Note",
+        "http://id.loc.gov/vocabulary/mnotetype/biblio"
+      ],
+      "rdfs:label": [
+        "Includes bibliographical references."
+      ]
+    }
+  ],
+  "provisionActivity": [
+    {
+      "@type": [
+        "ProvisionActivity",
+        "Publication"
+      ],
+      "bflc:simpleAgent": [
+        "New Bharatiya Book Corporation"
+      ],
+      "bflc:simpleDate": [
+        "2026"
+      ],
+      "bflc:simplePlace": [
+        "Delhi, India"
+      ]
+    },
+    {
+      "@type": [
+        "ProvisionActivity",
+        "Publication"
+      ],
+      "bflc:simpleAgent": [
+        "New Bharatiya Book Corporation"
+      ],
+      "bflc:simpleDate": [
+        "2026"
+      ],
+      "bflc:simplePlace": [
+        "Delhi, India"
+      ],
+      "date": [
+        {
+          "@type": "http://id.loc.gov/datatypes/edtf",
+          "@value": "2026"
+        }
+      ],
+      "place": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/countries/ii"
+        }
+      ]
+    }
+  ],
+  "publicationStatement": [
+    "Delhi, India: New Bharatiya Book Corporation, 2026"
+  ],
+  "responsibilityStatement": [
+    "by Madhavadas Chakravorti ; foreward by Prof. Penna Madhusudan."
+  ],
+  "title": [
+    {
+      "@type": [
+        "Title"
+      ],
+      "bflc:nonSortNum": [
+        "2"
+      ],
+      "mainTitle": [
+        "A short history of Sanskrit literature"
+      ]
+    }
+  ]
+}

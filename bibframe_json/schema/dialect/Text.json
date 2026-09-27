@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Text.json",
+  "$comment": "A literal: a plain scalar, or a value object. The scalar branch exists because Text.accept_a_bare_string is a validator, and model_json_schema() emits no validators.",
+  "anyOf": [
+    {
+      "title": "a plain literal",
+      "description": "text, written bare rather than as a value object",
+      "type": [
+        "string",
+        "number",
+        "boolean"
+      ]
+    },
+    {
+      "additionalProperties": true,
+      "description": "A literal that still knows its language and datatype.",
+      "properties": {
+        "@value": {
+          "type": "string"
+        },
+        "@language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "@type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "@value"
+      ],
+      "title": "Text",
+      "type": "object",
+      "not": {
+        "required": [
+          "@type",
+          "@language"
+        ]
+      },
+      "$comment": "A value object carries at most one of @type or @language, never both: required by JSON-LD and confirmed in the data -- 703 with a datatype, 68 with a language, none with both. Written here rather than as a model validator: the models parse and this judges, and a validator would not reach model_json_schema() anyway."
+    }
+  ]
+}

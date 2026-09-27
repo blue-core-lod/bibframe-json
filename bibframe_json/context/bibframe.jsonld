@@ -293,7 +293,8 @@
       "@container": "@set"
     },
     "hasInstance": {
-      "@container": "@set"
+      "@container": "@set",
+      "@type": "@id"
     },
     "hasItem": {
       "@container": "@set",
@@ -753,6 +754,14 @@
     },
     "bflc:simplePlace": {
       "@id": "http://id.loc.gov/ontologies/bflc/simplePlace",
+      "@container": "@set"
+    },
+    "bflc:simpleStatement": {
+      "@id": "http://id.loc.gov/ontologies/bflc/simpleStatement",
+      "@container": "@set"
+    },
+    "bflc:authoritativeLabel": {
+      "@id": "http://id.loc.gov/ontologies/bflc/authoritativeLabel",
       "@container": "@set"
     },
     "mads:authoritativeLabel": {

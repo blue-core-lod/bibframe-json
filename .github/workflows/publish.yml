@@ -39,7 +39,7 @@ jobs:
       - name: Generated artifacts match their generators
         run: |
           uv run python generate/from_ontology.py
-          uv run python generate/dialect.py
+          uv run python generate/bundle.py
           git diff --exit-code bibframe_json/context bibframe_json/schema
 
       - name: Publish

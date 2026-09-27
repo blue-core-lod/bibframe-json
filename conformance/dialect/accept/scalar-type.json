@@ -1,0 +1,17 @@
+{
+  "description": "@type as a string, which a node with one type carries",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Instance"
+    ],
+    "extent": [
+      {
+        "@type": "Extent",
+        "rdfs:label": [
+          "ix, 319 pages"
+        ]
+      }
+    ]
+  }
+}

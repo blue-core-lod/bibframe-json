@@ -1,0 +1,9 @@
+{
+  "description": "a record that says only what it is",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "description": "a literal keeping the language that tells two scripts apart",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          {
+            "@value": "Труды",
+            "@language": "ru-cyrl"
+          }
+        ]
+      }
+    ]
+  }
+}

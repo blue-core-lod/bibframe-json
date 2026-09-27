@@ -1,0 +1,9 @@
+{
+  "description": "the array rule reaches inside a reference too, not only a described node; the failure is reported at the reference, since a reference is a bare URI or a node and neither branch matched",
+  "document": {
+    "@id": "https://x/1",
+    "@type": ["Work"],
+    "subject": [{ "@id": "https://x/s", "mads:isMemberOfMADSScheme": "not a list" }]
+  },
+  "errors": ["/subject/0"]
+}

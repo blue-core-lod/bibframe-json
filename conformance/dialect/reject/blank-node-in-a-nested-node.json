@@ -1,0 +1,24 @@
+{
+  "description": "and the rule reaches every node, not only the reference-valued ones",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Instance"
+    ],
+    "provisionActivity": [
+      {
+        "@type": [
+          "Publication"
+        ],
+        "place": [
+          {
+            "@id": "_:b1"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/provisionActivity/0/place/0"
+  ]
+}

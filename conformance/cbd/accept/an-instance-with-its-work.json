@@ -1,0 +1,37 @@
+{
+  "description": "the smallest CBD: an Instance whose Work is embedded rather than named",
+  "document": {
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

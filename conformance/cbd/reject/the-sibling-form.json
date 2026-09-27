@@ -1,0 +1,42 @@
+{
+  "description": "principal resources side by side under @graph is LC's RDF/XML arrangement, which XML needs because it has no root and JSON does not",
+  "document": {
+    "@graph": [
+      {
+        "@id": "https://x/instances/1",
+        "@type": [
+          "Instance"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      },
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/"
+  ]
+}

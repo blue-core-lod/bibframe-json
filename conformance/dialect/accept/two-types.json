@@ -1,0 +1,20 @@
+{
+  "description": "a second @type beside the base, which is what tells notes apart",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Instance"
+    ],
+    "note": [
+      {
+        "@type": [
+          "Note",
+          "http://id.loc.gov/vocabulary/mnotetype/biblio"
+        ],
+        "rdfs:label": [
+          "Includes index."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "a property with no definition of its own is kept, not rejected",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "somethingElse": [
+      "kept"
+    ]
+  }
+}

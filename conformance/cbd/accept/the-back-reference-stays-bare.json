@@ -1,0 +1,40 @@
+{
+  "description": "the embedded Work points back at the Instance by URI, which is how a JSON-LD processor breaks the cycle",
+  "document": {
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ],
+        "hasInstance": [
+          "https://x/instances/1"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/cbd.json",
+  "title": "A Concise Bounded Description",
+  "description": "An Instance with its Work embedded, and with the resources they name described in place: enough in one document to explain the Instance without fetching anything.",
+  "$comment": "cbd-01.md is LC's description of how they serialize a CBD, and it describes RDF/XML: all principal resources as siblings under one rdf:RDF, linked by rdf:resource. That arrangement suits XML, where there is no natural root, and Marva reads it.\n\nJSON has a natural root, and LC never specified the JSON-LD -- their .cbd.jsonld is a flat array of expanded nodes, and Blue Core's was the same. So this takes the other option: the document is the Instance, and everything else is described where it is referenced. Measured over 59 CBDs from a running system it is 11% smaller than the sibling arrangement and describes exactly the same resources, and it puts a related Work where it belongs -- under the relation that reaches it -- rather than leaving a reader to rejoin URIs.\n\nThe one structural claim, and the thing that tells a CBD from a stored record: bf:instanceOf embeds the Work. In a stored record it is a bare URI, because the Work is a row of its own. The back-reference from the embedded Work is still bare, which is how a JSON-LD processor breaks the cycle and is what dialect.json already permits.\n\nEverything else is dialect.json, referenced rather than copied so the definitions exist in one place.",
+  "allOf": [
+    {
+      "$ref": "dialect.json"
+    },
+    {
+      "$ref": "#/$defs/instance-at-the-root"
+    },
+    {
+      "$ref": "#/$defs/work-embedded"
+    }
+  ],
+  "$defs": {
+    "instance-at-the-root": {
+      "title": "The document is an Instance",
+      "description": "A CBD is bounded by one Instance. Blue Core serves one for an Instance and nothing else; a Hub is described by the 'decomposed' form, which is a different document.",
+      "type": "object",
+      "required": [
+        "@id",
+        "@type"
+      ],
+      "properties": {
+        "@type": {
+          "anyOf": [
+            {
+              "type": "array",
+              "contains": {
+                "const": "Instance"
+              }
+            },
+            {
+              "const": "Instance"
+            }
+          ]
+        }
+      }
+    },
+    "work-embedded": {
+      "title": "With its Work embedded",
+      "description": "Not a bare URI, which is what a stored record holds. This is the difference between the two, and the reason a CBD is self-explaining.",
+      "type": "object",
+      "required": [
+        "instanceOf"
+      ],
+      "properties": {
+        "instanceOf": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              {
+                "$ref": "dialect.json"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "@id",
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "contains": {
+                          "const": "Work"
+                        }
+                      },
+                      {
+                        "const": "Work"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "$comment": "The embedded Work is checked by dialect.json as a resource, not merely as a reference. Without that it is only checked as a reference -- which is open, so a blank node keeping its @id inside the Work would pass. The sibling arrangement got this for free, because every member was dispatched as a resource; nesting has to ask for it."
+    }
+  }
+}

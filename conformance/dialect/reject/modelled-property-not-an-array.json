@@ -1,0 +1,15 @@
+{
+  "description": "the same rule for a property the schema does name",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "subject": {
+      "@id": "https://x/2"
+    }
+  },
+  "errors": [
+    "/subject"
+  ]
+}
