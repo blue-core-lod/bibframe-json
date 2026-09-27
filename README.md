@@ -2,22 +2,20 @@
 
 [![Test](https://github.com/edsu/bibframe-json/actions/workflows/test.yml/badge.svg)](https://github.com/edsu/bibframe-json/actions/workflows/test.yml)
 
-*bibframe-json* provides a predictable, opinionated JSON shape for [BIBFRAME]
+*bibframe-json* follows the [LOUD](https://linked.art/loud/) principles by 
+providing a predictable, opinionated JSON shape for [BIBFRAME]
 data. You can parse it without an RDF library or any knowledge of the RDF data
-model. If it sends you on to learn about the rest, so much the better.
+model. The hope is that it will encourage you to go on and learn more about the
+ontology when you have time.
 
 BIBFRAME is large and loosely constrained, and you can write it as RDF and
-JSON-LD in many ways. This describes one of them, says what that one
+JSON-LD in many ways. *bibframe-json* describes one of them, says what it
 guarantees, and ships the context that produces it, the JSON Schemas that check
 it, and a corpus of documents with expected verdicts, so you can hold a reader
 in any language to the same standard. The shape is the framed JSON-LD Blue Core
-stores per resource: a Work, Instance, Hub or Item.
+stores per resource: a Work, Instance, Hub or Item as well as the 
+Concise Bounded Description (CBD) for composing them together.
 
-bibframe-json follows the [LOUD](https://linked.art/loud/) principles, and the
-`@container: @set` rule from
-[Linked Art](https://linked.art/api/1.0/json-ld/) in particular: if a property
-can ever have more than one value, it always has an array. Everything else here
-rests on that one decision.
 
 ## What the shape guarantees
 
@@ -66,45 +64,14 @@ Note `instanceOf` has a bare URI, because the context declares it `@type: @id`.
 Seven properties are written that way: `instanceOf`, `hasInstance`, `itemOf`,
 `hasItem`, `electronicLocator`, `generationProcess`, `descriptionLevel`.
 
-`hasInstance` sat off that list for a while. The argument against it was a
-measurement: a bare string 262 times, a node with a URI 61 times, a node with
-**no** URI 39 times. Those counts came from the wrong population. We drew them
-from CBDs, where every referenced Instance is described in the document by
-definition, so a CBD holds no bare references to count. In a stored record the
-reference is all you have. The 39 blank nodes remain a real problem, and one
-nothing here can fix: an Instance with no URI cannot be written as a reference.
-
-The list is cbd-01.md's, minus `rdf:type`, which is also why the two contexts
-in the Blue Core family now agree. Across 120 stored records they produce
-identical triples.
-
 ## The context
 
-The schema never requires `@context`. Carry it as a URL, carry it inlined, or
-leave it out: all three conform, and there is a conformance case for each, so
-you do not have to guess.
-
-Leaving it out costs something easy to miss. Without a context the document is
-JSON that happens to match this shape. With one it is also JSON-LD, and
-`instanceOf` means `bf:instanceOf` instead of the string "instanceOf". Reading
-it as plain JSON works the same either way, which is the point. Name it, and
-both audiences get what they came for:
+The schema requires `@context`. Carry it as a URL or carry it inlined. The URI
+is provisional at the moment as this proposal is worked out:
 
 ```json
 "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
 ```
-
-**Name it, do not inline it.** A URL is one line; the context is 251 terms.
-Over 59 CBDs from a running system, inlining it costs 11,947 bytes per record
-and **61% of the document**. Most of what you send is then a copy of a
-vocabulary that no reader can use: a JSON reader ignores it, and a JSON-LD
-processor fetches it once and caches it.
-
-A record in a database is the exception, and Blue Core treats it as one. The
-context is the same for every row, so storing it per row duplicates 251 terms
-that many times over. `bluecore_models` strips it on write and the API puts it
-back on read. Take that as the general rule: a document leaving your system
-names its context, a row in your own table need not.
 
 A literal keeps its language or its datatype when it has one:
 
@@ -137,31 +104,9 @@ that tells them apart. `date` carries three datatypes in real records:
 `xsd:date`, `xsd:dateTime`, and EDTF. EDTF encodes uncertainty, so nothing
 parses `199X` as a date.
 
-## From Python
-
-```python
-import json
-
-import bibframe_json
-
-record = json.load(open("instance.json"))
-
-for finding in bibframe_json.validate(record, ontology=False):
-    print(finding)
-```
-
-That is the whole API, plus `schema()` and `context()`. Reading a record into
-objects is a separate job, and this package does not do it. It describes a
-shape you can write a reader against in any language, and shipping one reader
-in one language would promote that reader to the specification. The Pydantic
-models this started with now live in
-[bluecore_api](https://github.com/blue-core-lod/bluecore_api), the application
-that shaped them, and `conformance/` holds them to the same standard as
-anyone else's.
-
 ## Producing it
 
-This says how to write a description down. For what to describe, which entity
+*bibframe-json* says how to write a description down as JSON. For what to describe, which entity
 a thing is, and how to model a relationship, read [LC's BIBFRAME
 primer][primer]. It covers Works, Instances, Items and Hubs, and titles,
 subjects, identifiers, notes, contributions, relationships, provision activity
@@ -220,18 +165,12 @@ else's.
 
 ## Validating
 
-Three schemas, and which you want depends on what you are holding:
+There are three schemas, and which you want depends on what you are holding:
 
 | Schema | Checks |
 | --- | --- |
 | [`schema/dialect.json`](bibframe_json/schema/dialect.json) | one resource: a Work, Instance, Hub or Item |
 | [`schema/cbd.json`](bibframe_json/schema/cbd.json) | a Concise Bounded Description: an Instance with its Work embedded |
-| [`schema/ontology.json`](bibframe_json/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
-
-They are draft 2020-12 and reference nothing outside themselves, so any
-validator will run them. One thing to know before you start: `cbd.json` says
-`{"$ref": "dialect.json"}` rather than carrying a copy of every definition, so
-a validator needs both files loaded and something to resolve between them.
 
 The examples below read the two files from a local `schema/` directory, which
 is what a pipeline usually wants. If you fetch them at runtime instead, fetch
@@ -332,23 +271,6 @@ the record matched neither branch. Both true, neither the thing that is wrong.
 check-jsonschema --schemafile dialect.json record.json
 ```
 
-### What the schemas will not tell you
-
-The root dispatches on `@type` with `if`/`then`, so a failure is reported
-against the resource type the record claims and at the path it happened, rather
-than as "the document matched none of four types". Every definition carries a
-one-line `description`, and so do the rules with something to explain, so a
-validator that surfaces annotations will show them.
-
-The last mile of message quality does not travel. A reference may be a bare
-URI or a node, and a literal may be a bare string or a value object, so both
-are an `anyOf`. When one branch fails, a validator can say only that the value
-matched neither. Finding the branch you meant takes a short walk into
-`error.context`, around fifteen lines in any language, and `validate()` does it
-in `_causes()`. If you already know what you are holding, point straight at the
-type instead, `dialect.json#/$defs/Work`, and the errors localise without any
-of that.
-
 ## Checking an implementation
 
 `conformance/` holds documents with expected verdicts, as JSON rather than as
@@ -373,19 +295,19 @@ new constraint wants a case as well as a schema change. See
 ## Measuring against real records
 
 `conformance/` says what the shape requires. To find out what the data does,
-use the fetcher:
+use the fetcher to get Blue Core data:
 
 ```sh
 uv run python generate/sample.py --count 60    # into corpus/, gitignored
 ```
 
-It pulls recent Works and Instances from the Activity Streams change feed and
-reframes each one through `bluecore_models.frame_jsonld`, the same function the
-ORM applies on write. You get the shape the database holds, not whatever a row
-happens to contain today, and the difference is large: sampled straight from
-the API, a third of the staging records were still in the pre-coercion shape,
-with 41 of 51 properties appearing as a bare value somewhere. Reframed, those
-120 records went from 39 rejections to one.
+It pulls recent Works and Instances from the Blue Core Activity Streams change
+feed and reframes each one through `bluecore_models.frame_jsonld`, the same
+function the ORM applies on write. You get the shape the database holds, not
+whatever a row happens to contain today, and the difference is large: sampled
+straight from the API, a third of the staging records were still in the
+pre-coercion shape, with 41 of 51 properties appearing as a bare value
+somewhere. Reframed, those 120 records went from 39 rejections to one.
 
 The corpus is not checked in. It is whatever stage held on the day, and it
 goes stale as soon as the catalogue moves; a finding worth keeping belongs in
@@ -439,27 +361,6 @@ string in a field called `$id` into a file a validator can fetch, and what
 makes `{"$ref": "Ref.json"}` resolve over the network the way it already
 resolves on disk. `tests/test_site.py` fails if any `$id` and its served path
 disagree.
-
-### Where this is served, and why it is one command to move
-
-A relative `$ref` resolves against the base URI its `$id` establishes, not
-against the URL you fetched it from. So the `$id`s cannot name one host while
-you serve the files from another: `{"$ref": "Ref.json"}` would resolve against
-the host in the `$id` and find nothing. Hosting and identity move together or
-not at all, which is why moving them takes one command:
-
-```sh
-uv run python generate/site.py --rebase https://example.org/bibframe-json
-```
-
-It rewrites every `$id`, fixture, test and page at once, and the test above is
-what keeps that from being a sweep you can half-finish.
-
-The org project page is a stopgap. `bibframe-json.org` would be the better
-identity for something used outside Blue Core, since it survives the project
-moving between accounts. Settle it before the first release: an `$id` is an
-identity, and changing it after someone has pinned one breaks them. Before a
-release it costs a `--rebase` and nothing else.
 
 ## What is generated, and what is not
 
