@@ -240,6 +240,36 @@ def _delimiter(before: str, delimiter: str) -> str:
     return f'<span class="d">{html.escape(delimiter)}</span>' if delimiter else ""
 
 
+def compact_json(node: object, level: int = 0) -> str:
+    """JSON, with any array of scalars kept on one line.
+
+    json.dumps(indent=2) gives every value in this shape its own three lines,
+    because every value is an array: the record on the front page runs to
+    eighty lines of which most are a bracket. Beside a four-line catalogue
+    card that loses the comparison the card is there to make.
+
+    Arrays holding an object still break, so the nesting stays visible. The
+    output is ordinary JSON -- tests/test_example.py parses it back.
+    """
+    pad, inner = "  " * level, "  " * (level + 1)
+    if isinstance(node, dict):
+        if not node:
+            return "{}"
+        pairs = ",\n".join(
+            f"{inner}{json.dumps(key, ensure_ascii=False)}: "
+            f"{compact_json(value, level + 1)}"
+            for key, value in node.items()
+        )
+        return "{\n" + pairs + f"\n{pad}}}"
+    if isinstance(node, list):
+        if all(not isinstance(item, (dict, list)) for item in node):
+            one = ", ".join(json.dumps(item, ensure_ascii=False) for item in node)
+            return f"[{one}]"
+        items = ",\n".join(f"{inner}{compact_json(item, level + 1)}" for item in node)
+        return "[\n" + items + f"\n{pad}]"
+    return json.dumps(node, ensure_ascii=False)
+
+
 def card() -> str:
     """The signature: a catalogue card, and the JSON that is the same record.
 
@@ -252,10 +282,12 @@ def card() -> str:
     colour is what connects them: a line drawn between the two would not
     survive a narrow screen.
 
-    The keys go in the card's tracing block, which on a real card is where the
-    apparatus goes -- what else the item is filed under -- rather than
-    annotated onto the description, which is a transcription and takes no
-    editorial marks.
+    There is no tracing block. A card's tracings name what else the item is
+    filed under, so the position is the apparatus slot and listing the JSON
+    keys there was tempting -- but the JSON directly below shows the same keys
+    in the same order in bold, so it was a weaker copy of its own neighbour.
+    The description carries no annotation either: a card's description is a
+    transcription and takes no editorial marks.
     """
     record = json.loads((ROOT / "example" / "instance.json").read_text())
     out: list[str] = []
@@ -284,26 +316,29 @@ def card() -> str:
         previous = value.replace("\x00", "")
 
     shown = {key: record[key] for key in keys if key in record}
+    # The card shows one publication statement because that is what a card
+    # does; showing the record's two here would make the halves disagree.
+    if len(shown.get("provisionActivity", [])) > 1:
+        shown["provisionActivity"] = shown["provisionActivity"][:1]
     quoted = markdown.markdown(
-        "```json\n" + json.dumps(shown, indent=2, ensure_ascii=False) + "\n```",
+        "```json\n" + compact_json(shown) + "\n```",
         extensions=["fenced_code", "codehilite"],
         extension_configs={"codehilite": {"guess_lang": False}},
     )
-    tracings = " &middot; ".join(f"<code>{key}</code>" for key in keys)
     return f"""<figure class="plate">
   <div class="card" role="img" aria-label="A catalogue card for the record below">
     <p class="description">{"".join(out)}</p>
-    <p class="tracings">{tracings}</p>
   </div>
   <div class="same">the same record</div>
   <div class="json">{quoted}</div>
+  <p class="provenance">Abridged to the areas a card has room for. The whole
+    record is <a href="example/instance.json">example/instance.json</a>.</p>
   <figcaption>
-    The punctuation in the top half is ISBD, standardised in 1971. The
-    punctuation in the bottom half is JSON. Both do the one job this project
-    cares about: making a description parseable by someone who does not
-    already understand it. The one delimiter still in black is inside a
-    transcribed string, where nothing can reach it \u2014 which is the whole
-    case for putting the structure in the JSON instead.
+    The punctuation in the top half is ISBD, standardised in 1971; in the
+    bottom half it is JSON. Both do the one job this project cares about:
+    making a description parseable by someone who does not already understand
+    it. The delimiter left unmarked sits inside a transcribed string, where
+    nothing can reach it.
   </figcaption>
 </figure>"""
 
@@ -396,8 +431,25 @@ def render(base: str = BASE, out: Path = OUT) -> None:
     # style.css, which sits at the root beside fonts/.
     style = (DOCS / "fonts" / "faces.css").read_text() + "\n"
     style += (DOCS / "style.css").read_text()
-    light = HtmlFormatter(style="friendly").get_style_defs(".codehilite")
-    dark = HtmlFormatter(style="github-dark").get_style_defs(".codehilite")
+
+    def tokens_only(style: str) -> str:
+        """The token colours, without the theme's own background.
+
+        get_style_defs emits `.codehilite { background: ... }` alongside the
+        token rules, and it is concatenated after this stylesheet, so it won
+        -- putting a band of GitHub's grey around every block. The surface
+        belongs to the palette; a code block and a catalogue card are the
+        same object here.
+        """
+        defs = HtmlFormatter(style=style).get_style_defs(".codehilite")
+        return "\n".join(
+            line
+            for line in defs.splitlines()
+            if not re.match(r"^\.codehilite \{ background", line.strip())
+        )
+
+    light = tokens_only("friendly")
+    dark = tokens_only("github-dark")
     dark = "\n".join(f"    {line}" for line in dark.splitlines())
     (out / "style.css").write_text(
         f"{style}\n"

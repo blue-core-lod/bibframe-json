@@ -31,7 +31,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --paper: #1b1d1b;
-        --card:  #242623;
+        --card:  #282b27;   /* enough above --paper that a card reads as one */
         --ink:   #e7e4da;
         --quiet: #9a968c;
         --rule:  #3d403b;
@@ -255,18 +255,6 @@ pre code { font-size: 0.78rem; background: none; border: 0; padding: 0; }
     text-indent: -2.5rem;
 }
 
-.card .tracings {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    line-height: 1.9;
-    color: var(--quiet);
-    margin: 1.4rem 0 0;
-    padding-top: 0.7rem;
-    border-top: 1px solid var(--rule);
-    max-width: none;
-}
-.card .tracings code { background: none; border: 0; padding: 0; color: var(--mimeo); }
-
 .plate .same {
     font-family: var(--mono);
     font-size: 0.66rem;
@@ -282,7 +270,24 @@ pre code { font-size: 0.78rem; background: none; border: 0; padding: 0; }
 .plate .same::after { content: ""; height: 1px; background: var(--rule); flex: 1; }
 .plate .same::before { flex: 0 0 1.5rem; }
 
-.plate .json pre { margin: 0; max-width: none; max-height: 24rem; }
+/* No height cap, and long values wrap rather than scrolling out of sight.
+   A clipped block reads as broken rather than scrollable, and the line the
+   caption turns on -- the ";" inside the statement of responsibility -- is
+   one of the long ones, so it has to be on the page. */
+.plate .json pre {
+    margin: 0;
+    max-width: none;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.plate .provenance {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--quiet);
+    margin: 0.55rem 0 0;
+    max-width: none;
+}
 
 .plate figcaption {
     font-size: 0.92rem;
