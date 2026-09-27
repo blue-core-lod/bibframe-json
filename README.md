@@ -175,6 +175,11 @@ that for what a title is; read this for how to write one down.
 
 ### Compared with the primer
 
+Aligning with it is not a goal. This shape is deliberately the more
+constrained of the two, and the differences below are the constraints doing
+their job rather than a gap to be closed — a reader of this shape can loop
+without checking, and that is bought by ruling things out.
+
 The primer shows each of its examples as RDF/XML, JSON-LD, Turtle and a graph.
 Its JSON-LD is already nested rather than a flat dump, which is more than
 `.cbd.jsonld` from id.loc.gov manages, and it differs from this shape in four
@@ -266,6 +271,11 @@ validator will run them. One thing to know before you start: `cbd.json` says
 `{"$ref": "dialect.json"}` rather than carrying a copy of every definition, so
 a validator needs both files loaded and something to resolve between them.
 
+The examples below read the two files from a local `schema/` directory, which
+is what a pipeline usually wants. If you fetch them at runtime instead, fetch
+both from the published location: a relative `$ref` resolves against the `$id`
+of the file it appears in, not against wherever you happened to get the file.
+
 ### Python
 
 ```python
@@ -302,13 +312,13 @@ Ajv, with both schemas added so each is found by the `$id` it declares:
 
 ```js
 import Ajv2020 from "ajv/dist/2020.js";
+import { readFileSync } from "node:fs";
 
-const base =
-    "https://blue-core-lod.github.io/bibframe-json/schema/";
-const get = (name) => fetch(base + name).then((r) => r.json());
+const base = "https://blue-core-lod.github.io/bibframe-json/schema/";
+const read = (name) => JSON.parse(readFileSync(`schema/${name}`, "utf8"));
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
-ajv.addSchema([await get("dialect.json"), await get("cbd.json")]);
+ajv.addSchema([read("dialect.json"), read("cbd.json")]);
 
 const check = ajv.getSchema(base + "dialect.json");
 if (!check(record)) {
@@ -322,6 +332,38 @@ if (!check(record)) {
 also be compiled — Ajv throws `schema with key or id ... already exists`.
 `strict: false` because Ajv's strict mode objects to `$comment` beside a
 `$ref`.
+
+### Ruby
+
+`json_schemer`, which reads the draft from `$schema` and takes a resolver for
+the one reference that crosses files:
+
+```ruby
+require "json"
+require "json_schemer"
+
+resolver = ->(uri) do
+  JSON.parse(File.read(File.join("schema", File.basename(uri.path))))
+end
+schema = JSON.parse(File.read("schema/dialect.json"))
+check = JSONSchemer.schema(schema, ref_resolver: resolver)
+
+check.validate(record).each do |error|
+  puts [error["data_pointer"], error["error"]].join(" ")
+end
+```
+
+`data_pointer` is the path, and it comes out cleanest of the three. A scalar
+where an array belongs gets one line here —
+
+```
+/dimensions value at `/dimensions` is not an array
+```
+
+— where Ajv reports the same failure plus two more at the root, `must match
+"then" schema` and `must match "else" schema`, which are the `@type` dispatch
+reporting that the record matched neither branch. True, and not the thing that
+is wrong.
 
 ### At the command line
 
