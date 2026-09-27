@@ -1,6 +1,6 @@
 {
   "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
-  "@id": "https://stage.bcld.info/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4",
+  "@id": "https://bibframe.example/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4",
   "@type": [
     "Instance"
   ],
@@ -16,7 +16,7 @@
   ],
   "instanceOf": [
     {
-      "@id": "https://stage.bcld.info/works/4be57b41-d67e-4064-a6ac-5161e89dc963",
+      "@id": "https://bibframe.example/works/4be57b41-d67e-4064-a6ac-5161e89dc963",
       "@type": [
         "Work"
       ],
@@ -27,7 +27,7 @@
         "theconceptualstructureofreality"
       ],
       "hasInstance": [
-        "https://stage.bcld.info/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4"
+        "https://bibframe.example/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4"
       ],
       "title": [
         {

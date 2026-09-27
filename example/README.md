@@ -1,9 +1,16 @@
 # `cbd.json` — a Concise Bounded Description
 
-A real record from `stage.bcld.info`, framed. It validates against
-`../bibframe_json/schema/cbd.json`, and it is byte-for-byte what
-`generate/sample.py` produces — so it is a sample of the shape rather than a
-tidied illustration of it.
+A real record, framed. It validates against
+`../bibframe_json/schema/cbd.json`, and every value in it is what a cataloguer
+typed — so it is a sample of the shape rather than a tidied illustration of
+one.
+
+The only thing changed is the host in the URIs, which is `bibframe.example`
+here. The originals were from a staging environment: they would have rotted,
+and an identifier that looks resolvable and is not is worse than one that
+announces itself as an example. `.example` is reserved for exactly this by
+[RFC 2606](https://www.rfc-editor.org/rfc/rfc2606). The paths are untouched,
+so the shape of a Blue Core URI is still visible.
 
 LC defined how a CBD is serialized as RDF/XML and left the JSON-LD as an RDF
 dump: `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes with full
@@ -87,7 +94,3 @@ their own Instances, which land under the relation that reaches them, and
 cbd-01.md's secondary Instance, which arrives under the Work's `hasInstance`
 fully described.
 
-## A caveat
-
-The URIs are `stage.bcld.info` and will rot. This is here to be read, not
-depended on.

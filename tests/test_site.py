@@ -32,6 +32,18 @@ def test_every_page_is_built(built):
         assert page.read_text().strip().endswith("</html>")
 
 
+def test_a_removed_page_does_not_survive(tmp_path):
+    """site/ is not emptied between builds, so a dropped page lingers.
+
+    It would still be deployed from a local build, which is how a page that
+    has been removed goes on being served. The CNAME had the same problem.
+    """
+    site.render(out=tmp_path)
+    (tmp_path / "gone.html").write_text("a page from an older PAGES")
+    site.render(out=tmp_path)
+    assert not (tmp_path / "gone.html").exists()
+
+
 def test_no_directive_survives_the_build(built):
     """A directive left in the output is one `expand` did not recognise."""
     for page in built.glob("*.html"):

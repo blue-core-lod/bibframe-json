@@ -161,93 +161,156 @@ models this started with now live in
 application they were shaped by, and they are held to `conformance/` like
 anyone else's.
 
-## Validating
+## Producing it
 
-A reader **parses**; `validate()` **judges**. They are not the same, and the
-difference is worth keeping in mind: parsing a record into objects checks the
-fields that reader declares and quietly accepts the rest, and of the 136
-properties in real records only about a dozen are worth declaring. A record can
-parse perfectly and still be malformed.
+This says how to write a description down. It does not say what to describe, or
+which entity a thing is, or how to model a relationship — that is the work of
+[BIBFRAME itself][primer], and redoing it here badly would be worse than not
+doing it.
+
+If you already have RDF, the pipeline is four steps, of which framing is one
+and the other three are the things framing will not do for you.
+[`example/produce.py`](example/produce.py) is all four, depending on nothing but
+`pyld`:
+
+```sh
+uv run python example/produce.py record.jsonld https://example.org/i/1
+```
+
+Copy it, port it, or read it as a specification of the pipeline. Each step
+carries the reason it exists, because each was found by producing records and
+validating them — which is the short way to find whatever is left.
+
+Two things worth knowing before you run it.
+
+**It normalises, so its output may not match what your system stores.** Both
+forms of a reference conform — a bare URI and a `{"@id": ...}` wrapper — so a
+record can be valid and still not be in the shape the context describes. Across
+120 Blue Core records, `descriptionLevel` is a wrapper in all 114 of its
+appearances and `electronicLocator` in both of its, because the context those
+records were framed against does not declare those properties as references.
+The output of `produce.py` does. Neither is wrong; they are not the same
+document.
+
+**A JSON-LD processor cannot expand a document that names a context it cannot
+fetch.** `pyld` raises `loading remote context failed` on a record whose
+`@context` is a URL, unless you configure a document loader. Pass the terms
+instead while you are working locally:
 
 ```python
+terms = bibframe_json.context()["@context"]
+expanded = jsonld.expand({**record, "@context": terms})
+```
+
+### Which document to produce
+
+Frame a resource on its own and its links come out as bare URIs — a stored
+record, checked by `dialect.json`. Frame an Instance over a graph that also
+holds its Work and the Work arrives embedded — a Concise Bounded Description,
+checked by `cbd.json`. That difference is the whole of the second schema.
+
+### Then check it
+
+Whatever you build it with, the schemas are how you find out whether it worked,
+and `conformance/` is how you find out whether your reader agrees with anyone
+else's.
+
+[primer]: https://bibframe.org/docs/view/documentation-bf-primer/index.md
+
+## Validating
+
+Three schemas, and which you want depends on what you are holding:
+
+| Schema | Checks |
+| --- | --- |
+| [`schema/dialect.json`](bibframe_json/schema/dialect.json) | one resource — a Work, Instance, Hub or Item |
+| [`schema/cbd.json`](bibframe_json/schema/cbd.json) | a Concise Bounded Description: an Instance with its Work embedded |
+| [`schema/ontology.json`](bibframe_json/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings rather than errors — when the data and the ontology disagree, the ontology is often the one that is behind |
+
+They are draft 2020-12 and reference nothing outside themselves, so any
+validator will run them. One thing to know before you start: `cbd.json` says
+`{"$ref": "dialect.json"}` rather than carrying a copy of every definition, so
+a validator needs both files loaded and something to resolve between them.
+
+### Python
+
+```python
+import bibframe_json
+
 for finding in bibframe_json.validate(record):
     print(finding)
 
 # [dialect] subject/0: a blank node must not carry an @id
-# [ontology] the record: mainTitle does not belong on ['Work'] according to its rdfs:domain
+# [ontology] the record: mainTitle does not belong on ['Work']
 ```
 
 Each `Finding` has a `layer`, a `path` and a `message`, and `is_error` is true
-for the dialect layer. Either layer can be asked for on its own —
-`validate(record, ontology=False)` is the useful gate in a pipeline, since those
-are the guarantees a consumer depends on.
+for the dialect layer. `validate(record, ontology=False)` is the useful gate in
+a pipeline, since those are the guarantees a consumer depends on. Which
+structural schema applies is worked out from the document; `kind="cbd"` says so
+outright.
 
-The two schemas ship with the package and answer different questions. Both are
-plain JSON Schema, usable from any language:
-
-```python
-from bibframe_json import context, schema
-
-schema("dialect")     # one resource
-schema("cbd")         # a document holding several of them
-registry()            # the schemas, for resolving between them
-schema("ontology")    # BIBFRAME's domains and ranges, as constraints
-context()             # the JSON-LD context that produces the shape
-```
-
-There are two structural schemas because there are two kinds of document, and
-they differ by one thing. A stored record names the Work it instantiates —
-`"instanceOf": ["https://.../works/1"]` — because the Work is a row of its own.
-A Concise Bounded Description embeds it, so the document explains the Instance
-without fetching anything. `schema("cbd")` is that claim and little else; see
-`example/` for a real one and for what the difference buys.
-
-LC specified the RDF/XML serialization of a CBD and left the JSON-LD as an RDF
-dump — `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes. This is
-a proposal for the JSON-LD, and it takes the one liberty XML could not: the
-document is rooted at the Instance rather than holding every resource as a
-sibling.
-
-`schema("cbd")` references `dialect.json` rather than inlining it, so the
-definitions exist in one place. A validator therefore needs both files and
-something to resolve between them — `registry()` is that, and about five lines
-in any language:
+To drive `jsonschema` yourself, `registry()` is the part that resolves
+`cbd.json`'s reference to `dialect.json`:
 
 ```python
 import jsonschema
 from bibframe_json import CBD, registry, schema
 
-jsonschema.Draft202012Validator(schema(CBD), registry=registry())
+validator = jsonschema.Draft202012Validator(
+    schema(CBD), registry=registry()
+)
 ```
 
-`validate()` works out which schema applies by looking at the document, and
-takes `kind="cbd"` to say outright.
+### JavaScript
 
-## Using the schemas without Python
+Ajv, with both schemas added so each is found by the `$id` it declares:
 
-They are draft 2020-12, self-contained, and reference nothing outside
-themselves, so any validator will run them:
+```js
+import Ajv2020 from "ajv/dist/2020.js";
+
+const base =
+    "https://blue-core-lod.github.io/bibframe-json/schema/";
+const get = (name) => fetch(base + name).then((r) => r.json());
+
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+ajv.addSchema([await get("dialect.json"), await get("cbd.json")]);
+
+const check = ajv.getSchema(base + "dialect.json");
+if (!check(record)) {
+    for (const error of check.errors) {
+        console.log(error.instancePath || "(root)", error.message);
+    }
+}
+```
+
+`getSchema` rather than `compile`, because a schema that has been added cannot
+also be compiled — Ajv throws `schema with key or id ... already exists`.
+`strict: false` because Ajv's strict mode objects to `$comment` beside a
+`$ref`.
+
+### At the command line
 
 ```sh
 check-jsonschema --schemafile dialect.json record.json
 ```
 
+### What the schemas will not tell you
+
 The root dispatches on `@type` with `if`/`then`, so a failure is reported
 against the resource type the record claims and at the path it happened, rather
 than as "the document matched none of four types". Every definition carries a
-one-line `description`, and so do the rules with something to explain — a
+one-line `description`, and so do the rules with something to explain, so a
 validator that surfaces annotations will show them.
 
 What does not travel is the last mile of message quality. A reference may be a
 bare URI or a node, and a literal may be a bare string or a value object, so
-both are an `anyOf`; when one fails, a validator can only say the value matched
-neither branch. Finding the branch that was *meant* takes a short walk into
-`error.context`, which is what `validate()` does in `_causes()`. Around fifteen
-lines in any language, and worth writing if you are validating at scale.
-
-If you already know what you are holding, skip the dispatch and point at the
-type directly — `dialect.json#/$defs/Work` — which localises errors a little
-further still.
+both are an `anyOf`; when one branch fails, a validator can only say the value
+matched neither. Finding the branch that was *meant* takes a short walk into
+`error.context` — around fifteen lines in any language, and what `validate()`
+does in `_causes()`. If you already know what you are holding, pointing
+straight at the type instead — `dialect.json#/$defs/Work` — localises errors
+without any of that.
 
 ## Checking an implementation
 

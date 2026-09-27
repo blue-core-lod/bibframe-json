@@ -56,12 +56,31 @@ PAGES = (
     ("index.md", "bibframe-json", None),
     ("shape.md", "The shape", "The shape"),
     ("cbd.md", "A Concise Bounded Description", "A CBD"),
+    ("producing.md", "Producing it", "Producing it"),
     ("validating.md", "Validating", "Validating"),
     ("conformance.md", "Checking an implementation", "Conformance"),
-    ("project.md", "The project", "The project"),
 )
 
 LANGUAGES = {".json": "json", ".jsonld": "json", ".py": "python", ".sh": "sh"}
+
+
+# A path written for someone reading the repository, and where the same file
+# is served. bibframe_json/schema/ exists so hatchling ships the schemas with
+# the package; the site serves them at schema/ so their own $ids resolve. The
+# replacement is relative, not root-absolute: this is published under a path,
+# so /schema/... would leave the project and 404.
+SERVED = {
+    "../bibframe_json/schema/": "schema/",
+    "bibframe_json/schema/": "schema/",
+    "bibframe_json/context/": "context/",
+}
+
+
+def as_served(text: str) -> str:
+    """Point repository paths at where the site serves the same files."""
+    for repo, served in SERVED.items():
+        text = text.replace(repo, served)
+    return text
 
 
 def section(document: Path, heading: str) -> str:
@@ -84,7 +103,7 @@ def section(document: Path, heading: str) -> str:
     found = re.search(pattern, text, re.MULTILINE | re.DOTALL)
     if not found:
         raise SystemExit(f"{document.name} has no section '{heading}'")
-    return found.group(1).strip()
+    return as_served(found.group(1).strip())
 
 
 def links(document: Path) -> str:
@@ -109,13 +128,11 @@ def body(document: Path) -> str:
     Its `##` headings are left alone. They and the including page's are peers,
     since the page supplies the title and nothing else above them.
 
-    A path written for someone reading the repository is rewritten to where
-    the same file is served, because `../bibframe_json/schema/` is how you
-    reach the schemas from a subdirectory of a checkout and not how you reach
-    them from a page.
+    Repository paths are pointed at where the site serves the same files; see
+    `as_served`.
     """
     text = re.sub(r"\A#(?!#).*\n", "", document.read_text()).strip()
-    return text.replace("../bibframe_json/schema/", "/schema/")
+    return as_served(text)
 
 
 def quote(path: Path, display: str) -> str:
@@ -351,17 +368,23 @@ def fields(page: str) -> str:
     left, its content indented beside it, which is what a catalogue card's
     hanging indent is for.
 
+    Both heading levels get a label, so "Python" and "JavaScript" sit in the
+    rail as readily as a top-level section does.
+
+    Every child is wrapped, including a page that has no headings at all.
+    Unwrapped, they become grid items of main directly and land in alternating
+    columns -- the first paragraph beside the heading, the next table in the
+    rail. A page with no h2 used to hit exactly that.
+
     Done to the HTML rather than in Markdown so the pages stay readable as
     Markdown on GitHub. CSS subgrid then lines every heading up with the
     page's own columns; without a wrapper there is no row to line up.
     """
-    parts = re.split(r"(?=<h2)", page)
-    if len(parts) == 1:
-        return page
+    lede, *sections = re.split(r"(?=<h[23])", page)
     wrapped = "".join(
-        f'<section class="field">\n{part}</section>\n' for part in parts[1:]
+        f'<section class="field">\n{part}</section>\n' for part in sections
     )
-    return f'<div class="lede">\n{parts[0]}</div>\n{wrapped}'
+    return f'<div class="lede">\n{lede}</div>\n{wrapped}'
 
 
 def expand(text: str) -> str:
@@ -429,6 +452,14 @@ def render(base: str = BASE, out: Path = OUT) -> None:
     )
     # The @font-face rules go first, and url(fonts/...) in them is relative to
     # style.css, which sits at the root beside fonts/.
+    # A page that has been removed from PAGES is still on disk from the build
+    # before, and would still be deployed from a local build. Same class of
+    # mistake as a stale CNAME, so it is swept the same way.
+    wanted = {file.replace(".md", ".html") for file, _, _ in PAGES}
+    for stale in out.glob("*.html"):
+        if stale.name not in wanted:
+            stale.unlink()
+
     style = (DOCS / "fonts" / "faces.css").read_text() + "\n"
     style += (DOCS / "style.css").read_text()
 

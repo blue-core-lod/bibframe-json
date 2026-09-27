@@ -17,9 +17,14 @@ either a consequence of them or a way of checking them.
 | --- | --- |
 | see what a record looks like | [The shape](shape.md) |
 | read one document that explains a whole Instance | [A CBD](cbd.md) |
+| write records in this shape | [Producing it](producing.md) |
 | check records, in any language | [Validating](validating.md) |
 | write a reader and prove it agrees | [Checking an implementation](conformance.md) |
-| change the shape, or the ontology mapping | [The project](project.md) |
+
+How the schemas and the context are built, and what is measured against real
+records, is in
+[README.md](https://github.com/edsu/bibframe-json#readme) — that part is for
+people working on the repository rather than with the data.
 
 ## The files
 

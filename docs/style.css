@@ -137,7 +137,8 @@ main {
 
 .field > * { grid-column: 2; max-width: var(--measure); }
 
-.field > h2 {
+.field > h2,
+.field > h3 {
     grid-column: 1;
     grid-row: 1 / span 99;   /* stay beside the whole field, not just its first line */
     align-self: start;
@@ -151,6 +152,13 @@ main {
     color: var(--stamp);
     hyphens: none;
 }
+
+/* A subsection's label is quieter than a section's; that is the only thing
+   distinguishing them once both are in the rail. */
+.field > h3 { color: var(--quiet); letter-spacing: 0.06em; }
+
+/* A subsection sits under its section rather than starting a new one. */
+.field:has(> h3) { border-top: 0; margin-top: 1.25rem; padding-top: 0; }
 
 /* --- headings and prose --------------------------------------------------- */
 
@@ -213,9 +221,14 @@ pre {
     background: var(--card);
     border: 1px solid var(--rule);
     padding: 1rem 1.1rem;
-    overflow-x: auto;
     line-height: 1.5;
     margin: 0 0 1.25rem;
+    /* Wrap rather than scroll. The long lines here are record values and
+       context URLs -- data that cannot be shortened without falsifying it --
+       and a reader of a page about a JSON format has to see the whole value.
+       The authored examples are short enough not to need it. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 pre code { font-size: 0.78rem; background: none; border: 0; padding: 0; }
@@ -270,16 +283,7 @@ pre code { font-size: 0.78rem; background: none; border: 0; padding: 0; }
 .plate .same::after { content: ""; height: 1px; background: var(--rule); flex: 1; }
 .plate .same::before { flex: 0 0 1.5rem; }
 
-/* No height cap, and long values wrap rather than scrolling out of sight.
-   A clipped block reads as broken rather than scrollable, and the line the
-   caption turns on -- the ";" inside the statement of responsibility -- is
-   one of the long ones, so it has to be on the page. */
-.plate .json pre {
-    margin: 0;
-    max-width: none;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
+.plate .json pre { margin: 0; max-width: none; }
 
 .plate .provenance {
     font-family: var(--mono);
@@ -352,7 +356,7 @@ footer .colophon { font-size: 0.82rem; }
     :root { --measure: 100%; }
     main { grid-template-columns: minmax(0, 1fr); }
     .field { display: block; }
-    .field > h2 { margin-bottom: 0.9rem; }
+    .field > h2, .field > h3 { margin-bottom: 0.9rem; }
     .card { padding: 1.1rem 1.1rem 0.9rem; }
     .card .description { padding-left: 0; text-indent: 0; font-size: 0.78rem; }
 }

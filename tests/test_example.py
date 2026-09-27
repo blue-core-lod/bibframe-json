@@ -51,6 +51,51 @@ def test_the_two_examples_are_the_two_kinds_of_document():
     assert bibframe_json.validate(stored, ontology=False, kind=bibframe_json.CBD)
 
 
+def test_the_recipe_produces_what_it_claims():
+    """example/produce.py is documentation, so it has to actually work.
+
+    It is included verbatim on the site as the way to get from RDF into this
+    shape. An example pipeline that does not produce a conforming document
+    would be worse than no pipeline, since the reader has no way to tell.
+
+    cbd.json comes back identical, which is the stronger claim: the shipped
+    example is reproducible by the published recipe rather than by something
+    only this repository has.
+    """
+    from pyld import jsonld
+
+    from example.produce import produce
+
+    terms = bibframe_json.context()["@context"]
+    for name in ("instance", "cbd"):
+        record = json.loads((site.ROOT / "example" / f"{name}.json").read_text())
+        expanded = jsonld.expand({**record, "@context": terms})
+        produced = produce(expanded, record["@id"])
+        findings = bibframe_json.validate(produced, ontology=False)
+        assert findings == [], f"{name}: " + "\n".join(str(f) for f in findings)
+
+    cbd = json.loads((site.ROOT / "example" / "cbd.json").read_text())
+    again = produce(jsonld.expand({**cbd, "@context": terms}), cbd["@id"])
+    assert again == cbd, "example/cbd.json is no longer what the recipe produces"
+
+
+def test_the_recipe_leaves_a_value_object_alone():
+    """@type on a value object is a datatype, not a list of classes.
+
+    The array rule has to skip it, and the only thing distinguishing the two
+    cases is @value. Wrapping it would break every dated record, so it is
+    worth a case of its own rather than relying on the round trip above
+    happening to contain one.
+    """
+    from example.produce import as_arrays
+
+    literal = {"@value": "199X", "@type": "http://id.loc.gov/datatypes/edtf"}
+    assert as_arrays(literal) == literal
+
+    node = {"@type": "Instance", "title": "T"}
+    assert as_arrays(node) == {"@type": ["Instance"], "title": ["T"]}
+
+
 def test_the_card_says_only_what_the_record_says():
     """Every word of description on the card comes from the record.
 
