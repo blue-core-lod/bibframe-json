@@ -95,7 +95,8 @@ def test_the_files_reference_each_other_relatively():
     for path in sorted(SPLIT.glob("*.json")):
         contents = path.read_text()
         assert (
-            f'"$id": "https://bibframe-json.org/schema/dialect/{path.name}"' in contents
+            f'"$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/{path.name}"'
+            in contents
         )
         for ref in json.loads(contents).get("$defs", {}):
             raise AssertionError(f"{path.name} still carries $defs: {ref}")

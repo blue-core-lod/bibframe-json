@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/schema/dialect/Ref.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Ref.json",
   "$comment": "A reference: a bare URI string, as @type: @id writes it, or a node.",
   "anyOf": [
     {

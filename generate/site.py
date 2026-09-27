@@ -11,7 +11,7 @@ read out of the files themselves for the same reason.
 
 The artifacts -- the context, the schemas, the conformance corpus -- are copied
 in at the paths their own `$id`s name. That is what turns
-`https://bibframe-json.org/schema/dialect/Work.json` from a string in a field
+`https://blue-core-lod.github.io/bibframe-json/schema/dialect/Work.json` from a string in a field
 called `$id` into a file a validator can fetch, and it is what lets
 `{"$ref": "Ref.json"}` resolve over the network the way it already resolves on
 disk.
@@ -39,7 +39,7 @@ OUT = ROOT / "site"
 # Every $id in the repository is rooted here, and the artifacts are served at
 # the paths below it, so the two agree. `--rebase` moves both at once, and
 # tests/test_site.py fails if they ever disagree.
-BASE = "https://bibframe-json.org"
+BASE = "https://blue-core-lod.github.io/bibframe-json"
 
 # Where each artifact is served, relative to BASE. The schema keys are the
 # reason this mapping is written out rather than inferred: schemas live under
@@ -241,11 +241,17 @@ def render(base: str = BASE, out: Path = OUT) -> None:
             ignore=shutil.ignore_patterns("__pycache__", "*.md"),
         )
 
+    # A custom domain needs this file in the published directory. A project
+    # page under github.io does not -- and must not have it, because Pages
+    # reads it and would redirect the whole site to a domain that is not
+    # serving it. Written or removed rather than written or skipped: a CNAME
+    # left behind by an earlier build is how that happens.
     host = base.split("://", 1)[-1]
-    if "/" not in host:
-        # A custom domain needs this file in the published directory; a
-        # project page under github.io does not, and must not have it.
-        (out / "CNAME").write_text(f"{host}\n")
+    cname = out / "CNAME"
+    if "/" in host:
+        cname.unlink(missing_ok=True)
+    else:
+        cname.write_text(f"{host}\n")
 
     print(f"{out.name}/ built for {base}: {len(PAGES)} pages")
 

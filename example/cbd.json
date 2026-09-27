@@ -1,5 +1,5 @@
 {
-  "@context": "https://bibframe-json.org/context/bibframe.jsonld",
+  "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
   "@id": "https://stage.bcld.info/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4",
   "@type": [
     "Instance"

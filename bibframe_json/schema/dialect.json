@@ -78,7 +78,7 @@
       }
     }
   },
-  "$id": "https://bibframe-json.org/schema/dialect.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect.json",
   "$defs": {
     "AdminMetadata": {
       "additionalProperties": {

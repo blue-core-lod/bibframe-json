@@ -91,9 +91,28 @@ def test_the_context_is_served_where_it_is_referenced(built):
     assert (built / named.removeprefix(f"{site.BASE}/")).exists()
 
 
-def test_the_custom_domain_file_matches_the_base(built):
-    """CNAME and BASE disagreeing would serve the site from neither."""
-    assert (built / "CNAME").read_text().strip() == site.BASE.split("://", 1)[1]
+def test_a_project_page_publishes_no_cname(built):
+    """A CNAME is how Pages is told to answer for a custom domain.
+
+    Under a path -- blue-core-lod.github.io/bibframe-json -- there is no
+    domain to claim, and a CNAME left over from a build that had one sends
+    the whole site to a host that is not serving it. So the file is written
+    or removed, never written or skipped.
+    """
+    host = site.BASE.split("://", 1)[1]
+    if "/" in host:
+        assert not (built / "CNAME").exists()
+    else:
+        assert (built / "CNAME").read_text().strip() == host
+
+
+def test_a_stale_cname_is_cleared(tmp_path):
+    """The build this caught: site/ is not emptied between runs."""
+    (tmp_path / "CNAME").parent.mkdir(parents=True, exist_ok=True)
+    site.render(base="https://bibframe-json.example", out=tmp_path)
+    assert (tmp_path / "CNAME").exists()
+    site.render(base="https://an-org.github.io/a-repo", out=tmp_path)
+    assert not (tmp_path / "CNAME").exists()
 
 
 def test_the_corpus_is_published_whole(built):

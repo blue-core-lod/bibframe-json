@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/schema/dialect/Identifier.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Identifier.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"

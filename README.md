@@ -293,22 +293,33 @@ run against.
 
 And it copies the context, the schemas and the conformance corpus in at the
 paths their own `$id`s name. That is what turns
-`https://bibframe-json.org/schema/dialect/Work.json` from a string in a field
-called `$id` into a file a validator can fetch, and what makes
-`{"$ref": "Ref.json"}` resolve over the network the way it already resolves on
-disk. `tests/test_site.py` fails if any `$id` and its served path disagree.
+`https://blue-core-lod.github.io/bibframe-json/schema/dialect/Work.json` from a
+string in a field called `$id` into a file a validator can fetch, and what
+makes `{"$ref": "Ref.json"}` resolve over the network the way it already
+resolves on disk. `tests/test_site.py` fails if any `$id` and its served path
+disagree.
 
-**That domain is not registered yet**, so the `$id`s currently identify without
-locating — which JSON Schema permits, and which costs nothing until someone
-wants to fetch one. Two ways to finish it: point `bibframe-json.org` at GitHub
-Pages, or move everything to the project page with
+### Where this is served, and why it is one command to move
+
+A relative `$ref` resolves against the base URI its `$id` establishes, not
+against the URL it was fetched from. So the `$id`s cannot name one host while
+the files are served from another — `{"$ref": "Ref.json"}` would resolve
+against the host in the `$id` and find nothing. Hosting and identity move
+together or not at all, which is why moving them is one command:
 
 ```sh
-uv run python generate/site.py --rebase https://edsu.github.io/bibframe-json
+uv run python generate/site.py --rebase https://example.org/bibframe-json
 ```
 
-which rewrites every `$id`, fixture and page at once. The test is what keeps
-that from being a sweep you can half-finish.
+It rewrites every `$id`, fixture, test and page at once, and the test above is
+what keeps that from being a sweep you can half-finish.
+
+The org project page is a stopgap. `bibframe-json.org` would be the better
+identity for something meant to be used outside Blue Core — a name that
+survives the project moving between accounts — and it is worth settling before
+the first release, because an `$id` is an identity and changing it after
+someone has pinned one is a breaking change. Before a release it costs a
+`--rebase` and nothing else.
 
 ## What is generated, and what is not
 
