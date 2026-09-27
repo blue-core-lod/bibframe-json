@@ -8,8 +8,8 @@
 
 <!-- readme: What the shape guarantees -->
 
-Those five rules are the whole contract, and everything else on this site is
-either a consequence of them or a way of checking them.
+Those five rules are the whole contract. Everything else on this site follows
+from them or checks them.
 
 ## Where to start
 
@@ -23,8 +23,8 @@ either a consequence of them or a way of checking them.
 
 How the schemas and the context are built, and what is measured against real
 records, is in
-[README.md](https://github.com/edsu/bibframe-json#readme) — that part is for
-people working on the repository rather than with the data.
+[README.md](https://github.com/edsu/bibframe-json#readme), which is for people
+working on the repository rather than with the data.
 
 ## The files
 
@@ -33,7 +33,7 @@ dependency on the Python that maintains it:
 
 | | |
 | --- | --- |
-| [`{{base}}/context/bibframe.jsonld`](context/bibframe.jsonld) | the JSON-LD context that produces the shape — 251 terms |
+| [`{{base}}/context/bibframe.jsonld`](context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
 | [`{{base}}/schema/dialect.json`](schema/dialect.json) | one resource: a Work, Instance, Hub or Item |
 | [`{{base}}/schema/dialect/`](schema/dialect/main.json) | the same schema, one file per definition |
 | [`{{base}}/schema/cbd.json`](schema/cbd.json) | a Concise Bounded Description |
@@ -41,6 +41,6 @@ dependency on the Python that maintains it:
 | [`{{base}}/example/cbd.json`](example/cbd.json) | a real CBD |
 | [`{{base}}/conformance/`](conformance.md) | documents with expected verdicts |
 
-The schemas reference each other relatively — `{"$ref": "Ref.json"}`,
-`{"$ref": "dialect.json"}` — so they resolve against wherever they are served
-from, whether that is this site or a copy on your disk.
+The schemas reference each other relatively, `{"$ref": "Ref.json"}` and
+`{"$ref": "dialect.json"}`, so they resolve against wherever you serve them
+from, this site or a copy on your disk.

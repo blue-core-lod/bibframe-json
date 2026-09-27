@@ -215,7 +215,7 @@ def cases() -> str:
                 f"[{path.stem}](conformance/{kind}/{verdict}/{path.name})"
                 for path in sorted(folder.glob("*.json"))
             )
-            out.append(f"**{verdict}** — {listed}\n")
+            out.append(f"**{verdict}**: {listed}\n")
     return "\n".join(out)
 
 

@@ -1,48 +1,48 @@
-# `cbd.json` — a Concise Bounded Description
+# `cbd.json`: a Concise Bounded Description
 
 A real record, framed. It validates against
-`../bibframe_json/schema/cbd.json`, and every value in it is what a cataloguer
-typed — so it is a sample of the shape rather than a tidied illustration of
-one.
+`../bibframe_json/schema/cbd.json`, and a cataloguer typed every value in it.
+You are looking at a sample of the shape, not a tidied illustration of one.
 
-The only thing changed is the host in the URIs, which is `bibframe.example`
-here. The originals were from a staging environment: they would have rotted,
-and an identifier that looks resolvable and is not is worse than one that
-announces itself as an example. `.example` is reserved for exactly this by
-[RFC 2606](https://www.rfc-editor.org/rfc/rfc2606). The paths are untouched,
-so the shape of a Blue Core URI is still visible.
+We changed one thing, the host in the URIs, which reads `bibframe.example`
+here. The originals came from a staging environment and would have rotted, and
+an identifier that looks resolvable while resolving to nothing is worse than
+one announcing itself as an example. [RFC
+2606](https://www.rfc-editor.org/rfc/rfc2606) reserves `.example` for this. We
+left the paths alone, so you can still see the shape of a Blue Core URI.
 
-LC defined how a CBD is serialized as RDF/XML and left the JSON-LD as an RDF
+LC defined how to serialize a CBD as RDF/XML and left the JSON-LD as an RDF
 dump: `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes with full
-property URIs and no nesting, and Blue Core's was the same. This is a proposal
-for what it could be instead. The RDF is identical either way — only the
-serialization differs.
+property URIs and no nesting, and Blue Core's was the same. This proposes
+something else. The RDF is identical either way, and only the serialization
+differs.
 
 ## The shape
 
-**The document is the Instance.** Not an array of resources to search through:
-the thing you asked for is the thing you get, and everything else is described
-where it is referenced.
+**The document is the Instance.** You asked for an Instance and you get one,
+with everything else described where it is referenced, rather than an array of
+resources to search through.
 
 That is the one place this departs from cbd-01.md, which puts every principal
 resource side by side under a single `rdf:RDF`. XML has no natural root, so
-siblings are the only option there; JSON has one, so it can be used. Marva is
-unaffected — it reads the RDF/XML.
+siblings are the only option there. JSON has one, so we use it. Marva reads the
+RDF/XML and is unaffected.
 
-**`instanceOf` embeds the Work.** In a stored record it is a bare URI, because
-the Work is a row of its own. That difference is what `schema/cbd.json`
-checks, and it is the whole structural claim: a CBD explains its Instance
-without fetching anything.
+**`instanceOf` embeds the Work.** In a stored record it holds a bare URI,
+because the Work is a row of its own. `schema/cbd.json` checks that one
+difference, and it carries the whole structural claim: a CBD explains its
+Instance without you fetching anything.
 
 **The Work's `hasInstance` points back by URI.** A JSON-LD processor breaks the
-cycle that way, and it is what keeps the document finite.
+cycle that way, and that is what keeps the document finite.
 
-**Every property is an array**, even holding one value, so a reader can loop
-without checking.
+**Every property is an array**, even holding one value, so you can loop without
+checking.
 
-**`@context` is named rather than inlined**, which keeps the document about the
-record instead of about the vocabulary. Not only tidier: across the 59 records
-below, inlining the context is 11,947 bytes each and 61% of the document.
+**`@context` is named, not inlined**, which keeps the document about the record
+instead of about the vocabulary. It also saves a lot: across the 59 records
+measured below, inlining the context costs 11,947 bytes each and 61% of the
+document.
 
 ## Producing one
 
@@ -59,23 +59,23 @@ jsonld.frame(expanded, {
 })
 ```
 
-Then three things the frame cannot do, all of which took finding out:
+Then three things the frame cannot do, each of which took us a while to find:
 
-**Coerce every property to an array.** `@container: @set` in the context covers
-the 251 terms the context declares, and nothing else. A property it has never
-heard of — `bflc:catalogerId`, or Sinopia's `hasResourceTemplate` — compacts to
-a bare value and breaks the guarantee. 57 of 59 sampled records tripped on
-exactly that. `bluecore_models.utils.graph._as_arrays` is the coercion, and it
-has to run after framing.
+**Coerce every property to an array.** `@container: @set` covers the 251 terms
+the context declares and nothing else. A property it has never heard of, such
+as `bflc:catalogerId` or Sinopia's `hasResourceTemplate`, compacts to a bare
+value and breaks the guarantee. 57 of 59 sampled records tripped on that.
+`bluecore_models.utils.graph._as_arrays` does the coercion, and it has to run
+after framing.
 
 **Put `@type` in an array.** `@type` is a keyword, so no `@container` reaches
 it, and a node with a single type compacts to a string. The dialect tolerates
-both; this normalises for consistency.
+both, and this normalises for consistency.
 
-**Replace the context with its URL.** Framing has to be handed the terms, and
+**Replace the context with its URL.** You have to hand framing the terms, and
 pyld returns them inlined, so the document comes back carrying all 258 entries
-in front of the description it is about — the form this file argues against.
-`bibframe_json.CONTEXT_URL` is the string to put back.
+in front of the description it is about, which is the form this file argues
+against. Put `bibframe_json.CONTEXT_URL` back.
 
 ## Measurements
 
@@ -88,9 +88,9 @@ would otherwise swamp the difference:
 | siblings under `@graph` | 520,362 | all |
 | rooted at the Instance | 461,403 | all |
 
-Nesting depth 3 to 8, mostly 5. Nothing is lost either way, including the two
-cases that looked likely to break it: a Work with related Works that have
-their own Instances, which land under the relation that reaches them, and
-cbd-01.md's secondary Instance, which arrives under the Work's `hasInstance`
-fully described.
+Nesting runs 3 to 8 deep, mostly 5. Neither arrangement loses anything,
+including the two cases that looked likely to break this one: a Work with
+related Works that have their own Instances, which land under the relation that
+reaches them, and cbd-01.md's secondary Instance, which arrives under the
+Work's `hasInstance` fully described.
 
