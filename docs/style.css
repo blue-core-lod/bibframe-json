@@ -1,122 +1,353 @@
-/* Plain CSS, no build step and nothing fetched from anywhere else: a page
-   about a data format should be readable with the network off. */
+/* bibframe-json
+   ----------------------------------------------------------------------------
+   The palette is card stock, graphite and the red of a date stamp; the red is
+   spent on one thing only, the delimiters that carry structure in an ISBD
+   description and in JSON. Everything else stays quiet so that correspondence
+   is the thing you notice.
+
+   Layout is a record of fields: a mono label in the left rail, its content
+   indented beside it, which is what a hanging indent is for. Nothing is
+   fetched from another host -- a page about a data format should render with
+   the network off, which is why the fonts are vendored beside this file. */
 
 :root {
-    --ink: #1b1b1b;
-    --quiet: #5a5a5a;
-    --rule: #dcdcd4;
-    --paper: #fdfdfb;
-    --link: #0b5c8a;
-    --code-bg: #f4f3ee;
+    --paper:  #e4e4db;   /* the page: shelflist stock, cooler than cream */
+    --card:   #f2f1e9;   /* a card, and a code block: the same object */
+    --ink:    #2b2a28;   /* graphite */
+    --quiet:  #6b675e;
+    --rule:   #b7b3a6;
+    --stamp:  #a8322b;   /* date-stamp red. Delimiters, and nothing else. */
+    --mimeo:  #2b6474;   /* duplicator ink. Links, and nothing else. */
+
+    --serif: Literata, Georgia, "Times New Roman", serif;
+    --mono:  "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --measure: 34rem;    /* the prose column */
+    --rail:    8.5rem;   /* the field label */
+    --gutter:  2rem;
+    --page: calc(var(--rail) + var(--gutter) + var(--measure));
 }
 
-* { box-sizing: border-box; }
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #1b1d1b;
+        --card:  #242623;
+        --ink:   #e7e4da;
+        --quiet: #9a968c;
+        --rule:  #3d403b;
+        --stamp: #d9776a;   /* lightened; the oxidised red fails on dark */
+        --mimeo: #86b8c6;
+    }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
 
 body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
 }
 
+.skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--card);
+    color: var(--ink);
+    padding: 0.6rem 1rem;
+    z-index: 10;
+}
+.skip:focus { left: 0; }
+
+a { color: var(--mimeo); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--stamp); }
+
+:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+
+/* --- masthead --------------------------------------------------------------
+   The wordmark is the one place the mono face is set large, and the rule that
+   trails it is the card's top edge: the page is the object.                  */
+
 header {
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 2.25rem 1.5rem 0;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0 1.5rem;
-    max-width: 52rem;
-    margin: 0 auto;
-    padding: 1.5rem 1.5rem 1rem;
-    border-bottom: 1px solid var(--rule);
+    gap: 0.35rem 1.5rem;
 }
 
 .wordmark {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 auto;
+    font-family: var(--mono);
+    font-size: 0.95rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
     color: var(--ink);
     text-decoration: none;
 }
+.wordmark .rule { flex: 1; height: 1px; background: var(--rule); min-width: 1.5rem; }
+.wordmark:hover { color: var(--stamp); }
 
-nav { display: flex; flex-wrap: wrap; gap: 0 1.1rem; font-size: 0.92rem; }
-nav a { color: var(--quiet); text-decoration: none; }
-nav a:hover { color: var(--link); text-decoration: underline; }
+nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; }
+nav a {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--quiet);
+    text-decoration: none;
+}
+nav a:hover { color: var(--stamp); }
 
-main { max-width: 52rem; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+/* --- the record of fields --------------------------------------------------
+   main is two columns; each .field is a row that borrows them, so a heading
+   lines up with its own content and with every other heading.               */
 
-a { color: var(--link); }
-
-h1 { font-size: 1.9rem; line-height: 1.2; margin: 1.5rem 0 1rem; }
-h2 { font-size: 1.3rem; margin: 2.5rem 0 0.75rem; }
-h3 { font-size: 1.05rem; margin: 2rem 0 0.5rem; }
-
-/* The pages lean on these: almost every section opens with the sentence that
-   states the claim, and the rest is why. */
-h2 + p, h3 + p { margin-top: 0.4rem; }
-
-code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.88em;
-    background: var(--code-bg);
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
+main {
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    column-gap: var(--gutter);
 }
 
-pre {
-    background: var(--code-bg);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 0.9rem 1rem;
-    overflow-x: auto;
-    line-height: 1.45;
+.lede { grid-column: 1 / -1; }
+
+.field {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    margin-top: 2.5rem;
 }
 
-pre code { background: none; padding: 0; font-size: 0.82rem; }
+.field > * { grid-column: 2; max-width: var(--measure); }
+
+.field > h2 {
+    grid-column: 1;
+    grid-row: 1 / span 99;   /* stay beside the whole field, not just its first line */
+    align-self: start;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    hyphens: none;
+}
+
+/* --- headings and prose --------------------------------------------------- */
+
+h1 {
+    font-size: clamp(2rem, 1.3rem + 2.6vw, 3.1rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 2.5rem 0 1.25rem;
+    max-width: 30rem;
+}
+
+h3 {
+    font-family: var(--mono);
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 2.25rem 0 0.5rem;
+}
+
+p, ul, ol, table, pre, figure, blockquote { max-width: var(--measure); }
+p { margin: 0 0 1.05rem; }
+h2 + p, h3 + p { margin-top: 0; }
+
+.lede > p:first-of-type {
+    font-size: 1.16rem;
+    line-height: 1.5;
+    color: var(--ink);
+}
+
+ul, ol { padding-left: 1.15rem; margin: 0 0 1.05rem; }
+li { margin-bottom: 0.3rem; }
+li::marker { color: var(--rule); }
+
+strong { font-weight: 600; }
 
 blockquote {
     margin: 1.5rem 0;
-    padding-left: 1rem;
-    border-left: 3px solid var(--rule);
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--rule);
     color: var(--quiet);
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1.25rem 0;
+/* --- code ---------------------------------------------------------------- */
+
+code {
+    font-family: var(--mono);
+    font-size: 0.855em;
+    font-feature-settings: "ss02";   /* Plex's straight-sided zero */
+}
+
+p code, li code, td code, h2 code, figcaption code {
+    background: var(--card);
+    border: 1px solid color-mix(in srgb, var(--rule) 45%, transparent);
+    border-radius: 2px;
+    padding: 0.05em 0.3em;
+}
+
+pre {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    line-height: 1.5;
+    margin: 0 0 1.25rem;
+}
+
+pre code { font-size: 0.78rem; background: none; border: 0; padding: 0; }
+
+/* The through-line. JSON's structural punctuation is set in the same red as
+   an ISBD delimiter, everywhere on the site, because they are the same claim:
+   the punctuation is what you can rely on. */
+.codehilite .p { color: var(--stamp); }
+.codehilite .nt { font-weight: 600; }
+
+/* --- the plate: a card, and the record it describes ----------------------- */
+
+.plate {
+    grid-column: 1 / -1;
+    max-width: none;
+    margin: 2.5rem 0 3rem;
+    display: grid;
+    gap: 0;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    box-shadow: 3px 3px 0 color-mix(in srgb, var(--rule) 30%, transparent);
+    padding: 1.6rem 1.75rem 1.2rem;
+}
+
+.card .description {
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    line-height: 1.75;
+    margin: 0;
+    max-width: 44rem;
+    /* A card's hanging indent: the first line out, the rest tucked under. */
+    padding-left: 2.5rem;
+    text-indent: -2.5rem;
+}
+
+.card .tracings {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    line-height: 1.9;
+    color: var(--quiet);
+    margin: 1.4rem 0 0;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+    max-width: none;
+}
+.card .tracings code { background: none; border: 0; padding: 0; color: var(--mimeo); }
+
+.plate .same {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--quiet);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.1rem 0 0.7rem;
+}
+.plate .same::before,
+.plate .same::after { content: ""; height: 1px; background: var(--rule); flex: 1; }
+.plate .same::before { flex: 0 0 1.5rem; }
+
+.plate .json pre { margin: 0; max-width: none; max-height: 24rem; }
+
+.plate figcaption {
     font-size: 0.92rem;
+    color: var(--quiet);
+    margin-top: 1.1rem;
+    max-width: var(--measure);
+}
+
+/* The delimiters arrive a beat after the description, once, which is the only
+   motion on the site: it is what the page is about, so it is what moves. */
+.d { color: var(--stamp); }
+
+@media (prefers-reduced-motion: no-preference) {
+    .card .d { animation: stamp 900ms ease-out both; }
+    .card .d:nth-of-type(n + 4) { animation-delay: 120ms; }
+    .card .d:nth-of-type(n + 8) { animation-delay: 240ms; }
+}
+
+@keyframes stamp {
+    from { color: var(--ink); opacity: 0.35; }
+    to   { color: var(--stamp); opacity: 1; }
+}
+
+/* --- tables -------------------------------------------------------------- */
+
+table { border-collapse: collapse; width: 100%; margin: 1.35rem 0; font-size: 0.93rem; }
+
+th {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--quiet);
+    border-bottom: 1px solid var(--rule);
 }
 
 th, td {
     text-align: left;
-    padding: 0.45rem 0.7rem;
-    border-bottom: 1px solid var(--rule);
-    vertical-align: top;
+    padding: 0.5rem 0.7rem 0.5rem 0;
+    vertical-align: baseline;
 }
+td { border-bottom: 1px solid color-mix(in srgb, var(--rule) 40%, transparent); }
+td:first-child { white-space: nowrap; padding-right: 1.25rem; }
 
-th { font-weight: 600; }
-
-/* A definition table is mostly short names against long sentences. */
-td:first-child { white-space: nowrap; }
+/* --- footer -------------------------------------------------------------- */
 
 footer {
-    max-width: 52rem;
+    max-width: var(--page);
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 3rem;
     border-top: 1px solid var(--rule);
     color: var(--quiet);
     font-size: 0.9rem;
 }
+footer p { max-width: var(--measure); margin: 0 0 0.5rem; }
+footer .colophon { font-size: 0.82rem; }
 
-footer p { margin: 0; }
+/* --- narrow -------------------------------------------------------------- */
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --ink: #e8e6e1;
-        --quiet: #a3a09a;
-        --rule: #3a3a36;
-        --paper: #1a1a19;
-        --link: #74b8dd;
-        --code-bg: #24241f;
-    }
+@media (max-width: 46rem) {
+    :root { --measure: 100%; }
+    main { grid-template-columns: minmax(0, 1fr); }
+    .field { display: block; }
+    .field > h2 { margin-bottom: 0.9rem; }
+    .card { padding: 1.1rem 1.1rem 0.9rem; }
+    .card .description { padding-left: 0; text-indent: 0; font-size: 0.78rem; }
 }

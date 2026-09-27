@@ -2,6 +2,11 @@
 
 <!-- readme: The JSON -->
 
+That record is on the front page as a catalogue card. The whole of it is
+[`example/instance.json`](example/instance.json) — eighteen properties rather
+than the eight a card has room for, which is most of what BIBFRAME adds to
+ISBD.
+
 ## The context
 
 <!-- readme: The context -->

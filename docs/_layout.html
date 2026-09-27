@@ -5,16 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{title}} — bibframe-json</title>
 <link rel="stylesheet" href="style.css">
+<link rel="preload" href="fonts/literata-latin-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/plex-mono-latin-normal-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="alternate" type="application/ld+json" href="context/bibframe.jsonld">
 </head>
 <body>
+<a class="skip" href="#start">Skip to content</a>
 <header>
-    <a class="wordmark" href="index.html">bibframe-json</a>
-    <nav>
+    <a class="wordmark" href="index.html">bibframe&#8203;-json<span class="rule"></span></a>
+    <nav aria-label="Sections">
 {{nav}}
     </nav>
 </header>
-<main>
+<main id="start">
 {{content}}
 </main>
 <footer>
@@ -24,6 +27,10 @@
         useful outside it.
         <a href="https://github.com/edsu/bibframe-json">Source, issues and
         pull requests</a>.
+    </p>
+    <p class="colophon">
+        Set in Literata and IBM Plex Mono. The examples are records from a
+        running catalogue, not illustrations of them.
     </p>
 </footer>
 </body>

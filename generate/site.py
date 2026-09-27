@@ -166,6 +166,169 @@ def cases() -> str:
     return "\n".join(out)
 
 
+# The ISBD areas the card on the front page shows, in the order a card shows
+# them, each with the delimiter that introduces it and how many line breaks
+# precede it. This is the argument the hero makes: the punctuation is the
+# structure, and it was the structure before JSON existed -- ISBD(M)
+# standardised it in 1971.
+#
+# Areas 1 to 4 run on as one paragraph; the physical description starts a line
+# of its own, and the note and the ISBN each start another. That is the layout
+# of a card rather than of the standard, which says nothing about line breaks.
+ISBD = (
+    ("title", "", 0),
+    ("responsibilityStatement", " / ", 0),
+    ("editionStatement", ". \u2014 ", 0),
+    ("provisionActivity", ". \u2014 ", 0),
+    ("extent", "", 1),
+    ("dimensions", " ; ", 0),
+    ("note", "", 2),
+    ("identifiedBy", "", 2),
+)
+
+
+def _imprint(record: dict) -> str:
+    """Place : publisher, date -- ISBD area 4, from the bflc simple forms.
+
+    The record also carries publicationStatement with the imprint already
+    assembled, which is the same string a cataloguer typed. Taking the parts
+    instead, because what the hero claims is that the parts are addressable.
+
+    \0 marks a delimiter falling inside one area rather than between two, so
+    area 4's " : " and ", " are coloured like every other delimiter.
+    """
+    activity = record["provisionActivity"][0]
+    return (
+        f"{activity['bflc:simplePlace'][0]}\x00 : \x00"
+        f"{activity['bflc:simpleAgent'][0]}\x00, \x00"
+        f"{activity['bflc:simpleDate'][0]}."
+    )
+
+
+def _isbn(record: dict) -> str:
+    for identifier in record["identifiedBy"]:
+        if "Isbn" in identifier.get("@type", []):
+            qualifier = identifier.get("qualifier", [])
+            said = f" ({qualifier[0]})" if qualifier else ""
+            return f"ISBN {identifier['rdf:value'][0]}{said}"
+    return ""
+
+
+READERS = {
+    "title": lambda r: r["title"][0]["mainTitle"][0],
+    "responsibilityStatement": lambda r: r["responsibilityStatement"][0],
+    "editionStatement": lambda r: r["editionStatement"][0],
+    "provisionActivity": _imprint,
+    "extent": lambda r: r["extent"][0]["rdfs:label"][0],
+    "dimensions": lambda r: r["dimensions"][0] + ".",
+    "note": lambda r: r["note"][0]["rdfs:label"][0],
+    "identifiedBy": _isbn,
+}
+
+
+def _delimiter(before: str, delimiter: str) -> str:
+    """A delimiter, marked up, with ISBD's one piece of arithmetic applied.
+
+    An area delimiter is written ". \u2014 ", but an element that already ends
+    in a full stop does not take a second one: "Madhusudan. \u2014 2nd revised
+    edition", not "Madhusudan.. \u2014". Transcribed statements of
+    responsibility very often end in a stop, so this is the ordinary case
+    rather than an edge one.
+    """
+    if delimiter.startswith(".") and before.rstrip().endswith("."):
+        delimiter = delimiter[1:]
+    return f'<span class="d">{html.escape(delimiter)}</span>' if delimiter else ""
+
+
+def card() -> str:
+    """The signature: a catalogue card, and the JSON that is the same record.
+
+    Generated from example/instance.json, so it is a view of a record that
+    validates rather than a picture of one. tests/test_example.py checks that
+    every fragment of description on it is a string in that file -- a card
+    with a hand-typed title would look identical and mean nothing.
+
+    Delimiters are marked up in both halves so they can be coloured, and the
+    colour is what connects them: a line drawn between the two would not
+    survive a narrow screen.
+
+    The keys go in the card's tracing block, which on a real card is where the
+    apparatus goes -- what else the item is filed under -- rather than
+    annotated onto the description, which is a transcription and takes no
+    editorial marks.
+    """
+    record = json.loads((ROOT / "example" / "instance.json").read_text())
+    out: list[str] = []
+    keys: list[str] = []
+    previous = ""
+    for key, delimiter, breaks in ISBD:
+        try:
+            value = READERS[key](record)
+        except (KeyError, IndexError):
+            continue
+        if not value:
+            continue
+        keys.append(key)
+        if breaks:
+            out.append("<br>" * breaks)
+            previous = ""
+        else:
+            out.append(_delimiter(previous, delimiter))
+        parts = html.escape(value).split("\x00")
+        out.append(
+            "".join(
+                part if i % 2 == 0 else f'<span class="d">{part}</span>'
+                for i, part in enumerate(parts)
+            )
+        )
+        previous = value.replace("\x00", "")
+
+    shown = {key: record[key] for key in keys if key in record}
+    quoted = markdown.markdown(
+        "```json\n" + json.dumps(shown, indent=2, ensure_ascii=False) + "\n```",
+        extensions=["fenced_code", "codehilite"],
+        extension_configs={"codehilite": {"guess_lang": False}},
+    )
+    tracings = " &middot; ".join(f"<code>{key}</code>" for key in keys)
+    return f"""<figure class="plate">
+  <div class="card" role="img" aria-label="A catalogue card for the record below">
+    <p class="description">{"".join(out)}</p>
+    <p class="tracings">{tracings}</p>
+  </div>
+  <div class="same">the same record</div>
+  <div class="json">{quoted}</div>
+  <figcaption>
+    The punctuation in the top half is ISBD, standardised in 1971. The
+    punctuation in the bottom half is JSON. Both do the one job this project
+    cares about: making a description parseable by someone who does not
+    already understand it. The one delimiter still in black is inside a
+    transcribed string, where nothing can reach it \u2014 which is the whole
+    case for putting the structure in the JSON instead.
+  </figcaption>
+</figure>"""
+
+
+def fields(page: str) -> str:
+    """Wrap each `##` section so its heading can sit in the left rail.
+
+    The rail is the layout's one structural claim: this documentation
+    describes fields, so it is set as a record of fields -- a label to the
+    left, its content indented beside it, which is what a catalogue card's
+    hanging indent is for.
+
+    Done to the HTML rather than in Markdown so the pages stay readable as
+    Markdown on GitHub. CSS subgrid then lines every heading up with the
+    page's own columns; without a wrapper there is no row to line up.
+    """
+    parts = re.split(r"(?=<h2)", page)
+    if len(parts) == 1:
+        return page
+    wrapped = "".join(
+        f'<section class="field">\n{part}</section>\n' for part in parts[1:]
+    )
+    return f'<div class="lede">\n{parts[0]}</div>\n{wrapped}'
+
+
 def expand(text: str) -> str:
     """Resolve the directives a page uses to pull content from the repository."""
 
@@ -181,10 +344,12 @@ def expand(text: str) -> str:
             return definitions()
         if kind == "cases":
             return cases()
+        if kind == "card":
+            return card()
         raise SystemExit(f"unknown directive: {kind}")
 
     return re.sub(
-        r"<!--\s*(readme|markdown|include|definitions|cases)\s*:?([^>]*?)-->",
+        r"<!--\s*(readme|markdown|include|definitions|cases|card)\s*:?([^>]*?)-->",
         resolve,
         text,
     )
@@ -208,7 +373,7 @@ def render(base: str = BASE, out: Path = OUT) -> None:
         source = f"{source}\n\n{links(ROOT / 'README.md')}\n"
         # Between pages, not to the repository: a link written as shape.md is
         # what makes the sources readable on GitHub too.
-        content = page.convert(source).replace('.md"', '.html"')
+        content = fields(page.convert(source).replace('.md"', '.html"'))
         name = file.replace(".md", ".html")
         (out / name).write_text(
             layout.replace("{{title}}", html.escape(title))
@@ -221,7 +386,16 @@ def render(base: str = BASE, out: Path = OUT) -> None:
     # Two highlighting themes rather than one filtered: a light theme's token
     # colours on a dark background are unreadable, and inverting the block
     # turns dark blue keys into the background.
-    style = (DOCS / "style.css").read_text()
+    shutil.copytree(
+        DOCS / "fonts",
+        out / "fonts",
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("faces.css"),
+    )
+    # The @font-face rules go first, and url(fonts/...) in them is relative to
+    # style.css, which sits at the root beside fonts/.
+    style = (DOCS / "fonts" / "faces.css").read_text() + "\n"
+    style += (DOCS / "style.css").read_text()
     light = HtmlFormatter(style="friendly").get_style_defs(".codehilite")
     dark = HtmlFormatter(style="github-dark").get_style_defs(".codehilite")
     dark = "\n".join(f"    {line}" for line in dark.splitlines())

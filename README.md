@@ -370,9 +370,11 @@ bibframe_json/schema/ontology.json     generated   150 range + 110 domain constr
 bibframe_json/schema/dialect/          written     one resource, one file per definition
 bibframe_json/schema/dialect.json      generated   the same schema, bundled from those
 bibframe_json/schema/cbd.json          written     a CBD, referencing dialect.json
+example/instance.json                  written     a real stored record, and the card on the front page
 example/cbd.json                       written     a real CBD, and what its shape is for
 conformance/                           written     documents and verdicts, for any implementation
 docs/                                  written     six pages, mostly directives into the above
+docs/fonts/                            vendored    Literata and IBM Plex Mono, OFL
 site/                                  generated   the pages, and the artifacts at their own URLs
 generate/bibframe.rdf                  vendored    BIBFRAME 3.0.1, issued 2025-12-03
 ```

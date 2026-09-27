@@ -1,5 +1,7 @@
 # One JSON shape for BIBFRAME
 
+<!-- card -->
+
 <!-- readme -->
 
 ## What the shape guarantees
