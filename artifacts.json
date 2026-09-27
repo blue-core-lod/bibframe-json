@@ -1,0 +1,11 @@
+{
+  "comment": "Where each artifact tree is published, relative to the site base. Read by src/integrations/artifacts.mjs, which copies them, and by tests/test_artifacts.py, which checks that every $id matches the URL it lands at. One file because the two must not disagree: a relative $ref resolves against the $id of the file it appears in, not against wherever you fetched it, so a schema served anywhere other than the path its own $id names has references that resolve to nothing.",
+  "base": "https://blue-core-lod.github.io/bibframe-json",
+  "publish": {
+    "bibframe_json/context": "context",
+    "bibframe_json/schema": "schema",
+    "conformance": "conformance",
+    "example": "example"
+  },
+  "skip": ["*.md", "__pycache__"]
+}

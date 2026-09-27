@@ -1,0 +1,194 @@
+---
+/**
+ * A catalogue card, and the same record as JSON.
+ *
+ * ISBD has structured bibliographic description with delimiters since 1971:
+ * title / responsibility. -- edition. -- place : publisher, date. That is the
+ * same idea as this project, so the front page shows both halves with the
+ * structural punctuation marked in the same colour.
+ *
+ * Generated from example/instance.json, which validates, rather than typed
+ * out. A card with a hand-written title would look identical and mean
+ * nothing. Every field below is indexed directly, so a record missing one
+ * fails the build instead of quietly rendering a gap.
+ *
+ * Ported from generate/site.py. The Python version had a test asserting every
+ * fragment here is a real string in the record; pytest cannot reach an Astro
+ * component, so that guarantee is weaker now -- direct indexing catches a
+ * missing field but not an invented one.
+ */
+import record from "../../example/instance.json";
+
+const CARD_MONO = "0.8rem";
+
+type Area = { key: string; delimiter: string; breaks: number; value: string };
+
+const place = record.provisionActivity[0]["bflc:simplePlace"][0];
+const publisher = record.provisionActivity[0]["bflc:simpleAgent"][0];
+const date = record.provisionActivity[0]["bflc:simpleDate"][0];
+const isbn = record.identifiedBy.find((id) => id["@type"].includes("Isbn"))!;
+
+// The areas a card shows, in the order it shows them. Areas 1 to 4 run on as
+// one paragraph; the physical description, the note and the ISBN each start a
+// line. \0 marks a delimiter falling inside an area rather than between two,
+// so area 4's " : " and ", " are marked like the rest.
+const AREAS: Area[] = [
+  { key: "title", delimiter: "", breaks: 0, value: record.title[0].mainTitle[0] },
+  {
+    key: "responsibilityStatement",
+    delimiter: " / ",
+    breaks: 0,
+    value: record.responsibilityStatement[0],
+  },
+  {
+    key: "editionStatement",
+    delimiter: ". — ",
+    breaks: 0,
+    value: record.editionStatement[0],
+  },
+  {
+    key: "provisionActivity",
+    delimiter: ". — ",
+    breaks: 0,
+    value: `${place}\0 : \0${publisher}\0, \0${date}.`,
+  },
+  {
+    key: "extent",
+    delimiter: "",
+    breaks: 1,
+    value: record.extent[0]["rdfs:label"][0],
+  },
+  { key: "dimensions", delimiter: " ; ", breaks: 0, value: `${record.dimensions[0]}.` },
+  { key: "note", delimiter: "", breaks: 2, value: record.note[0]["rdfs:label"][0] },
+  {
+    key: "identifiedBy",
+    delimiter: "",
+    breaks: 2,
+    value: `ISBN ${isbn["rdf:value"][0]} (${isbn.qualifier[0]})`,
+  },
+];
+
+const escape = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const mark = (text: string) => `<span class="d">${escape(text)}</span>`;
+
+/**
+ * An area delimiter, with ISBD's one piece of arithmetic applied: an element
+ * already ending in a full stop does not take a second one, so it reads
+ * "Madhusudan. -- 2nd revised edition" and not "Madhusudan.. --". Transcribed
+ * statements of responsibility very often end in a stop, so this is the
+ * ordinary case rather than an edge one.
+ */
+function delimiter(before: string, mark_: string): string {
+  const trimmed =
+    mark_.startsWith(".") && before.trimEnd().endsWith(".") ? mark_.slice(1) : mark_;
+  return trimmed ? mark(trimmed) : "";
+}
+
+let description = "";
+let previous = "";
+for (const area of AREAS) {
+  if (area.breaks) {
+    description += "<br>".repeat(area.breaks);
+    previous = "";
+  } else {
+    description += delimiter(previous, area.delimiter);
+  }
+  description += area.value
+    .split("\0")
+    .map((part, i) => (i % 2 === 0 ? escape(part) : mark(part)))
+    .join("");
+  previous = area.value.replaceAll("\0", "");
+}
+
+/** JSON with any array of scalars kept on one line.
+ *
+ * json.dumps-style indentation gives every value in this shape three lines,
+ * because every value is an array: the record runs to eighty lines of which
+ * most are a bracket. Beside a five-line card that loses the comparison the
+ * card is here to make.
+ */
+function compact(node: unknown, level = 0): string {
+  const pad = "  ".repeat(level);
+  const inner = "  ".repeat(level + 1);
+  if (Array.isArray(node)) {
+    if (node.every((item) => typeof item !== "object" || item === null)) {
+      return `[${node.map((item) => JSON.stringify(item)).join(", ")}]`;
+    }
+    const items = node.map((item) => `${inner}${compact(item, level + 1)}`);
+    return `[\n${items.join(",\n")}\n${pad}]`;
+  }
+  if (node && typeof node === "object") {
+    const pairs = Object.entries(node).map(
+      ([key, value]) => `${inner}${JSON.stringify(key)}: ${compact(value, level + 1)}`,
+    );
+    return `{\n${pairs.join(",\n")}\n${pad}}`;
+  }
+  return JSON.stringify(node);
+}
+
+/**
+ * Mark JSON's structural punctuation, and only where it is structural.
+ *
+ * Walked rather than matched with a regex so that punctuation inside a string
+ * is left alone. That is not a detail: the ";" in "Chakravorti ; foreward by
+ * Prof. Penna Madhusudan" is a real ISBD delimiter sitting inside a
+ * transcribed literal, where no parser can reach it. It stays in the ink
+ * colour in both halves, and that is the argument for putting the structure
+ * in the JSON instead.
+ */
+function markPunctuation(json: string): string {
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (const character of json) {
+    if (escaped) {
+      out += escape(character);
+      escaped = false;
+    } else if (character === "\\") {
+      out += escape(character);
+      escaped = true;
+    } else if (character === '"') {
+      inString = !inString;
+      out += character;
+    } else if (!inString && "{}[]:,".includes(character)) {
+      out += mark(character);
+    } else {
+      out += escape(character);
+    }
+  }
+  return out;
+}
+
+// The card has room for one publication statement, so showing the record's
+// two here would make the halves disagree.
+const shown = Object.fromEntries(
+  AREAS.map(({ key }) => [
+    key,
+    key === "provisionActivity"
+      ? record.provisionActivity.slice(0, 1)
+      : record[key as keyof typeof record],
+  ]),
+);
+---
+
+<figure class="plate" style={`--card-mono: ${CARD_MONO}`}>
+  <div class="card" role="img" aria-label="A catalogue card for the record below">
+    <p class="description" set:html={description} />
+  </div>
+
+  <p class="between">
+    The same record, twice. Red is the punctuation that carries the structure,
+    and ISBD standardised the top half's in 1971.
+  </p>
+
+  <pre class="record"><code set:html={markPunctuation(compact(shown))} /></pre>
+
+  <figcaption>
+    Abridged to the areas a card has room for; the whole record is <a
+      href="example/instance.json">example/instance.json</a
+    >. The one delimiter left in the ink colour sits inside a transcribed
+    string, where nothing can reach it.
+  </figcaption>
+</figure>

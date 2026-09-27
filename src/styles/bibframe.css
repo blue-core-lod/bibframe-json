@@ -1,0 +1,85 @@
+/* bibframe-json
+   ----------------------------------------------------------------------------
+   Two fonts, one accent, and the catalogue card. Everything else is
+   Starlight's, deliberately: the point of moving here was to stop
+   hand-crafting a site.
+
+   Red is date-stamp red and it means one thing, the punctuation that carries
+   structure. Links are duplicator-ink teal so they do not compete for it. The
+   old site spent the red in five places, including every section heading,
+   which left it meaning nothing in particular. */
+
+:root {
+    --sl-font: Literata, Georgia, "Times New Roman", serif;
+    --sl-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sl-color-accent: #2b6474;
+    --sl-color-accent-high: #1d4a57;
+    --sl-color-accent-low: #d7e3e7;
+    --stamp: #a8322b;
+}
+
+:root[data-theme="dark"] {
+    --sl-color-accent: #86b8c6;
+    --sl-color-accent-high: #b3d4dd;
+    --sl-color-accent-low: #123038;
+    --stamp: #d9776a;
+}
+
+/* The splash template runs to the full window, which is a poor measure for
+   17px Literata. Cap it: the plate gets the extra room it needs for a card's
+   long description line, and the prose beside it stays readable. */
+.sl-container {
+    max-width: 54rem;
+}
+
+/* --- the plate: a card, and the record it describes ---------------------- */
+
+.plate {
+    margin: 2rem 0 2.5rem;
+}
+
+.card {
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-hairline);
+    box-shadow: 3px 3px 0 var(--sl-color-hairline);
+    padding: 1.5rem 1.6rem 1.2rem;
+}
+
+.card .description {
+    font-family: var(--sl-font-mono);
+    font-size: var(--card-mono);
+    line-height: 1.75;
+    margin: 0;
+    /* a card's hanging indent: first line out, the rest tucked under */
+    padding-left: 2.5rem;
+    text-indent: -2.5rem;
+}
+
+/* Both halves at one size. At two sizes, one reads as an illustration of the
+   other, when the claim is that they are two descriptions of one record. */
+.plate .record {
+    font-size: var(--card-mono);
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-hairline);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.plate .between,
+.plate figcaption {
+    font-size: 0.95rem;
+    color: var(--sl-color-gray-3);
+    max-width: 34rem;
+}
+
+.plate .between { margin: 1.1rem 0 0.8rem; }
+.plate figcaption { margin-top: 1rem; }
+
+/* The delimiters. No animation: the design rests on this colour being a fact
+   about the text rather than an event the page performs. */
+.d { color: var(--stamp); }
+
+@media (max-width: 46rem) {
+    .card { padding: 1rem 1rem 0.8rem; }
+    .card .description { padding-left: 0; text-indent: 0; }
+}
