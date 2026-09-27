@@ -65,8 +65,20 @@ Here's what an abridged JSON Instance looks like:
 ```
 
 Note `instanceOf` has a bare URI, because the context declares it `@type: @id`.
-Six properties are written that way: `instanceOf`, `itemOf`, `hasItem`,
-`electronicLocator`, `generationProcess`, `descriptionLevel`.
+Seven properties are written that way: `instanceOf`, `hasInstance`, `itemOf`,
+`hasItem`, `electronicLocator`, `generationProcess`, `descriptionLevel`.
+
+`hasInstance` is on that list now and was excluded for a while. The argument
+against it was a measurement — a bare string 262 times, a node with a URI 61
+times, a node with **no** URI 39 times — taken from the wrong population. It
+was drawn from CBDs, where every referenced Instance is described in the
+document by definition, so there are no bare references to count. In a stored
+record the reference is all there is. The 39 blank nodes are real and remain
+unaddressed: an Instance with no URI cannot be written as a reference at all.
+
+The list is cbd-01.md's, minus `rdf:type`. Which is also why the two contexts
+in the Blue Core family now agree — across 120 stored records they produce
+identical triples.
 
 ## The context
 
