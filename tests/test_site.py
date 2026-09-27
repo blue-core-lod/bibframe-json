@@ -14,6 +14,7 @@ import re
 
 import pytest
 
+import bibframe_json
 from generate import site
 
 
@@ -84,11 +85,18 @@ def test_a_schema_is_served_at_the_url_its_id_names(built):
 
 
 def test_the_context_is_served_where_it_is_referenced(built):
-    """The URL example/cbd.json names in its own @context."""
+    """Three places name this URL, and they have to agree.
+
+    `CONTEXT_URL` is what a producer writes into a document, example/cbd.json
+    is one that did, and the served path is where the file lands. A document
+    naming a context that is not there is worse than one naming none: a
+    JSON-LD processor fails on it, where it would have ignored the absence.
+    """
+    served = f"{site.BASE}/context/bibframe.jsonld"
+    assert bibframe_json.CONTEXT_URL == served
     example = json.loads((built / "example" / "cbd.json").read_text())
-    named = example["@context"]
-    assert named == f"{site.BASE}/context/bibframe.jsonld"
-    assert (built / named.removeprefix(f"{site.BASE}/")).exists()
+    assert example["@context"] == served
+    assert (built / served.removeprefix(f"{site.BASE}/")).exists()
 
 
 def test_a_project_page_publishes_no_cname(built):

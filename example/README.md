@@ -1,7 +1,9 @@
 # `cbd.json` — a Concise Bounded Description
 
 A real record from `stage.bcld.info`, framed. It validates against
-`../bibframe_json/schema/cbd.json`.
+`../bibframe_json/schema/cbd.json`, and it is byte-for-byte what
+`generate/sample.py` produces — so it is a sample of the shape rather than a
+tidied illustration of it.
 
 LC defined how a CBD is serialized as RDF/XML and left the JSON-LD as an RDF
 dump: `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes with full
@@ -32,7 +34,8 @@ cycle that way, and it is what keeps the document finite.
 without checking.
 
 **`@context` is named rather than inlined**, which keeps the document about the
-record instead of about the vocabulary.
+record instead of about the vocabulary. Not only tidier: across the 59 records
+below, inlining the context is 11,947 bytes each and 61% of the document.
 
 ## Producing one
 
@@ -49,7 +52,7 @@ jsonld.frame(expanded, {
 })
 ```
 
-Then two things the frame cannot do, both of which took finding out:
+Then three things the frame cannot do, all of which took finding out:
 
 **Coerce every property to an array.** `@container: @set` in the context covers
 the 251 terms the context declares, and nothing else. A property it has never
@@ -62,10 +65,16 @@ has to run after framing.
 it, and a node with a single type compacts to a string. The dialect tolerates
 both; this normalises for consistency.
 
+**Replace the context with its URL.** Framing has to be handed the terms, and
+pyld returns them inlined, so the document comes back carrying all 258 entries
+in front of the description it is about — the form this file argues against.
+`bibframe_json.CONTEXT_URL` is the string to put back.
+
 ## Measurements
 
 Against 59 CBDs from a running system, comparing this with the sibling
-arrangement:
+arrangement. Both figures exclude `@context`, which is the same either way and
+would otherwise swamp the difference:
 
 | | bytes | resources described |
 | --- | --- | --- |

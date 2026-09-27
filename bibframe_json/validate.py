@@ -29,6 +29,13 @@ DIALECT = "dialect"
 CBD = "cbd"
 ONTOLOGY = "ontology"
 
+# Where context() is published. A document that names its context rather than
+# inlining it -- which is what a document leaving your system should do -- has
+# to name this exact URL, because a relative $ref and a context reference both
+# resolve against where the file actually is. Anything that writes it needs
+# the same string, so there is one.
+CONTEXT_URL = "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+
 
 class Finding(NamedTuple):
     """One thing wrong with a record.

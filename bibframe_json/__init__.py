@@ -11,6 +11,8 @@ them.
                         holding several, or "ontology"
     registry()          the shipped schemas, for resolving between them
     context()           the JSON-LD context that produces the shape
+    CONTEXT_URL         where that context is published, for a document that
+                        names it rather than carrying a copy
 
 Reading a record into objects is a separate job and deliberately not one this
 package does. See conformance/README.md.
@@ -18,6 +20,7 @@ package does. See conformance/README.md.
 
 from bibframe_json.validate import (
     CBD,
+    CONTEXT_URL,
     DIALECT,
     ONTOLOGY,
     Finding,
@@ -29,6 +32,7 @@ from bibframe_json.validate import (
 
 __all__ = [
     "CBD",
+    "CONTEXT_URL",
     "DIALECT",
     "ONTOLOGY",
     "Finding",

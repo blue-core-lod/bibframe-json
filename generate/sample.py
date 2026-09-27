@@ -38,7 +38,7 @@ import urllib.request
 from bluecore_models.utils.graph import CONTEXT, _as_arrays, frame_jsonld
 from pyld import jsonld
 
-from bibframe_json import context
+from bibframe_json import CONTEXT_URL, context
 
 HERE = pathlib.Path(__file__).resolve().parent
 CORPUS = HERE.parent / "corpus"
@@ -176,6 +176,13 @@ def cbds(uris: list[str]) -> int:
         framed = strip_blank_ids(
             _as_arrays(jsonld.frame(expanded, cbd_frame(resource)))
         )
+        # Naming the context, not carrying it: framing has to be handed the
+        # terms, and pyld returns them inlined, so every record came back with
+        # 258 entries of vocabulary in front of the description it is actually
+        # about. That is the form the README argues against, and a sample of
+        # the recommended shape should be in it.
+        if isinstance(framed, dict):
+            framed["@context"] = CONTEXT_URL
         (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.cbd.json").write_text(
             json.dumps(framed, indent=2, ensure_ascii=False) + "\n"
         )
