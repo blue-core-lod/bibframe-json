@@ -69,7 +69,14 @@ def test_every_link_between_pages_resolves(built):
         for href in re.findall(r'href="([^"]+)"', page.read_text()):
             if href.startswith(("http", "#", "mailto:")):
                 continue
-            assert (built / href).exists(), f"{page.name} links to missing {href}"
+            target, _, fragment = href.partition("#")
+            assert (built / target).exists(), f"{page.name} links to missing {href}"
+            if fragment:
+                # heading ids come from markdown's toc extension, so rewording
+                # a heading silently breaks every link into it
+                assert f'id="{fragment}"' in (built / target).read_text(), (
+                    f"{page.name} links to {href}, but that anchor is not there"
+                )
 
 
 def test_a_schema_is_served_at_the_url_its_id_names(built):

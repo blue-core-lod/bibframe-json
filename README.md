@@ -164,9 +164,42 @@ anyone else's.
 ## Producing it
 
 This says how to write a description down. It does not say what to describe, or
-which entity a thing is, or how to model a relationship — that is the work of
-[BIBFRAME itself][primer], and redoing it here badly would be worse than not
-doing it.
+which entity a thing is, or how to model a relationship: that is the work of
+[LC's BIBFRAME primer][primer], which is a reference guide to the model — a
+section each for Works, Instances, Items and Hubs, and for titles, subjects,
+identifiers, notes, contributions, relationships, provision activity and
+administrative metadata, with implementation considerations throughout. Eleven
+of the fifteen definitions in `schema/dialect/` have a section there, and [the
+table on the shape page](docs/shape.md#the-definitions) links each one to it. Read
+that for what a title is; read this for how to write one down.
+
+### Compared with the primer
+
+The primer shows each of its examples as RDF/XML, JSON-LD, Turtle and a graph.
+Its JSON-LD is already nested rather than a flat dump, which is more than
+`.cbd.jsonld` from id.loc.gov manages, and it differs from this shape in four
+ways worth knowing if you have been reading it:
+
+- a single value is a bare object, where this shape always uses an array
+- `@type` is a string, where this shape uses a list of classes on a node
+- terms are prefixed — `bf:title` — where this context uses `@vocab`, so
+  `title`
+- a blank node carries `"@id": "_:b0"`
+
+The last one the primer itself argues against, in
+[Properties and classes overview][overview]: a nodeID "can be, and is often,
+omitted as parsers will supply their own blank node identifier when absent".
+That is the reason this shape forbids it — a label a parser invents is not an
+identifier, and keeping it makes two identical values distinguishable by
+accident.
+
+Two other things it says are load-bearing here. That when referencing a
+resource you may "provide the URI, a label, or both" is why a reference in
+this shape is a bare URI or a node with `rdfs:label` and either conforms. And
+that for any property "the object should not be a literal in one triple and a
+resource in another" is why only seven properties are written as bare URIs:
+`@type: @id` on a property that sometimes embeds a node would produce exactly
+that mixture.
 
 If you already have RDF, the pipeline is four steps, of which framing is one
 and the other three are the things framing will not do for you.
@@ -216,6 +249,7 @@ and `conformance/` is how you find out whether your reader agrees with anyone
 else's.
 
 [primer]: https://bibframe.org/docs/view/documentation-bf-primer/index.md
+[overview]: https://bibframe.org/docs/view/documentation-bf-primer/rdf-in-bibframe/properties-and-classes-overview.md
 
 ## Validating
 

@@ -73,6 +73,11 @@ SERVED = {
     "../bibframe_json/schema/": "schema/",
     "bibframe_json/schema/": "schema/",
     "bibframe_json/context/": "context/",
+    # A link to another page is written docs/shape.md so it works on GitHub;
+    # the site serves those pages flat. Matched with the link syntax attached
+    # so that "docs/" in running prose, or in the table of what is generated,
+    # is left alone.
+    "](docs/": "](",
 }
 
 
@@ -148,6 +153,30 @@ def quote(path: Path, display: str) -> str:
     )
 
 
+# Where the BIBFRAME primer explains what each of these is for. The primer is
+# LC's reference guide to the model; this repository describes one way to write
+# it down, so a definition that has a counterpart there should say so rather
+# than paraphrase it. Eleven of fifteen do; Ref, Text, Resource and main are
+# artefacts of the shape rather than parts of the model, and Classification has
+# no section of its own.
+PRIMER = "https://bibframe.org/docs/view/documentation-bf-primer/"
+CLASSES = "data-model-resource-description-classes/"
+COMMON = "data-model-common-properties-and-classes/"
+EXPLAINED = {
+    "Work.json": CLASSES + "works.md",
+    "Instance.json": CLASSES + "instances.md",
+    "Item.json": CLASSES + "items.md",
+    "Hub.json": CLASSES + "hubs.md",
+    "AdminMetadata.json": COMMON + "administrative-metadata.md",
+    "Contribution.json": COMMON + "contributions-and-contributors.md",
+    "Identifier.json": COMMON + "identifiers.md",
+    "Note.json": COMMON + "notes.md",
+    "ProvisionActivity.json": COMMON + "provision-activity.md",
+    "Relation.json": COMMON + "relationships.md",
+    "Title.json": COMMON + "titles.md",
+}
+
+
 def definitions() -> str:
     """A table of the split dialect files, read out of the files.
 
@@ -155,14 +184,21 @@ def definitions() -> str:
     a validator surfaces -- so the reference page is the schemas talking about
     themselves.
     """
-    rows = ["| Definition | What it is |", "| --- | --- |"]
+    rows = [
+        "| Definition | What it is | In the model |",
+        "| --- | --- | --- |",
+    ]
     files = sorted((ROOT / "bibframe_json" / "schema" / "dialect").glob("*.json"))
     for path in [p for p in files if p.name == "main.json"] + [
         p for p in files if p.name != "main.json"
     ]:
         schema = json.loads(path.read_text())
         described = schema.get("description") or schema.get("title", "")
-        rows.append(f"| [`{path.name}`](schema/dialect/{path.name}) | {described} |")
+        page = EXPLAINED.get(path.name)
+        explains = f"[primer]({PRIMER}{page})" if page else ""
+        rows.append(
+            f"| [`{path.name}`](schema/dialect/{path.name}) | {described} | {explains} |"
+        )
     return "\n".join(rows)
 
 
@@ -431,7 +467,12 @@ def render(base: str = BASE, out: Path = OUT) -> None:
         source = f"{source}\n\n{links(ROOT / 'README.md')}\n"
         # Between pages, not to the repository: a link written as shape.md is
         # what makes the sources readable on GitHub too.
-        content = fields(page.convert(source).replace('.md"', '.html"'))
+        # A link between pages is written .md, which is what makes the
+        # sources readable on GitHub. The fragment has to survive: matching
+        # only .md" left shape.md#the-definitions pointing at a file the site
+        # does not serve.
+        converted = re.sub(r'\.md(?=["#])', ".html", page.convert(source))
+        content = fields(converted)
         name = file.replace(".md", ".html")
         (out / name).write_text(
             layout.replace("{{title}}", html.escape(title))
