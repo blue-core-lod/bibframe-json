@@ -2,6 +2,10 @@
 
 <!-- readme: The JSON -->
 
+## The context
+
+<!-- readme: The context -->
+
 ## The definitions
 
 A resource is checked by `dialect.json`, which comes in two forms from one

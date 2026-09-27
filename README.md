@@ -36,6 +36,7 @@ Here's what an abridged JSON Instance looks like:
 
 ```json
 {
+  "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
   "@id": "http://id.loc.gov/resources/instances/23867197",
   "@type": ["Instance"],
   "instanceOf": ["http://id.loc.gov/resources/works/23867197"],
@@ -66,6 +67,33 @@ Here's what an abridged JSON Instance looks like:
 Note `instanceOf` has a bare URI, because the context declares it `@type: @id`.
 Six properties are written that way: `instanceOf`, `itemOf`, `hasItem`,
 `electronicLocator`, `generationProcess`, `descriptionLevel`.
+
+## The context
+
+The schema never requires `@context`. A document may carry it as a URL, carry
+it inlined, or leave it out, and all three conform — there are conformance
+cases for each, because a producer should not have to guess.
+
+But leaving it out costs something that is easy to miss. Without a context the
+document is JSON that happens to match this shape; with one it is also JSON-LD,
+and `instanceOf` means `bf:instanceOf` rather than the string "instanceOf".
+Nothing about reading it as plain JSON changes either way — which is the point
+— so the recommendation is to name it and let the two audiences coexist:
+
+```json
+"@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+```
+
+**Name it rather than inlining it.** A URL is one line; the context is 251
+terms. Inlining makes most of a small record a copy of a vocabulary, and
+changes nothing a reader can use — a JSON reader ignores it and a JSON-LD
+processor fetches and caches it once.
+
+A record stored in a database is the exception, and Blue Core treats it as one:
+the context is the same for every row, so storing it per row would be 251 terms
+of duplication. `bluecore_models` strips it on write and the API puts it back
+on read. Which is the general rule — a document that leaves your system names
+its context, a row in your own table need not.
 
 A literal keeps its language or its datatype when it has one:
 
