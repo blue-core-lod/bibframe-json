@@ -1,6 +1,6 @@
 # bibframe-json
 
-[![Test](https://github.com/edsu/bibframe-json/actions/workflows/test.yml/badge.svg)](https://github.com/edsu/bibframe-json/actions/workflows/test.yml)
+[![Test](https://github.com/blue-core-lod/bibframe-json/actions/workflows/test.yml/badge.svg)](https://github.com/blue-core-lod/bibframe-json/actions/workflows/test.yml)
 
 *bibframe-json* follows the [LOUD](https://linked.art/loud/) principles by 
 providing a predictable, opinionated JSON shape for [BIBFRAME]

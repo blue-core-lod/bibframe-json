@@ -23,7 +23,7 @@ from them or checks them.
 
 How the schemas and the context are built, and what is measured against real
 records, is in
-[README.md](https://github.com/edsu/bibframe-json#readme), which is for people
+[README.md](https://github.com/blue-core-lod/bibframe-json#readme), which is for people
 working on the repository rather than with the data.
 
 ## The files
