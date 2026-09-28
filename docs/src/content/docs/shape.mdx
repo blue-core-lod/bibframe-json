@@ -1,0 +1,121 @@
+---
+title: The shape
+---
+
+import Definitions from "../../components/Definitions.astro";
+
+## The JSON
+
+An abridged JSON Instance:
+
+```json
+{
+  "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
+  "@id": "http://id.loc.gov/resources/instances/23867197",
+  "@type": ["Instance"],
+  "instanceOf": ["http://id.loc.gov/resources/works/23867197"],
+  "title": [
+    {
+      "@type": ["Title"],
+      "mainTitle": ["Minority voices from the academic superstructure"]
+    }
+  ],
+  "identifiedBy": [
+    { "@type": ["Lccn"], "rdf:value": ["  2024038899"] },
+    {
+      "@type": ["Isbn"],
+      "qualifier": ["hardcover"],
+      "rdf:value": ["9781668499092"]
+    }
+  ],
+  "provisionActivity": [
+    {
+      "@type": ["ProvisionActivity", "Publication"],
+      "bflc:simplePlace": ["Hershey, PA"],
+      "bflc:simpleDate": ["[2025]"]
+    }
+  ]
+}
+```
+
+Note `instanceOf` has a bare URI, because the context declares it `@type: @id`.
+Seven properties are written that way: `instanceOf`, `hasInstance`, `itemOf`,
+`hasItem`, `electronicLocator`, `generationProcess`, `descriptionLevel`.
+
+## The context
+
+The schema requires `@context` on the document. Carry it as a URL or carry it
+inlined; the URI below is provisional while this proposal is worked out.
+
+```json
+"@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+```
+
+The requirement reaches the document and nothing else. A nested node carries
+no context of its own, and neither does the Work a CBD embeds: it is a Work,
+not a document.
+
+Without a context the document is JSON that happens to match this shape. With
+one it is also JSON-LD, and `instanceOf` means `bf:instanceOf` rather than the
+string "instanceOf". Reading it as plain JSON works the same either way, which
+is the point of requiring it: naming the context costs a reader nothing and
+buys the other audience everything.
+
+Name it rather than inlining it. A URL is one line; the context is 251 terms.
+Over 59 CBDs from a running system, inlining it costs 11,947 bytes per record
+and 61% of the document, and it changes nothing a reader can use: a JSON
+reader ignores it, and a JSON-LD processor fetches it once and caches it.
+
+A row in a database is not a document in this shape and is not expected to be
+one. The context is the same for every row, so storing it per row duplicates
+251 terms that many times over, and `bluecore_models` strips it on write.
+What this schema describes is what you hand to somebody else.
+
+A literal keeps its language or its datatype when it has one:
+
+```json
+"title": [
+  { 
+    "@type": ["Title"],
+    "mainTitle": ["Trudy Instituta Obshchcei Fiziki"]
+  },
+  {
+    "@type": ["Title"],
+    "mainTitle": [
+      {
+        "@value": "Труды Института Общц̳еи Физики",
+        "@language": "ru-cyrl"
+      }
+    ]
+  }
+],
+"date": [
+  {
+    "@value": "199X",
+    "@type": "http://id.loc.gov/datatypes/edtf"
+  }
+]
+```
+
+Those two titles are one title in two scripts, and the language tag is all
+that tells them apart. `date` carries three datatypes in real records:
+`xsd:date`, `xsd:dateTime`, and EDTF. EDTF encodes uncertainty, so nothing
+parses `199X` as a date.
+
+[primer]: https://bibframe.org/docs/view/documentation-bf-primer/index.md
+[BIBFRAME]: https://bibframe.org
+[Blue Core]: https://bluecore.info/
+
+## The definitions
+
+A resource is checked by `dialect.json`, which comes in two forms from one
+build: a single bundled file, and one file per definition. The split files are
+the source. Each has a page of its own, listing the properties it names and
+what BIBFRAME says each of them is.
+
+<Definitions />
+
+Start at [`https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json). It
+dispatches on `@type` with `if`/`then`, so a failure is reported against the
+resource type the record claims rather than as "the document matched none of
+four types".

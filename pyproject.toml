@@ -29,15 +29,15 @@ dev = [
     "pytest>=8.3.4",
     "ruff>=0.9.6",
     "ty>=0.0.1a1",
-    "markdown>=3.11",
 ]
 
 [tool.pytest.ini_options]
 addopts = "-v"
 testpaths = ["tests"]
-# so that tests/test_site.py can import generate/site.py. The generators are
-# a build tool rather than part of the package -- hatchling ships only
-# bibframe_json -- so they are reached from the checkout root.
+# so that tests/test_example.py can import example/produce.py, the published
+# recipe for producing this shape. example/ and generate/ are not part of the
+# package -- hatchling ships only bibframe_json -- so they are reached from
+# the checkout root.
 pythonpath = ["."]
 markers = [
     "corpus: needs the Blue Core corpus and bluecore-models; deselect with -m 'not corpus'",

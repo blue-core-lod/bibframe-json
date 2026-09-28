@@ -1,7 +1,8 @@
-# The site is built here rather than checked in, so git holds one copy of each
-# schema instead of two. generate/site.py copies the context, the schemas and
-# the conformance corpus in at the paths their own $ids name, which is what
-# makes those $ids resolvable and `{"$ref": "Ref.json"}` work over the network.
+# The documentation site. Astro builds it, and src/integrations/artifacts.mjs
+# copies the context, the schemas and the conformance corpus in at the paths
+# their own $ids name -- which is what makes those $ids resolvable and
+# {"$ref": "Ref.json"} work over the network. tests/test_artifacts.py checks
+# that mapping, so a broken one fails the Test workflow rather than shipping.
 name: Pages
 on:
   push:
@@ -28,28 +29,36 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.13"
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Install
+        run: npm ci
+        working-directory: docs
 
       - name: Build
-        run: uv run python generate/site.py
+        run: npm run build
+        working-directory: docs
 
-      # enablement creates the Pages site through the API if it does not
-      # exist, so the first deploy does not need someone to visit Settings.
-      # Without it configure-pages fails with "Get Pages site failed", which
-      # is what the first run in the org did.
+      # Pages has to be turned on in Settings, by someone with admin on the
+      # repository, with the source set to GitHub Actions. Until then this job
+      # fails, which is the honest signal. There is no way around it from
+      # here: configure-pages can create the site through the API with
+      # `enablement: true`, and this org refuses it --
+      #
+      #   Create Pages site failed.
+      #   Error: Resource not accessible by integration
+      #
+      # so the flag is left off rather than left in place not working.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: docs/dist
 
   deploy:
     needs: build

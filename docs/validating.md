@@ -1,3 +1,0 @@
-# Validating
-
-<!-- readme: Validating -->

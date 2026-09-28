@@ -24,7 +24,7 @@ import pathlib
 import jsonschema
 import pytest
 
-from bibframe_json import CBD, DIALECT, registry, schema, validate
+from bibframe_json import CBD, CONTEXT_URL, DIALECT, registry, schema, validate
 
 CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 SCHEMAS = (DIALECT, CBD)
@@ -116,13 +116,17 @@ def test_a_stored_record_is_not_a_cbd():
     carries more.
     """
     stored = {
+        "@context": CONTEXT_URL,
         "@id": "https://x/instances/1",
         "@type": ["Instance"],
         "instanceOf": ["https://x/works/1"],
     }
     cbd = {
+        "@context": CONTEXT_URL,
         "@id": "https://x/instances/1",
         "@type": ["Instance"],
+        # the embedded Work carries no context of its own: it is a Work, not
+        # a document, and only a document is required to name one
         "instanceOf": [{"@id": "https://x/works/1", "@type": ["Work"]}],
     }
 

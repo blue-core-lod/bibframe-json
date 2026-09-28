@@ -1,0 +1,132 @@
+---
+title: Validating
+description: Check a record against the shipped JSON Schemas, from Python, JavaScript or Ruby.
+---
+
+Three schemas, and which you want depends on what you are holding.
+
+| Schema | Checks |
+| --- | --- |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect.json) | one resource: a Work, Instance, Hub or Item |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/schema/cbd.json) | a Concise Bounded Description: an Instance with its Work embedded |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
+
+They are draft 2020-12 and reference nothing outside themselves, so any
+validator will run them. One thing to know before you start: `cbd.json` says
+`{"$ref": "dialect.json"}` rather than carrying a copy of every definition, so
+a validator needs both files loaded and something to resolve between them.
+
+The examples below read the two files from a local `schema/` directory, which
+is what a pipeline wants. If you fetch them at runtime instead, fetch both from
+the published location: a relative `$ref` resolves against the `$id` of the
+file it appears in, not against wherever you happened to get the file.
+
+## Python
+
+```python
+import bibframe_json
+
+for finding in bibframe_json.validate(record):
+    print(finding)
+
+# [dialect] subject/0: a blank node must not carry an @id
+# [ontology] the record: mainTitle does not belong on ['Work']
+```
+
+Each `Finding` has a `layer`, a `path` and a `message`, and `is_error` is true
+for the dialect layer. `validate(record, ontology=False)` is the useful gate in
+a pipeline, since those are the guarantees a consumer depends on. Which
+structural schema applies is worked out from the document; `kind="cbd"` says so
+outright.
+
+To drive `jsonschema` yourself, `registry()` is the part that resolves
+`cbd.json`'s reference to `dialect.json`:
+
+```python
+import jsonschema
+from bibframe_json import CBD, registry, schema
+
+validator = jsonschema.Draft202012Validator(
+    schema(CBD), registry=registry()
+)
+```
+
+## JavaScript
+
+Ajv, with both schemas added so each is found by the `$id` it declares:
+
+```js
+import Ajv2020 from "ajv/dist/2020.js";
+import { readFileSync } from "node:fs";
+
+const base = "https://blue-core-lod.github.io/bibframe-json/schema/";
+const read = (name) => JSON.parse(readFileSync(`schema/${name}`, "utf8"));
+
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+ajv.addSchema([read("dialect.json"), read("cbd.json")]);
+
+const check = ajv.getSchema(base + "dialect.json");
+if (!check(record)) {
+    for (const error of check.errors) {
+        console.log(error.instancePath || "(root)", error.message);
+    }
+}
+```
+
+`getSchema` rather than `compile`, because a schema that has been added cannot
+also be compiled. Ajv throws `schema with key or id ... already exists`.
+`strict: false` because Ajv's strict mode objects to `$comment` beside a
+`$ref`.
+
+## Ruby
+
+`json_schemer`, which reads the draft from `$schema` and takes a resolver for
+the one reference that crosses files:
+
+```ruby
+require "json"
+require "json_schemer"
+
+resolver = ->(uri) do
+  JSON.parse(File.read(File.join("schema", File.basename(uri.path))))
+end
+schema = JSON.parse(File.read("schema/dialect.json"))
+check = JSONSchemer.schema(schema, ref_resolver: resolver)
+
+check.validate(record).each do |error|
+  puts [error["data_pointer"], error["error"]].join(" ")
+end
+```
+
+`data_pointer` is the path, and it comes out cleanest of the three. A scalar
+where an array belongs gets one line:
+
+```
+/dimensions value at `/dimensions` is not an array
+```
+
+Ajv reports that same failure plus two more at the root, `must match "then"
+schema` and `must match "else" schema`. Those are the `@type` dispatch saying
+the record matched neither branch. Both true, neither the thing that is wrong.
+
+## At the command line
+
+```sh
+check-jsonschema --schemafile dialect.json record.json
+```
+
+## What the schemas will not tell you
+
+The root dispatches on `@type` with `if`/`then`, so a failure is reported
+against the resource type the record claims and at the path it happened, rather
+than as "the document matched none of four types". Every definition carries a
+one-line `description`, and so do the rules with something to explain, so a
+validator that surfaces annotations will show them.
+
+The last mile of message quality does not travel. A reference may be a bare URI
+or a node, and a literal may be a bare string or a value object, so both are an
+`anyOf`. When one branch fails, a validator can say only that the value matched
+neither. Finding the branch you meant takes a short walk into `error.context`,
+around fifteen lines in any language, and `validate()` does it in `_causes()`.
+If you already know what you are holding, point straight at the type instead,
+`dialect.json#/$defs/Work`, and the errors localise without any of that.

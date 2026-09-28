@@ -1,6 +1,7 @@
 {
   "description": "the ontology's business, not the dialect's",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Work"

@@ -1,6 +1,7 @@
 {
   "description": "the dialect reaches inside: a blank node keeping its @id is wrong wherever it is",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"

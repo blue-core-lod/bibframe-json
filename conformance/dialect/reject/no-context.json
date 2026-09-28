@@ -1,0 +1,22 @@
+{
+  "description": "a document in this shape names the context that gives its terms meaning",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A title"
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "/"
+  ]
+}

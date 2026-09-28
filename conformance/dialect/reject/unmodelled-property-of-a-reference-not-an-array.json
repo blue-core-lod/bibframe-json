@@ -1,9 +1,19 @@
 {
   "description": "the array rule reaches inside a reference too, not only a described node; the failure is reported at the reference, since a reference is a bare URI or a node and neither branch matched",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/1",
-    "@type": ["Work"],
-    "subject": [{ "@id": "https://x/s", "mads:isMemberOfMADSScheme": "not a list" }]
+    "@type": [
+      "Work"
+    ],
+    "subject": [
+      {
+        "@id": "https://x/s",
+        "mads:isMemberOfMADSScheme": "not a list"
+      }
+    ]
   },
-  "errors": ["/subject/0"]
+  "errors": [
+    "/subject/0"
+  ]
 }

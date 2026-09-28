@@ -6,6 +6,24 @@
     "type": "array"
   },
   "description": "What a Work, Instance, Hub and Item have in common.",
+  "examples": [
+    {
+      "@id": "https://bibframe.example/works/9937996a",
+      "@type": [
+        "Work"
+      ],
+      "title": [
+        {
+          "@type": [
+            "Title"
+          ],
+          "mainTitle": [
+            "A short history of Sanskrit literature"
+          ]
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

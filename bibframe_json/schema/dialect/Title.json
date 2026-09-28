@@ -6,6 +6,16 @@
     "type": "array"
   },
   "description": "A title, or one of the variant forms of it a record carries.",
+  "examples": [
+    {
+      "@type": [
+        "Title"
+      ],
+      "mainTitle": [
+        "A short history of Sanskrit literature"
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

@@ -54,7 +54,7 @@
           "items": {
             "allOf": [
               {
-                "$ref": "dialect.json"
+                "$ref": "dialect.json#/$defs/Work"
               },
               {
                 "type": "object",
@@ -82,7 +82,7 @@
           }
         }
       },
-      "$comment": "The embedded Work is checked by dialect.json as a resource, not merely as a reference. Without that it is only checked as a reference -- which is open, so a blank node keeping its @id inside the Work would pass. The sibling arrangement got this for free, because every member was dispatched as a resource; nesting has to ask for it."
+      "$comment": "The embedded Work is checked against the Work definition, not merely as a reference. Without that it is only checked as a reference -- which is open, so a blank node keeping its @id inside the Work would pass. The sibling arrangement got this for free, because every member was dispatched as a resource; nesting has to ask for it.\n\nAgainst #/$defs/Work rather than against dialect.json, which is the whole document schema and now requires @context. An embedded Work is a Work, not a document, and must not be made to carry a context of its own. The definition carries the same shared rules either way: each split file holds them itself, which tests/test_split_schema.py checks."
     }
   }
 }

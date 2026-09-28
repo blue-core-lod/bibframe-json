@@ -1,0 +1,71 @@
+---
+title: Producing it
+---
+
+import { Code } from "astro:components";
+import recipe from "../../../../example/produce.py?raw";
+
+*bibframe-json* says how to write a description down as JSON. For what to describe, which entity
+a thing is, and how to model a relationship, read [LC's BIBFRAME
+primer][primer]. It covers Works, Instances, Items and Hubs, and titles,
+subjects, identifiers, notes, contributions, relationships, provision activity
+and administrative metadata. Eleven of the fifteen definitions in
+`schema/dialect/` have a section there, and [the table on the shape
+page](../shape/#the-definitions) links each one to it.
+
+If you already have RDF, the pipeline is four steps, of which framing is one
+and the other three are the things framing will not do for you.
+[`https://blue-core-lod.github.io/bibframe-json/example/produce.py`](https://blue-core-lod.github.io/bibframe-json/example/produce.py) is all four, depending on nothing but
+`pyld`:
+
+```sh
+uv run python example/produce.py record.jsonld https://example.org/i/1
+```
+
+Copy it, port it, or read it as a specification of the pipeline. Each step
+carries the reason it exists, because we found each one by producing records
+and validating them. Do the same and you will find whatever is left.
+
+Two things to know before you run it.
+
+**It normalises, so its output may not match what your system stores.** Both
+forms of a reference conform, a bare URI and a `{"@id": ...}` wrapper, so a
+record can be valid and still not sit in the shape the context describes.
+Across 120 Blue Core records, `descriptionLevel` is a wrapper in all 114 of its
+appearances and `electronicLocator` in both of its, because the context those
+records were framed against does not declare those properties as references.
+The context here does. Neither is wrong, and they are not the same document.
+
+**A JSON-LD processor cannot expand a document that names a context it cannot
+fetch.** `pyld` raises `loading remote context failed` on a record whose
+`@context` is a URL, unless you configure a document loader. Pass the terms
+instead while you are working locally:
+
+```python
+terms = bibframe_json.context()["@context"]
+expanded = jsonld.expand({**record, "@context": terms})
+```
+
+### Which document to produce
+
+Frame a resource on its own and its links come out as bare URIs. That is a
+stored record, checked by `dialect.json`. Frame an Instance over a graph that
+also holds its Work, and the Work arrives embedded: a Concise Bounded
+Description, checked by `cbd.json`. That one difference is the whole of the
+second schema.
+
+### Then check it
+
+Whatever you build it with, the schemas are how you find out whether it worked,
+and `conformance/` is how you find out whether your reader agrees with anyone
+else's.
+
+[primer]: https://bibframe.org/docs/view/documentation-bf-primer/index.md
+
+[primer]: https://bibframe.org/docs/view/documentation-bf-primer/index.md
+[BIBFRAME]: https://bibframe.org
+[Blue Core]: https://bluecore.info/
+
+## The pipeline
+
+<Code code={recipe} lang="python" title="example/produce.py" />

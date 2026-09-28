@@ -6,6 +6,19 @@
     "type": "array"
   },
   "description": "A number that names the resource, and the scheme it belongs to.",
+  "examples": [
+    {
+      "@type": [
+        "Isbn"
+      ],
+      "qualifier": [
+        "hardback"
+      ],
+      "rdf:value": [
+        "9788183155984"
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

@@ -1,6 +1,7 @@
 {
   "description": "that is a stored record, where the Work is a row of its own; a CBD embeds it",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"

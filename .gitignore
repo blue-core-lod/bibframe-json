@@ -18,7 +18,11 @@ corpus/
 # down in a form this repository owns.
 cbd-01.md
 
-# The documentation site, assembled by generate/site.py and deployed from CI.
-# It is a copy of artifacts that are already in the repository, so checking it
-# in would mean two copies of every schema and a way for them to disagree.
-site/
+
+# The Starlight docs site: dependencies, build output and Astro cache.
+node_modules/
+dist/
+.astro/
+# Artifacts copied in by the artifacts integration from where they already
+# live in the repository. Generated, so not checked in.
+docs/public/

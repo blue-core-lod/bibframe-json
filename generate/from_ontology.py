@@ -30,12 +30,13 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from rdflib import OWL, RDF, RDFS, Graph, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, Graph, URIRef
 
 HERE = Path(__file__).resolve().parent
 ONTOLOGY = HERE / "bibframe.rdf"
 OUTPUT = HERE.parent / "bibframe_json" / "schema" / "ontology.json"
 CONTEXT_OUTPUT = HERE.parent / "bibframe_json" / "context" / "bibframe.jsonld"
+VOCABULARY_OUTPUT = HERE.parent / "bibframe_json" / "vocabulary.json"
 
 BF = "http://id.loc.gov/ontologies/bibframe/"
 ONTOLOGY_IRI = URIRef(BF)
@@ -452,6 +453,45 @@ def build(graph: Graph) -> dict:
     }
 
 
+def build_vocabulary(graph: Graph) -> dict:
+    """What BIBFRAME says each term means, indexed by the name we use for it.
+
+    Three things per term, all LC's own words. `label` is the human name,
+    which is often not the property name: bf:genreForm is "Genre/form" and
+    bf:hasInstance is "Instance of Work". `definition` is skos:definition,
+    which 455 of the 456 terms carry and which is the sentence a reader
+    wants. `notes` are the rdfs:comment values, which in this vocabulary hold
+    "Suggested use" and "Suggested value" hints rather than definitions.
+
+    Generated so the documentation can describe a property without anyone
+    paraphrasing LC, and so that paraphrase cannot drift. The schemas stay
+    editorial and say nothing about individual properties; this is the other
+    half, and the two are joined where they are read rather than merged here.
+    """
+    terms: dict[str, dict] = {}
+    for subject in sorted(set(graph.subjects()), key=str):
+        if not isinstance(subject, URIRef) or not str(subject).startswith(BF):
+            continue
+        name = term(subject)
+        label = graph.value(subject, RDFS.label)
+        definition = graph.value(subject, SKOS.definition)
+        notes = sorted(str(note) for note in graph.objects(subject, RDFS.comment))
+        if not (label or definition or notes):
+            continue
+        entry: dict[str, object] = {}
+        if label:
+            entry["label"] = str(label)
+        if definition:
+            entry["definition"] = str(definition)
+        if notes:
+            entry["notes"] = notes
+        terms[name] = entry
+    return {
+        "x-generated-from": "BIBFRAME, generate/bibframe.rdf",
+        "terms": terms,
+    }
+
+
 def main() -> None:
     graph = Graph()
     graph.parse(ONTOLOGY)
@@ -469,11 +509,19 @@ def main() -> None:
     print(
         f"  {len(schema['x-skipped'])} skipped by OVERRIDES: {', '.join(schema['x-skipped'])}"
     )
+    vocabulary = build_vocabulary(graph)
+    VOCABULARY_OUTPUT.write_text(
+        json.dumps(vocabulary, indent=2, ensure_ascii=False) + "\n"
+    )
+
     print(f"wrote {CONTEXT_OUTPUT.relative_to(HERE.parent)}")
     print(
         f"  {declared} terms declared; {len(ALWAYS_A_REFERENCE)} as @type: @id; "
         f"{len(LIST_VALUED)} skipped as rdf:List valued"
     )
+    defined = sum(1 for e in vocabulary["terms"].values() if "definition" in e)
+    print(f"wrote {VOCABULARY_OUTPUT.relative_to(HERE.parent)}")
+    print(f"  {len(vocabulary['terms'])} terms, {defined} with a definition")
 
 
 if __name__ == "__main__":

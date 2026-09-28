@@ -1,6 +1,7 @@
 {
   "description": "the embedded Work points back at the Instance by URI, which is how a JSON-LD processor breaks the cycle",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"
