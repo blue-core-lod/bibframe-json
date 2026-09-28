@@ -40,6 +40,14 @@ html {
     max-width: 54rem;
 }
 
+/* Astro's Code component scrolls long lines. The examples on the definition
+   pages are records, and a clipped @id reads as broken rather than
+   scrollable, so they wrap instead. Expressive Code handles its own blocks. */
+pre.astro-code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 /* --- the plate: a card, and the record it describes ---------------------- */
 
 .plate {

@@ -6,6 +6,43 @@
     "type": "array"
   },
   "description": "One published edition of a Work.",
+  "examples": [
+    {
+      "@id": "https://bibframe.example/instances/fb857a3a-f454-4392-ba6d-a3653c12be47",
+      "@type": [
+        "Instance"
+      ],
+      "instanceOf": [
+        "https://bibframe.example/works/9937996a-1083-4357-b05f-4be85f7b7354"
+      ],
+      "title": [
+        {
+          "@type": [
+            "Title"
+          ],
+          "bflc:nonSortNum": [
+            "2"
+          ],
+          "mainTitle": [
+            "A short history of Sanskrit literature"
+          ]
+        }
+      ],
+      "identifiedBy": [
+        {
+          "@type": [
+            "Isbn"
+          ],
+          "qualifier": [
+            "hardback"
+          ],
+          "rdf:value": [
+            "9788183155984"
+          ]
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

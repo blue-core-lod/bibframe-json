@@ -6,6 +6,23 @@
     "type": "array"
   },
   "description": "How the record itself came to be, rather than what it describes.",
+  "examples": [
+    {
+      "@type": [
+        "AdminMetadata"
+      ],
+      "descriptionAuthentication": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/marcauthen/pcc"
+        }
+      ],
+      "descriptionLanguage": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/languages/eng"
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

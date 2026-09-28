@@ -13,6 +13,8 @@
  * Deliberately not attempted: explaining the model. That is LC's BIBFRAME
  * primer, linked per definition where there is a section for it.
  */
+import { Code } from "astro:components";
+
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
 import vocabulary from "../../../bibframe_json/vocabulary.json";
@@ -23,6 +25,7 @@ type Schema = {
   description?: string;
   properties?: Record<string, Property>;
   anyOf?: Schema[];
+  examples?: unknown[];
   type?: string | string[];
   additionalProperties?: unknown;
 };
@@ -141,7 +144,9 @@ const own = term[definition!];
 const primer = PRIMER[`${definition}.json`];
 
 const title = schema.title ?? definition!;
+const examples = schema.examples ?? [];
 const headings = [
+  ...(examples.length ? [{ depth: 2, slug: "example", text: "Example" }] : []),
   { depth: 2, slug: "properties", text: "Properties" },
   { depth: 2, slug: "the-schema", text: "The schema" },
 ];
@@ -193,6 +198,23 @@ const headings = [
           </small>
         </p>
       </blockquote>
+    )
+  }
+
+  {
+    examples.length > 0 && (
+      <>
+        <h2 id="example">{examples.length > 1 ? "Examples" : "Example"}</h2>
+        {examples.map((example) => (
+          <Code code={JSON.stringify(example, null, 2)} lang="json" />
+        ))}
+        <p>
+          Trimmed from a real record rather than written for the occasion, and
+          checked against this definition by <code>tests/test_examples.py</code>
+          . A wrong example is worse than none, because it is the first thing
+          anyone copies.
+        </p>
+      </>
     )
   }
 

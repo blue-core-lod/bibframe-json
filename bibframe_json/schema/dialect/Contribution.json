@@ -6,6 +6,24 @@
     "type": "array"
   },
   "description": "An agent's part in making the resource, and what that part was.",
+  "examples": [
+    {
+      "@type": [
+        "Contribution",
+        "PrimaryContribution"
+      ],
+      "agent": [
+        {
+          "@id": "http://id.loc.gov/rwo/agents/n94051979"
+        }
+      ],
+      "role": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/relators/aut"
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

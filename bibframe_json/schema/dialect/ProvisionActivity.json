@@ -6,6 +6,23 @@
     "type": "array"
   },
   "description": "A publication, distribution or manufacture: who, where and when.",
+  "examples": [
+    {
+      "@type": [
+        "ProvisionActivity",
+        "Publication"
+      ],
+      "bflc:simplePlace": [
+        "Delhi, India"
+      ],
+      "bflc:simpleAgent": [
+        "New Bharatiya Book Corporation"
+      ],
+      "bflc:simpleDate": [
+        "2026"
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

@@ -6,6 +6,18 @@
     "type": "array"
   },
   "description": "How one resource points at another, and what the pointing means.",
+  "examples": [
+    {
+      "@type": [
+        "Relation"
+      ],
+      "relationship": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/relationship/series"
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [

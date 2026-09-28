@@ -6,6 +6,16 @@
     "type": "array"
   },
   "description": "A call number, and who assigned it.",
+  "examples": [
+    {
+      "@type": [
+        "ClassificationUdc"
+      ],
+      "classificationPortion": [
+        "721"
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [
