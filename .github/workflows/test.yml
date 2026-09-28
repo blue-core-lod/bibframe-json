@@ -56,11 +56,14 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+          cache-dependency-path: docs/package-lock.json
 
       - name: Install
         run: npm ci
+        working-directory: docs
 
       # Also runs starlight-links-validator, so a broken link or a heading
       # anchor that no longer exists fails here rather than shipping.
       - name: Build the documentation site
         run: npm run build
+        working-directory: docs

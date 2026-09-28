@@ -18,7 +18,7 @@ in any language to the same standard.
 uv run pytest                              # the library and the schemas
 uv run python generate/from_ontology.py    # context, ontology schema, vocabulary
 uv run python generate/bundle.py           # dialect.json, bundled from schema/dialect/
-npm install && npm run dev                 # the documentation site
+cd docs && npm install && npm run dev      # the documentation site
 ```
 
 The context, the ontology schema and `bibframe_json/vocabulary.json` are

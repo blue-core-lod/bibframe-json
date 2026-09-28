@@ -109,7 +109,7 @@ def pages() -> dict[str, Path]:
     entirely from the root.
     """
     found = {}
-    for path in sorted((ROOT / "src" / "content" / "docs").glob("*.mdx")):
+    for path in sorted((ROOT / "docs" / "src" / "content" / "docs").glob("*.mdx")):
         slug = "" if path.stem == "index" else f"{path.stem}/"
         found[slug] = path
     return found

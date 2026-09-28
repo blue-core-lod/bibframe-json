@@ -1,4 +1,4 @@
-import artifacts from "../../artifacts.json";
+import artifacts from "../../../artifacts.json";
 
 /**
  * Where the artifacts are published.

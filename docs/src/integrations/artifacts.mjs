@@ -1,7 +1,7 @@
 import { cp, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
-import config from "../../artifacts.json" with { type: "json" };
+import config from "../../../artifacts.json" with { type: "json" };
 
 /**
  * Publish the schemas, the context and the conformance corpus.
@@ -21,7 +21,9 @@ export function artifacts() {
     name: "bibframe-json:artifacts",
     hooks: {
       "astro:config:setup": async ({ config: astro, logger }) => {
-        const root = fileURLToPath(astro.root);
+        // The trees live in the repository, above the site. Resolved against
+        // this file rather than against astro.root, which is docs/.
+        const root = fileURLToPath(new URL("../../../", import.meta.url));
         const publicDir = fileURLToPath(astro.publicDir);
         for (const [from, to] of Object.entries(config.publish)) {
           await mkdir(`${publicDir}/${to}`, { recursive: true });

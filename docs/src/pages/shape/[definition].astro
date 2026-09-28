@@ -17,7 +17,7 @@ import { Code } from "astro:components";
 
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
-import vocabulary from "../../../bibframe_json/vocabulary.json";
+import vocabulary from "../../../../bibframe_json/vocabulary.json";
 import { PRIMER } from "../../data/primer";
 import { url } from "../../data/published";
 
@@ -39,13 +39,13 @@ type Property = {
 };
 
 const schemas = import.meta.glob<Schema>(
-  "../../../bibframe_json/schema/dialect/*.json",
+  "../../../../bibframe_json/schema/dialect/*.json",
   { eager: true, import: "default" },
 );
 
 export function getStaticPaths() {
   const files = import.meta.glob<Schema>(
-    "../../../bibframe_json/schema/dialect/*.json",
+    "../../../../bibframe_json/schema/dialect/*.json",
     { eager: true, import: "default" },
   );
   return Object.keys(files)
