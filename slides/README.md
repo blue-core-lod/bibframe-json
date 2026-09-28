@@ -2,8 +2,19 @@
 
 `cbd-json.svg` is a Concise Bounded Description as JSON, to drop into a slide.
 Just the record: no heading, no notes, no rule. 1280 wide, two thirds of a
-1920 slide, and as tall as the record needs. `cbd-json.png` is a 2560px export
-for software that will not place SVG.
+1920 slide, and as tall as it needs. `cbd-json.png` is a 2560px export for
+software that will not place SVG.
+
+The type is sized to fill that box in both directions, so the record is set
+as large as it will go rather than as small as it will fit. The two title
+objects are opened onto three lines each for the same reason: on one line the
+title is the longest line in the record by a wide margin and holds the whole
+thing down, and opened up fully it costs so many lines that the line count
+holds it down instead.
+
+If it still wants to be bigger, the lever is showing less rather than
+reformatting: dropping `@context` and `identifiedBy` buys several points of
+type size.
 
 ```sh
 python3 slides/make-cbd-json-slide.py

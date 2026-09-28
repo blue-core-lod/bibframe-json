@@ -30,8 +30,11 @@ WORK, WORK_BG = "#b0743c", "#fbf2e7"
 INST, INST_BG = "#2f7d7a", "#e8f4f3"
 STR = "#3d4b57"
 
-# Two thirds of a 1920 slide. The height follows the record.
+# Two thirds of a 1920 slide across, and most of its height. The type is
+# sized to fill that box, so the record is set as large as it will go rather
+# than as small as it will fit.
 W = 1280
+MAX_H = 1000
 PAD = 34
 TAG_H = 30
 # SF Mono advances at about 0.6em, which is what lets the type size be
@@ -52,29 +55,46 @@ def short(uri: str) -> str:
 def abridged() -> list[tuple[str, int, str]]:
     """The record as (kind, indent, text) lines.
 
-    Written out rather than pretty-printed, because a slide wants one array
-    per line and json.dumps gives three. Every value is read from the file so
-    the slide cannot drift from the example it claims to show.
+    Laid out one property per line, with the title objects opened up. That
+    costs height and buys width: the longest line is what decides the type
+    size, so breaking the two long ones lets everything else be set larger.
+
+    Every value is read from the file, so the picture cannot drift from the
+    record it claims to show.
     """
     r = json.loads(RECORD.read_text())
     work = r["instanceOf"][0]
     title = r["title"][0]["mainTitle"][0]
     isbn = r["identifiedBy"][0]["rdf:value"][0]
     instance_uri, work_uri = short(r["@id"]), short(work["@id"])
-    ctx = r["@context"].replace("https://blue-core-lod.github.io", "…")
+    ctx = r["@context"].replace("https://blue-core-lod.github.io/bibframe-json", "…")
+
+    def title_block(kind: str, at: int) -> list[tuple[str, int, str]]:
+        """Three lines, which is the size that fits best.
+
+        On one line the title is the longest in the record by a wide margin
+        and holds the type size down. Opened up fully it costs six lines, and
+        then the line count holds the type size down instead. Three is the
+        bottom of that curve.
+        """
+        return [
+            (kind, at, '"title": ['),
+            (kind, at + 1, f'{{ "@type": ["Title"], "mainTitle": ["{title}"] }}'),
+            (kind, at, "],"),
+        ]
 
     return [
         ("inst", 0, "{"),
         ("inst", 1, f'"@context": "{ctx}",'),
         ("inst", 1, f'"@id": "{instance_uri}",'),
         ("inst", 1, '"@type": ["Instance"],'),
-        ("inst", 1, f'"title": [{{ "@type": ["Title"], "mainTitle": ["{title}"] }}],'),
+        *title_block("inst", 1),
         ("inst", 1, f'"identifiedBy": [{{ "@type": ["Isbn"], "rdf:value": ["{isbn}"] }}],'),
         ("inst", 1, '"instanceOf": ['),
         ("work", 2, "{"),
         ("work", 3, f'"@id": "{work_uri}",'),
         ("work", 3, '"@type": ["Work"],'),
-        ("work", 3, f'"title": [{{ "@type": ["Title"], "mainTitle": ["{title}"] }}],'),
+        *title_block("work", 3),
         ("work", 3, f'"hasInstance": ["{instance_uri}"]'),
         ("work", 2, "}"),
         ("inst", 1, "]"),
@@ -119,7 +139,11 @@ def svg() -> str:
 
     # Fit the longest line rather than guess and nudge, so editing the record
     # re-fits the image instead of overflowing it.
-    mono = min(22, int((W - 2 * PAD - deepest * 24) / (widest * ADVANCE)))
+    # Fit the box in both directions: the longest line decides one bound and
+    # the number of lines the other, and the type takes whichever is smaller.
+    by_width = (W - 2 * PAD - deepest * 24) / (widest * ADVANCE)
+    by_height = (MAX_H - 2 * PAD - TAG_H) / (len(lines) * 1.62)
+    mono = int(min(34, by_width, by_height))
     line_h = round(mono * 1.62)
     indent_w = round(mono * 1.3)
 
