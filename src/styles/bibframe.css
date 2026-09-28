@@ -87,6 +87,13 @@ html {
    about the text rather than an event the page performs. */
 .d { color: var(--stamp); }
 
+/* A property name, and a string value. Weight for the name because it is a
+   name rather than a different kind of thing, and the palette's other hue for
+   the value. Numbers and booleans stay in the ink colour: three distinctions
+   are enough, and a fourth would start to cost the red its meaning. */
+.plate .record .k { font-weight: 600; }
+.plate .record .s { color: var(--sl-color-accent); }
+
 @media (max-width: 46rem) {
     .card { padding: 1rem 1rem 0.8rem; }
     .card .description { padding-left: 0; text-indent: 0; }

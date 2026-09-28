@@ -129,36 +129,71 @@ function compact(node: unknown, level = 0): string {
 }
 
 /**
- * Mark JSON's structural punctuation, and only where it is structural.
+ * Tokenise the JSON so it can be highlighted, and only where highlighting
+ * says something true.
  *
- * Walked rather than matched with a regex so that punctuation inside a string
+ * Three distinctions, two of them free. Structural punctuation takes the
+ * stamp red, because that is the claim this page makes. A property name is
+ * set in weight rather than in another colour, because it is a name and not
+ * a different kind of thing. A string value takes the one other hue already
+ * in the palette. Anything else -- a number, a boolean, null -- stays in the
+ * ink colour.
+ *
+ * Walked rather than matched with a pattern, so punctuation inside a string
  * is left alone. That is not a detail: the ";" in "Chakravorti ; foreward by
  * Prof. Penna Madhusudan" is a real ISBD delimiter sitting inside a
  * transcribed literal, where no parser can reach it. It stays in the ink
  * colour in both halves, and that is the argument for putting the structure
  * in the JSON instead.
+ *
+ * A string is a property name when the next thing that is not whitespace is a
+ * colon, which is the whole of JSON's grammar on the point.
  */
-function markPunctuation(json: string): string {
-  let out = "";
-  let inString = false;
-  let escaped = false;
-  for (const character of json) {
-    if (escaped) {
-      out += escape(character);
-      escaped = false;
-    } else if (character === "\\") {
-      out += escape(character);
-      escaped = true;
-    } else if (character === '"') {
-      inString = !inString;
-      out += character;
-    } else if (!inString && "{}[]:,".includes(character)) {
-      out += mark(character);
+type Token = { text: string; kind: "punct" | "string" | "plain" };
+
+function tokenise(json: string): Token[] {
+  const tokens: Token[] = [];
+  let index = 0;
+  while (index < json.length) {
+    const character = json[index];
+    if (character === '"') {
+      let end = index + 1;
+      while (end < json.length) {
+        if (json[end] === "\\") {
+          end += 2;
+          continue;
+        }
+        if (json[end] === '"') break;
+        end += 1;
+      }
+      tokens.push({ text: json.slice(index, end + 1), kind: "string" });
+      index = end + 1;
+    } else if ("{}[]:,".includes(character)) {
+      tokens.push({ text: character, kind: "punct" });
+      index += 1;
     } else {
-      out += escape(character);
+      let end = index;
+      while (end < json.length && !'"{}[]:,'.includes(json[end])) end += 1;
+      tokens.push({ text: json.slice(index, end), kind: "plain" });
+      index = end;
     }
   }
-  return out;
+  return tokens;
+}
+
+function highlight(json: string): string {
+  const tokens = tokenise(json);
+  return tokens
+    .map((token, i) => {
+      if (token.kind === "punct") return mark(token.text);
+      if (token.kind === "string") {
+        const next = tokens.slice(i + 1).find((t) => t.text.trim() !== "");
+        const isName = next?.kind === "punct" && next.text === ":";
+        return `<span class="${isName ? "k" : "s"}">${escape(token.text)}</span>`;
+      }
+      return escape(token.text);
+    })
+    .join("");
 }
 
 // The card has room for one publication statement, so showing the record's
@@ -183,7 +218,7 @@ const shown = Object.fromEntries(
     and ISBD standardised the top half's in 1971.
   </p>
 
-  <pre class="record"><code set:html={markPunctuation(compact(shown))} /></pre>
+  <pre class="record"><code set:html={highlight(compact(shown))} /></pre>
 
   <figcaption>
     Abridged to the areas a card has room for; the whole record is <a
