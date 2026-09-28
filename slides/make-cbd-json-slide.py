@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""One slide: what a Concise Bounded Description looks like as JSON.
+"""A Concise Bounded Description as JSON, to drop into a slide.
 
-Same stage as bluecore-models/docs/slides: 1920x1080, Iowan Old Style for the
-heading, Inter for everything that labels, SF Mono for anything a machine
-wrote. It borrows that deck's palette on purpose, so Work stays amber and
-Instance stays teal from one talk to the next -- which happens to be the exact
-distinction this slide is about.
+Just the record: no heading, no notes, no rule. 1280 wide, two thirds of a
+1920 slide, and as tall as the record needs.
 
-The record is example/cbd.json, abridged. Every key and value below is in that
-file; the UUIDs are cut short with an ellipsis, which is the only liberty
-taken, and the counts in the note are real.
+It borrows bluecore-models/docs/slides' palette on purpose, so Work stays
+amber and Instance stays teal between talks. That is the distinction a CBD
+turns on, so the amber band -- the embedded Work, inside the Instance that is
+the document -- does some of the work before anyone reads the JSON.
+
+Every key and value is read from example/cbd.json at build time rather than
+typed in here, so the image cannot drift from the record. It is abridged and
+the UUIDs are cut short with an ellipsis; that is the only liberty.
 
     python3 slides/make-cbd-json-slide.py
     rsvg-convert -w 2560 slides/cbd-json.svg -o slides/cbd-json.png
@@ -17,7 +19,6 @@ taken, and the counts in the note are real.
 
 import json
 import pathlib
-from textwrap import wrap
 
 HERE = pathlib.Path(__file__).resolve().parent
 RECORD = HERE.parent / "example" / "cbd.json"
@@ -29,11 +30,10 @@ WORK, WORK_BG = "#b0743c", "#fbf2e7"
 INST, INST_BG = "#2f7d7a", "#e8f4f3"
 STR = "#3d4b57"
 
-W, H = 1920, 1080
-LEFT = 72
-TOP = 232          # below the house rule at y=168
-PANEL_W = W - 2 * LEFT   # the record gets the width; notes go beneath
-PAD = 30
+# Two thirds of a 1920 slide. The height follows the record.
+W = 1280
+PAD = 34
+TAG_H = 30
 # SF Mono advances at about 0.6em, which is what lets the type size be
 # computed from the longest line instead of guessed at and then nudged.
 ADVANCE = 0.6
@@ -89,7 +89,7 @@ def coloured(text: str) -> str:
     the colour of the string. That is the same rule the site uses and the same
     reason: punctuation only means something when it is outside a literal.
     """
-    out, i, in_string = [], 0, False
+    out, i = [], 0
     while i < len(text):
         ch = text[i]
         if ch == '"':
@@ -117,76 +117,37 @@ def svg() -> str:
     deepest = max(indent for _, indent, _ in lines)
     widest = max(len(text) + indent * 2 for _, indent, text in lines)
 
-    # Fit the longest line, then fill the space that leaves. A slide read from
-    # the back of a room wants the largest type that does not overflow, and
-    # nothing here should need nudging by hand after an edit to the record.
-    mono = min(24, int((PANEL_W - 2 * PAD - deepest * 26) / (widest * ADVANCE)))
+    # Fit the longest line rather than guess and nudge, so editing the record
+    # re-fits the image instead of overflowing it.
+    mono = min(22, int((W - 2 * PAD - deepest * 24) / (widest * ADVANCE)))
     line_h = round(mono * 1.62)
-    indent_w = round(mono * 1.25)
+    indent_w = round(mono * 1.3)
 
-    body_h = len(lines) * line_h
-    top = TOP + 18
+    top = PAD + TAG_H + mono
+    height = top + (len(lines) - 1) * line_h + PAD + round(mono * 0.5)
 
-    work_rows = [n for n, (kind, _, _) in enumerate(lines) if kind == "work"]
-    band_y = top + work_rows[0] * line_h - round(mono * 1.15)
-    band_h = (work_rows[-1] - work_rows[0] + 1) * line_h + 10
+    work = [n for n, (kind, _, _) in enumerate(lines) if kind == "work"]
+    band_y = top + work[0] * line_h - round(mono * 1.2)
+    band_h = (work[-1] - work[0] + 1) * line_h + 8
 
-    panel_y = top - 52
-    panel_h = body_h + 58
-
-    body = []
-    for n, (kind, indent, text) in enumerate(lines):
-        y = top + n * line_h
-        x = LEFT + PAD + indent * indent_w
-        body.append(f'<text class="j" x="{x}" y="{y}">{coloured(text)}</text>')
-
-    # the three things the slide is for, in the order the eye meets them
-    notes = [
-        (INST, "The document is the Instance",
-         "You asked for one, and that is what you get."),
-        (WORK, "instanceOf embeds the Work",
-         "A stored record names it instead: there, the Work is a row of its own."),
-        (MUTE, "hasInstance points back by URI",
-         "A processor breaks the cycle there, which keeps the document finite."),
+    body = [
+        f'<text class="j" x="{PAD + 12 + indent * indent_w}" y="{top + n * line_h}">'
+        f"{coloured(text)}</text>"
+        for n, (kind, indent, text) in enumerate(lines)
     ]
-    # Three notes in a row beneath, rather than a column beside. The record
-    # is the thing being shown, so it takes the width, and at full width the
-    # longest line fits at the largest size this caps at.
-    col_w = (PANEL_W - 2 * 40) // 3
-    ny = panel_y + panel_h + 62
-    for i, (colour, head, sub) in enumerate(notes):
-        nx = LEFT + i * (col_w + 40)
-        body.append(f'<rect x="{nx}" y="{ny - 26}" width="34" height="3" rx="1.5" fill="{colour}"/>')
-        body.append(f'<text class="nh" x="{nx}" y="{ny + 14}">{esc(head)}</text>')
-        for j, part in enumerate(wrap(sub, 52)):
-            body.append(
-                f'<text class="ns" x="{nx}" y="{ny + 44 + j * 26}">{esc(part)}</text>'
-            )
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {height}" width="{W}" height="{height}">
 <style>
-  .h1 {{ font: 600 46px "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; fill:{INK} }}
-  .sub {{ font: 400 23px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:{MUTE} }}
-  .j  {{ font: 400 {mono}px "SF Mono",SFMono-Regular,Menlo,Consolas,monospace; fill:{STR} }}
-  .nh {{ font: 600 21px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:{INK} }}
-  .ns {{ font: 400 18.5px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:{MUTE} }}
-  .tag {{ font: 600 14px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; letter-spacing:1.6px }}
-  .foot {{ font: 400 17px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:{FAINT} }}
+  .j {{ font: 400 {mono}px "SF Mono",SFMono-Regular,Menlo,Consolas,monospace; fill:{STR} }}
+  .tag {{ font: 600 13px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; letter-spacing:1.6px }}
 </style>
-<rect width="{W}" height="{H}" fill="#ffffff"/>
-<text class="h1" x="{LEFT}" y="92">One document explains the Instance</text>
-<text class="sub" x="{LEFT}" y="138">A Concise Bounded Description in bibframe-json: the Instance at the root, with its Work embedded.</text>
-<line x1="{LEFT}" y1="168" x2="{W - LEFT}" y2="168" stroke="{RULE}" stroke-width="1"/>
-
-<rect x="{LEFT}" y="{panel_y}" width="{PANEL_W}" height="{panel_h}" rx="10"
+<rect x="0.5" y="0.5" width="{W - 1}" height="{height - 1}" rx="10"
       fill="#fcfdfd" stroke="{RULE}" stroke-width="1"/>
-<rect x="{LEFT + 14}" y="{band_y}" width="{PANEL_W - 28}" height="{band_h}" rx="8"
+<rect x="{PAD - 14}" y="{band_y}" width="{W - 2 * (PAD - 14)}" height="{band_h}" rx="8"
       fill="{WORK_BG}" stroke="{WORK}" stroke-width="1.5"/>
-<text class="tag" x="{LEFT + PAD}" y="{panel_y + 30}" fill="{INST}">INSTANCE</text>
-<text class="tag" x="{LEFT + PANEL_W - 30}" y="{band_y + 26}" fill="{WORK}" text-anchor="end">WORK</text>
+<text class="tag" x="{PAD}" y="{PAD + 14}" fill="{INST}">INSTANCE</text>
+<text class="tag" x="{W - PAD}" y="{band_y + 22}" fill="{WORK}" text-anchor="end">WORK</text>
 {chr(10).join(body)}
-
-<text class="foot" x="{LEFT}" y="{H - 54}">Abridged from example/cbd.json, which validates against schema/cbd.json. Every property is an array, so a reader loops without checking.</text>
 </svg>
 """
 

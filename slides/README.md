@@ -1,22 +1,22 @@
 # Slides
 
-`cbd-json.svg` is the source and `cbd-json.png` a 2560px export, for slide
-software that will not place SVG. 16:9, 1920x1080.
+`cbd-json.svg` is a Concise Bounded Description as JSON, to drop into a slide.
+Just the record: no heading, no notes, no rule. 1280 wide, two thirds of a
+1920 slide, and as tall as the record needs. `cbd-json.png` is a 2560px export
+for software that will not place SVG.
 
 ```sh
 python3 slides/make-cbd-json-slide.py
 rsvg-convert -w 2560 slides/cbd-json.svg -o slides/cbd-json.png
 ```
 
-The look is bluecore-models' `docs/slides`, deliberately: same stage, same
-fonts, and the same palette, so a Work stays amber and an Instance stays teal
-from one talk to the next. That is the distinction this slide is about, so the
-colours are already doing the work before anybody reads the JSON.
+It borrows the palette from bluecore-models' `docs/slides`, so a Work stays
+amber and an Instance stays teal between talks. That is the distinction a CBD
+turns on, so the amber band — the embedded Work, inside the Instance that is
+the document — does some of the work before anyone reads the JSON.
 
-Every key and value comes out of `example/cbd.json`, read at build time rather
-than typed in, so the slide cannot drift from the record it claims to show.
-The record is abridged to fit and the UUIDs are cut short with an ellipsis;
-those are the only liberties.
-
-The type size is computed from the longest line rather than set by hand, so
-editing the record re-fits the slide instead of overflowing it.
+Every key and value is read from `example/cbd.json` at build time rather than
+typed in, so the image cannot drift from the record. It is abridged to fit and
+the UUIDs are cut short with an ellipsis; that is the only liberty. The type
+size is computed from the longest line, so editing the record re-fits the
+image instead of overflowing it.

@@ -1,50 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 576" width="1280" height="576">
 <style>
-  .h1 { font: 600 46px "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; fill:#15202b }
-  .sub { font: 400 23px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:#6c7b87 }
-  .j  { font: 400 24px "SF Mono",SFMono-Regular,Menlo,Consolas,monospace; fill:#3d4b57 }
-  .nh { font: 600 21px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:#15202b }
-  .ns { font: 400 18.5px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:#6c7b87 }
-  .tag { font: 600 14px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; letter-spacing:1.6px }
-  .foot { font: 400 17px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; fill:#93a0ab }
+  .j { font: 400 20px "SF Mono",SFMono-Regular,Menlo,Consolas,monospace; fill:#3d4b57 }
+  .tag { font: 600 13px "Inter","Helvetica Neue",Helvetica,Arial,sans-serif; letter-spacing:1.6px }
 </style>
-<rect width="1920" height="1080" fill="#ffffff"/>
-<text class="h1" x="72" y="92">One document explains the Instance</text>
-<text class="sub" x="72" y="138">A Concise Bounded Description in bibframe-json: the Instance at the root, with its Work embedded.</text>
-<line x1="72" y1="168" x2="1848" y2="168" stroke="#dde3e8" stroke-width="1"/>
-
-<rect x="72" y="198" width="1776" height="643" rx="10"
+<rect x="0.5" y="0.5" width="1279" height="575" rx="10"
       fill="#fcfdfd" stroke="#dde3e8" stroke-width="1"/>
-<rect x="86" y="495" width="1748" height="244" rx="8"
+<rect x="20" y="284" width="1240" height="200" rx="8"
       fill="#fbf2e7" stroke="#b0743c" stroke-width="1.5"/>
-<text class="tag" x="102" y="228" fill="#2f7d7a">INSTANCE</text>
-<text class="tag" x="1818" y="521" fill="#b0743c" text-anchor="end">WORK</text>
-<text class="j" x="102" y="250"><tspan fill="#93a0ab">{</tspan></text>
-<text class="j" x="132" y="289"><tspan fill="#15202b" font-weight="600">"@context"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"…/bibframe-json/context/bibframe.jsonld"</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="132" y="328"><tspan fill="#15202b" font-weight="600">"@id"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/instances/0b46c016-…"</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="132" y="367"><tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Instance"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="132" y="406"><tspan fill="#15202b" font-weight="600">"title"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Title"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"mainTitle"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"The Conceptual Structure of Reality"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="132" y="445"><tspan fill="#15202b" font-weight="600">"identifiedBy"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Isbn"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"rdf:value"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"9783319071862"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="132" y="484"><tspan fill="#15202b" font-weight="600">"instanceOf"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan></text>
-<text class="j" x="162" y="523"><tspan fill="#93a0ab">{</tspan></text>
-<text class="j" x="192" y="562"><tspan fill="#15202b" font-weight="600">"@id"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/works/4be57b41-…"</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="192" y="601"><tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Work"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="192" y="640"><tspan fill="#15202b" font-weight="600">"title"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Title"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"mainTitle"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"The Conceptual Structure of Reality"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
-<text class="j" x="192" y="679"><tspan fill="#15202b" font-weight="600">"hasInstance"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/instances/0b46c016-…"</tspan><tspan fill="#93a0ab">]</tspan></text>
-<text class="j" x="162" y="718"><tspan fill="#93a0ab">}</tspan></text>
-<text class="j" x="132" y="757"><tspan fill="#93a0ab">]</tspan></text>
-<text class="j" x="102" y="796"><tspan fill="#93a0ab">}</tspan></text>
-<rect x="72" y="877" width="34" height="3" rx="1.5" fill="#2f7d7a"/>
-<text class="nh" x="72" y="917">The document is the Instance</text>
-<text class="ns" x="72" y="947">You asked for one, and that is what you get.</text>
-<rect x="677" y="877" width="34" height="3" rx="1.5" fill="#b0743c"/>
-<text class="nh" x="677" y="917">instanceOf embeds the Work</text>
-<text class="ns" x="677" y="947">A stored record names it instead: there, the Work is</text>
-<text class="ns" x="677" y="973">a row of its own.</text>
-<rect x="1282" y="877" width="34" height="3" rx="1.5" fill="#6c7b87"/>
-<text class="nh" x="1282" y="917">hasInstance points back by URI</text>
-<text class="ns" x="1282" y="947">A processor breaks the cycle there, which keeps the</text>
-<text class="ns" x="1282" y="973">document finite.</text>
-
-<text class="foot" x="72" y="1026">Abridged from example/cbd.json, which validates against schema/cbd.json. Every property is an array, so a reader loops without checking.</text>
+<text class="tag" x="34" y="48" fill="#2f7d7a">INSTANCE</text>
+<text class="tag" x="1246" y="306" fill="#b0743c" text-anchor="end">WORK</text>
+<text class="j" x="46" y="84"><tspan fill="#93a0ab">{</tspan></text>
+<text class="j" x="72" y="116"><tspan fill="#15202b" font-weight="600">"@context"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"…/bibframe-json/context/bibframe.jsonld"</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="72" y="148"><tspan fill="#15202b" font-weight="600">"@id"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/instances/0b46c016-…"</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="72" y="180"><tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Instance"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="72" y="212"><tspan fill="#15202b" font-weight="600">"title"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Title"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"mainTitle"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"The Conceptual Structure of Reality"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="72" y="244"><tspan fill="#15202b" font-weight="600">"identifiedBy"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Isbn"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"rdf:value"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"9783319071862"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="72" y="276"><tspan fill="#15202b" font-weight="600">"instanceOf"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan></text>
+<text class="j" x="98" y="308"><tspan fill="#93a0ab">{</tspan></text>
+<text class="j" x="124" y="340"><tspan fill="#15202b" font-weight="600">"@id"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/works/4be57b41-…"</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="124" y="372"><tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Work"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="124" y="404"><tspan fill="#15202b" font-weight="600">"title"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#93a0ab">{</tspan> <tspan fill="#15202b" font-weight="600">"@type"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"Title"</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan> <tspan fill="#15202b" font-weight="600">"mainTitle"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"The Conceptual Structure of Reality"</tspan><tspan fill="#93a0ab">]</tspan> <tspan fill="#93a0ab">}</tspan><tspan fill="#93a0ab">]</tspan><tspan fill="#93a0ab">,</tspan></text>
+<text class="j" x="124" y="436"><tspan fill="#15202b" font-weight="600">"hasInstance"</tspan><tspan fill="#93a0ab">:</tspan> <tspan fill="#93a0ab">[</tspan><tspan fill="#3d4b57" font-weight="400">"https://bibframe.example/instances/0b46c016-…"</tspan><tspan fill="#93a0ab">]</tspan></text>
+<text class="j" x="98" y="468"><tspan fill="#93a0ab">}</tspan></text>
+<text class="j" x="72" y="500"><tspan fill="#93a0ab">]</tspan></text>
+<text class="j" x="46" y="532"><tspan fill="#93a0ab">}</tspan></text>
 </svg>
