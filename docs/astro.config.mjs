@@ -49,6 +49,13 @@ export default defineConfig({
       // A catalogue card's hanging indent, with the edge in the delimiter
       // red: the same claim the front page makes, at 16 pixels.
       favicon: "/favicon.svg",
+      // The same mark beside the wordmark. replacesTitle is left off: the
+      // name is what people search for, and the icon has nothing to say on
+      // its own yet.
+      logo: {
+        light: "./src/assets/bibframe-json-light.svg",
+        dark: "./src/assets/bibframe-json-dark.svg",
+      },
       head: [
         {
           tag: "link",
