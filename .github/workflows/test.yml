@@ -42,4 +42,25 @@ jobs:
         run: |
           uv run python generate/from_ontology.py
           uv run python generate/bundle.py
-          git diff --exit-code bibframe_json/context bibframe_json/schema
+          git diff --exit-code bibframe_json/context bibframe_json/schema \
+            bibframe_json/vocabulary.json
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Also runs starlight-links-validator, so a broken link or a heading
+      # anchor that no longer exists fails here rather than shipping.
+      - name: Build the documentation site
+        run: npm run build

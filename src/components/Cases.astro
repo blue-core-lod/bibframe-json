@@ -1,0 +1,55 @@
+---
+/**
+ * The conformance corpus, listed.
+ *
+ * Walked rather than written down, because a case that is in the repository
+ * and not on this page is a case nobody knows to run. Each name links to the
+ * document itself, which is the whole of what a case is.
+ */
+const files = import.meta.glob("../../conformance/**/*.json", {
+  eager: true,
+  query: "?url",
+});
+
+type Case = { kind: string; verdict: string; name: string; path: string };
+
+const cases: Case[] = Object.keys(files)
+  .map((path) => {
+    const [kind, verdict, file] = path.split("/conformance/")[1].split("/");
+    return { kind, verdict, name: file.replace(".json", ""), path };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const kinds = [...new Set(cases.map((one) => one.kind))].sort();
+const base = import.meta.env.BASE_URL;
+---
+
+{
+  kinds.map((kind) => (
+    <>
+      <h3 id={kind}>
+        <code>{kind}</code>
+      </h3>
+      {["accept", "reject"].map((verdict) => {
+        const listed = cases.filter(
+          (one) => one.kind === kind && one.verdict === verdict,
+        );
+        return (
+          listed.length > 0 && (
+            <p>
+              <strong>{verdict}</strong>:{" "}
+              {listed.map((one, i) => (
+                <>
+                  {i > 0 && ", "}
+                  <a href={`${base}conformance/${kind}/${verdict}/${one.name}.json`}>
+                    {one.name}
+                  </a>
+                </>
+              ))}
+            </p>
+          )
+        );
+      })}
+    </>
+  ))
+}

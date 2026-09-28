@@ -56,8 +56,12 @@ export default defineConfig({
         "./src/styles/bibframe.css",
       ],
       sidebar: [
-        { label: "The shape", link: "/" },
+        { label: "Overview", link: "/" },
+        { label: "The shape", link: "/shape/" },
+        { label: "A CBD", link: "/cbd/" },
+        { label: "Producing it", link: "/producing/" },
         { label: "Validating", link: "/validating/" },
+        { label: "Checking an implementation", link: "/conformance/" },
         {
           // Built from the schema directory rather than listed, so a new
           // definition appears here without anyone remembering to add it.
@@ -67,6 +71,12 @@ export default defineConfig({
           items: definitions(),
         },
       ],
+      expressiveCode: {
+        // Wrap rather than scroll. The long lines here are record values and
+        // context URLs, data that cannot be shortened without falsifying it,
+        // and a clipped @id reads as broken rather than scrollable.
+        defaultProps: { wrap: true },
+      },
       plugins: [
         starlightLinksValidator({
           // The artifact links point into public/, which the validator cannot
