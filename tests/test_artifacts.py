@@ -115,6 +115,20 @@ def pages() -> dict[str, Path]:
     return found
 
 
+def test_no_page_quotes_a_relative_path_to_an_artifact():
+    """A relative path is not something a reader can use.
+
+    The link check below only sees markdown links. This catches the other
+    spelling, a path written as inline code -- `../schema/cbd.json` on the CBD
+    page, which survived the conversion to published URLs because it was never
+    a link. Those paths mean something to someone in a checkout and nothing to
+    anyone reading the site.
+    """
+    for path in pages().values():
+        quoted = re.findall(r"`(\.\./[^`]*)`", path.read_text())
+        assert not quoted, f"{path.name} quotes relative paths: {quoted}"
+
+
 def test_every_artifact_link_in_the_pages_resolves():
     """Follow each link the way a browser would, from where the page is served.
 
