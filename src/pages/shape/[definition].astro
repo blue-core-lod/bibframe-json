@@ -19,6 +19,7 @@ import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 
 import vocabulary from "../../../bibframe_json/vocabulary.json";
 import { PRIMER } from "../../data/primer";
+import { url } from "../../data/published";
 
 type Schema = {
   title?: string;
@@ -289,11 +290,11 @@ const headings = [
   <h2 id="the-schema">The schema</h2>
 
   <p>
-    <a href={`${import.meta.env.BASE_URL}schema/dialect/${definition}.json`}>
+    <a href={url(`schema/dialect/${definition}.json`)}>
       <code>schema/dialect/{definition}.json</code>
     </a>{" "}
     is this definition on its own, and{" "}
-    <a href={`${import.meta.env.BASE_URL}schema/dialect.json`}>
+    <a href={url("schema/dialect.json")}>
       <code>schema/dialect.json</code>
     </a>{" "}
     is the whole shape with every definition inlined. They are checked against

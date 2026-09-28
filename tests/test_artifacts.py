@@ -131,6 +131,18 @@ def test_every_artifact_link_in_the_pages_resolves():
         for href in re.findall(r"\]\(([^)]+)\)", text) + re.findall(
             r'href="([^"]+)"', text
         ):
+            # An artifact link is written as its full published URL, because
+            # that URL is the file's own $id. Checked here rather than skipped
+            # as external: nothing else looks at them, and a typo in one is
+            # invisible until someone clicks it.
+            if href.startswith(f"{BASE}/"):
+                resolved = href.removeprefix(f"{BASE}/")
+                assert resolved in serving, (
+                    f"{path.name} links to {href}, and nothing is published "
+                    f"at {resolved}"
+                )
+                checked += 1
+                continue
             if href.startswith(("http", "#", "mailto:", "/")):
                 continue
             resolved = posixpath.normpath(posixpath.join(slug, href))
