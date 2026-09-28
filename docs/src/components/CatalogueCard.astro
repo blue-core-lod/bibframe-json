@@ -75,32 +75,35 @@ const escape = (text: string) =>
 const mark = (text: string) => `<span class="d">${escape(text)}</span>`;
 
 /**
- * An area delimiter, with ISBD's one piece of arithmetic applied: an element
- * already ending in a full stop does not take a second one, so it reads
- * "Madhusudan. -- 2nd revised edition" and not "Madhusudan.. --". Transcribed
- * statements of responsibility very often end in a stop, so this is the
- * ordinary case rather than an edge one.
+ * An area delimiter, marked up so it can be coloured.
+ *
+ * No arithmetic. ISBD A.3.2.7 is explicit that when an element ends with a
+ * point and the next area's prescribed punctuation begins with one, both
+ * points are given, so that an abbreviation's point and the prescribed point
+ * are each accounted for:
+ *
+ *     . -- 3rd ed.. --      not  . -- 3rd ed. --
+ *     by J. Smith, Esq.. -- not  by J. Smith, Esq. --
+ *
+ * So "Madhusudan.. -- 2nd revised edition" is correct and the single point
+ * this used to emit was not. It looks wrong to a modern eye, which is
+ * presumably why I talked myself into the other rule.
  */
-function delimiter(before: string, mark_: string): string {
-  const trimmed =
-    mark_.startsWith(".") && before.trimEnd().endsWith(".") ? mark_.slice(1) : mark_;
-  return trimmed ? mark(trimmed) : "";
+function delimiter(prescribed: string): string {
+  return prescribed ? mark(prescribed) : "";
 }
 
 let description = "";
-let previous = "";
 for (const area of AREAS) {
   if (area.breaks) {
     description += "<br>".repeat(area.breaks);
-    previous = "";
   } else {
-    description += delimiter(previous, area.delimiter);
+    description += delimiter(area.delimiter);
   }
   description += area.value
     .split("\0")
     .map((part, i) => (i % 2 === 0 ? escape(part) : mark(part)))
     .join("");
-  previous = area.value.replaceAll("\0", "");
 }
 
 /** JSON with any array of scalars kept on one line.
@@ -215,14 +218,13 @@ const shown = Object.fromEntries(
   </div>
 
   <p class="between">
-    The same record, twice. Red is the punctuation that carries the structure,
-    and ISBD standardised the top half's in 1971.
+    The same record, twice. The red punctuation above carries the structure. Below is the <em>bibframe-json</em> equivalent.
   </p>
 
   <pre class="record"><code set:html={highlight(compact(shown))} /></pre>
 
   <figcaption>
-    Abridged to the areas a card has room for. The whole record is{" "}
+    This has been abridged to the areas a card has room for. The whole record is{" "}
     <a href={url("example/instance.json")}>
       <code>{url("example/instance.json")}</code>
     </a>
