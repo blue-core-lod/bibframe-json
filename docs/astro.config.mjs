@@ -46,6 +46,19 @@ export default defineConfig({
     artifacts(),
     starlight({
       title: "bibframe-json",
+      // A catalogue card's hanging indent, with the edge in the delimiter
+      // red: the same claim the front page makes, at 16 pixels.
+      favicon: "/favicon.svg",
+      head: [
+        {
+          tag: "link",
+          attrs: {
+            rel: "apple-touch-icon",
+            sizes: "180x180",
+            href: "/bibframe-json/apple-touch-icon.png",
+          },
+        },
+      ],
       description:
         "One JSON shape for BIBFRAME: parse it without an RDF library.",
       social: [
