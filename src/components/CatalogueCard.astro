@@ -222,9 +222,11 @@ const shown = Object.fromEntries(
   <pre class="record"><code set:html={highlight(compact(shown))} /></pre>
 
   <figcaption>
-    Abridged to the areas a card has room for; the whole record is <a
-      href="example/instance.json">example/instance.json</a
-    >. The one delimiter left in the ink colour sits inside a transcribed
+    Abridged to the areas a card has room for. The whole record is{" "}
+    <a href={url("example/instance.json")}>
+      <code>{url("example/instance.json")}</code>
+    </a>
+    . The one delimiter left in the ink colour sits inside a transcribed
     string, where nothing can reach it.
   </figcaption>
 </figure>

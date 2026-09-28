@@ -291,11 +291,11 @@ const headings = [
 
   <p>
     <a href={url(`schema/dialect/${definition}.json`)}>
-      <code>schema/dialect/{definition}.json</code>
+      <code>{url(`schema/dialect/${definition}.json`)}</code>
     </a>{" "}
     is this definition on its own, and{" "}
     <a href={url("schema/dialect.json")}>
-      <code>schema/dialect.json</code>
+      <code>{url("schema/dialect.json")}</code>
     </a>{" "}
     is the whole shape with every definition inlined. They are checked against
     each other over the conformance corpus, so either is safe to depend on.
