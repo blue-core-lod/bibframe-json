@@ -1,6 +1,7 @@
 {
   "description": "every property is an array, including the ones with no definition here",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Work"

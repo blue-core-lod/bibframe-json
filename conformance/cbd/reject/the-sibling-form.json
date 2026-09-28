@@ -1,6 +1,7 @@
 {
   "description": "principal resources side by side under @graph is LC's RDF/XML arrangement, which XML needs because it has no root and JSON does not",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@graph": [
       {
         "@id": "https://x/instances/1",

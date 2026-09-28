@@ -7,9 +7,10 @@ package does; the dispatch tests that lived here moved with the models.
 import jsonschema
 import pytest
 
-from bibframe_json import DIALECT, ONTOLOGY, context, schema, validate
+from bibframe_json import CONTEXT_URL, DIALECT, ONTOLOGY, context, schema, validate
 
 CLEAN = {
+    "@context": CONTEXT_URL,
     "@id": "https://bcld.info/works/1",
     "@type": ["Work"],
     "title": [{"@type": ["Title"], "mainTitle": ["A title"]}],
@@ -234,6 +235,7 @@ def test_a_failure_is_reported_at_the_path_it_happened():
     """
     dialect = jsonschema.Draft202012Validator(schema(DIALECT))
     record = {
+        "@context": CONTEXT_URL,
         "@id": "https://x/1",
         "@type": ["Work"],
         "subject": [{"@id": "_:b0"}],
@@ -265,7 +267,12 @@ def test_the_dispatch_reaches_the_type_the_record_claims(types, claimed):
     @type down whichever branch came first.
     """
     dialect = jsonschema.Draft202012Validator(schema(DIALECT))
-    record = {"@id": "https://x/1", "@type": types, "hasExpression": [{"@id": "_:b0"}]}
+    record = {
+        "@context": CONTEXT_URL,
+        "@id": "https://x/1",
+        "@type": types,
+        "hasExpression": [{"@id": "_:b0"}],
+    }
     reached_hub = bool(list(dialect.iter_errors(record)))
     assert reached_hub == (claimed == "Hub")
 

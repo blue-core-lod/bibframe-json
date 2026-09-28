@@ -1,7 +1,6 @@
 {
-  "description": "a literal written bare rather than as a value object",
+  "description": "a document in this shape names the context that gives its terms meaning",
   "document": {
-    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Work"
@@ -12,9 +11,12 @@
           "Title"
         ],
         "mainTitle": [
-          "a title"
+          "A title"
         ]
       }
     ]
-  }
+  },
+  "errors": [
+    "/"
+  ]
 }

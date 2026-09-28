@@ -1,6 +1,7 @@
 {
   "description": "the smallest CBD: an Instance whose Work is embedded rather than named",
   "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"
