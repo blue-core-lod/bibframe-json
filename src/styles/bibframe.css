@@ -9,6 +9,14 @@
    old site spent the red in five places, including every section heading,
    which left it meaning nothing in particular. */
 
+/* Starlight's whole type scale hangs off 1rem, so this moves all of it at
+   once and keeps the proportions. A percentage rather than a pixel value, so
+   it scales with whatever the reader has set as their own base size. 18px at
+   the usual default: Literata has a small x-height and 16px reads cramped. */
+html {
+    font-size: 112.5%;
+}
+
 :root {
     --sl-font: Literata, Georgia, "Times New Roman", serif;
     --sl-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
