@@ -1,8 +1,27 @@
+import { readdirSync } from "node:fs";
+
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
 
 import { artifacts } from "./src/integrations/artifacts.mjs";
+
+const RESOURCES = ["Work", "Instance", "Hub", "Item"];
+
+/** One sidebar entry per definition, resource types first. */
+function definitions() {
+  const names = readdirSync("./bibframe_json/schema/dialect")
+    .filter((file) => file.endsWith(".json"))
+    .map((file) => file.replace(".json", ""))
+    // main.json is the dispatch between the four resource types rather than a
+    // definition of its own.
+    .filter((name) => name !== "main");
+  const rest = names.filter((name) => !RESOURCES.includes(name)).sort();
+  return [...RESOURCES, ...rest].map((name) => ({
+    label: name,
+    link: `/shape/${name}/`,
+  }));
+}
 
 // A project page, so the site lives under a path. `base` is what puts
 // public/schema/dialect.json at /bibframe-json/schema/dialect.json, which is
@@ -39,6 +58,14 @@ export default defineConfig({
       sidebar: [
         { label: "The shape", link: "/" },
         { label: "Validating", link: "/validating/" },
+        {
+          // Built from the schema directory rather than listed, so a new
+          // definition appears here without anyone remembering to add it.
+          // The four resource types first, since those are the documents you
+          // actually hold; the rest are what they nest.
+          label: "Definitions",
+          items: definitions(),
+        },
       ],
       plugins: [
         starlightLinksValidator({

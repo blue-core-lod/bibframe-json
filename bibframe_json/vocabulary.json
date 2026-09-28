@@ -1,0 +1,2187 @@
+{
+  "x-generated-from": "BIBFRAME, generate/bibframe.rdf",
+  "terms": {
+    "": {
+      "label": "BIBFRAME vocabulary"
+    },
+    "AbbreviatedTitle": {
+      "label": "Abbreviated title",
+      "definition": "Title as abbreviated for citation, indexing, and/or identification"
+    },
+    "AccessPolicy": {
+      "label": "Access policy",
+      "definition": "Access restrictions and allowances regarding access to a resource, e.g., lending policy, access restrictions, embargos"
+    },
+    "AccessionNumber": {
+      "label": "Accession number",
+      "definition": "Accession Number"
+    },
+    "AcquisitionSource": {
+      "label": "Acquisition source",
+      "definition": "Information about an organization, person, etc., from which a resource may be obtained"
+    },
+    "AdminMetadata": {
+      "label": "Administrative metadata",
+      "definition": "Metadata about the metadata, especially provenance information"
+    },
+    "Agent": {
+      "label": "Agent",
+      "definition": "Entity having a role in a resource, such as a person or organization"
+    },
+    "Ansi": {
+      "label": "ANSI number",
+      "definition": "American National Standards Institute identifier"
+    },
+    "AppliedMaterial": {
+      "label": "Applied material",
+      "definition": "Physical or chemical substance applied to a base material of a resource"
+    },
+    "Archival": {
+      "label": "Archival controlled",
+      "definition": "Resources organically created, accumulated, and/or used by a person, family, or organization in the course of conduct of affairs and preserved because of their continuing value"
+    },
+    "Arrangement": {
+      "label": "Arrangement",
+      "definition": "Resource that represents an arrangement of another resource"
+    },
+    "AspectRatio": {
+      "label": "Aspect ratio",
+      "definition": "Proportional relationship between an image's width and its height"
+    },
+    "Audio": {
+      "label": "Audio",
+      "definition": "Resources expressed in an audible form, including music or other sounds"
+    },
+    "AudioIssueNumber": {
+      "label": "Audio issue number",
+      "definition": "Number assigned by publishers of sound recordings to identify the issue designation, or serial identification, of the resource"
+    },
+    "AudioTake": {
+      "label": "Audio recording take",
+      "definition": "Identifier assigned to the smallest identifiable unit of a recording session, e.g., a specific recording of an individual song"
+    },
+    "Barcode": {
+      "label": "Barcode",
+      "definition": "Optical machine-readable representation of data relating to the item to which it is attached"
+    },
+    "BaseMaterial": {
+      "label": "Base material",
+      "definition": "Underlying physical material of a resource"
+    },
+    "Binding": {
+      "label": "Binding method",
+      "definition": "Information about methods used to bind a published or unpublished resource, or other binding information"
+    },
+    "BookFormat": {
+      "label": "Book format",
+      "definition": "Result of folding a printed sheet to form a gathering of leaves"
+    },
+    "BroadcastStandard": {
+      "label": "Broadcast standard",
+      "definition": "System used to format a video resource for television broadcast, e.g., HDTV, PAL"
+    },
+    "Capture": {
+      "label": "Capture of content",
+      "definition": "Information about place and date associated with the capture (i.e., recording, filming, etc.) of the content of a resource"
+    },
+    "CaptureStorage": {
+      "label": "Capture and Storage Technique",
+      "definition": "Specifies the sound capture and storage technique used on a sound recording resource"
+    },
+    "Carrier": {
+      "label": "Carrier type",
+      "definition": "Categorization reflecting the format of the storage medium and housing of a carrier"
+    },
+    "Cartographic": {
+      "label": "Cartographic information",
+      "definition": "Content that represents the whole or part of the earth, any celestial body, or imaginary place at any scale"
+    },
+    "CartographicDataType": {
+      "label": "Digital cartographic data type",
+      "definition": "Data type for encoding of geospatial information in a cartographic resource, e.g., raster, vector, point"
+    },
+    "CartographicObjectType": {
+      "label": "Digital cartographic object type",
+      "definition": "Object type for encoding of geospatial information in a cartographic resource, e.g., point, line, polygon"
+    },
+    "Cartography": {
+      "label": "Cartography",
+      "definition": "Resource that shows spatial information, including maps, atlases, globes, digital, and other cartographic resources"
+    },
+    "Chronology": {
+      "label": "Chronology",
+      "definition": "Dates associated with issues or items held"
+    },
+    "Classification": {
+      "label": "Classification entity",
+      "definition": "System of coding and organizing materials according to their subject"
+    },
+    "ClassificationDdc": {
+      "label": "DDC Classification",
+      "definition": "Dewey Decimal Classification number used for subject access"
+    },
+    "ClassificationLcc": {
+      "label": "LCC Classification",
+      "definition": "Library of Congress Classification number used for subject access"
+    },
+    "ClassificationNal": {
+      "label": "NAL classification",
+      "definition": "National Library of Agriculture number used for subject access"
+    },
+    "ClassificationNlm": {
+      "label": "NLM classification",
+      "definition": "National Library of Medicine Classification number used for subject access"
+    },
+    "ClassificationUdc": {
+      "label": "UDC Classification",
+      "definition": "Universal Decimal Classification number used for subject access"
+    },
+    "Coden": {
+      "label": "CODEN",
+      "definition": "Identifier for scientific and technical periodical titles assigned by the International CODEN Section of Chemical Abstracts Service"
+    },
+    "Collection": {
+      "label": "Collection",
+      "definition": "Aggregation of resources, generally gathered together artificially"
+    },
+    "CollectionArrangement": {
+      "label": "Organization of materials information",
+      "definition": "Information about the organization and arrangement of a collection of items"
+    },
+    "CollectiveTitle": {
+      "label": "Collective title",
+      "definition": "Title for a compilation of resources"
+    },
+    "ColorContent": {
+      "label": "Color content",
+      "definition": "Color characteristics of a resource, e.g., black and white, multicolored, etc."
+    },
+    "Content": {
+      "label": "Content type",
+      "definition": "Categorization reflecting the fundamental form of communication in which the content is expressed and the human sense through which it is intended to be perceived"
+    },
+    "ContentAccessibility": {
+      "label": "Content accessibility information",
+      "definition": "Information that assists those with a sensory impairment for greater understanding of content, e.g., captions"
+    },
+    "Contribution": {
+      "label": "Contribution",
+      "definition": "Agent and role with respect to the resource being described"
+    },
+    "CopyrightNumber": {
+      "label": "Copyright-legal deposit number",
+      "definition": "Identifier assigned to a copyright registration or legal deposit"
+    },
+    "CopyrightRegistration": {
+      "label": "Copyright registration",
+      "definition": "Copyright or Legal Deposit registration information"
+    },
+    "CoverArt": {
+      "label": "Cover art",
+      "definition": "Cover illustration of a resource"
+    },
+    "Dataset": {
+      "label": "Dataset",
+      "definition": "Data encoded in a defined structure, including numeric data, environmental data, etc., used by applications software"
+    },
+    "DescriptionAuthentication": {
+      "label": "Metadata authentication",
+      "definition": "Indication of specific types of reviews that have been carried out on the description information"
+    },
+    "DescriptionConventions": {
+      "label": "Description conventions",
+      "definition": "Rules used for the descriptive content of the resource description"
+    },
+    "DescriptionLevel": {
+      "label": "Description level",
+      "definition": "Designation of the descriptive content of the metadata"
+    },
+    "DigitalCharacteristic": {
+      "label": "Digital characteristic",
+      "definition": "Technical specification relating to the digital encoding of text, image, audio, video, and other types of data in a resource"
+    },
+    "Dissertation": {
+      "label": "Dissertation information",
+      "definition": "Information about a work presented as part of the formal requirements for an academic degree"
+    },
+    "DissertationIdentifier": {
+      "label": "Dissertation Identifier",
+      "definition": "Identifier assigned to a thesis or dissertation for identification purposes"
+    },
+    "Distribution": {
+      "label": "Distributor",
+      "definition": "Information relating to distribution of a resource"
+    },
+    "Doi": {
+      "label": "DOI",
+      "definition": "Digital Object Identifier"
+    },
+    "DramaticRole": {
+      "label": "Dramatic role",
+      "definition": "The dramatic role performed by a contributing agent"
+    },
+    "Ean": {
+      "label": "EAN",
+      "definition": "International Article Identifier"
+    },
+    "Eidr": {
+      "label": "EIDR",
+      "definition": "Entertainment Identifier Registry"
+    },
+    "Electronic": {
+      "label": "Electronic",
+      "definition": "Resource that is intended for manipulation by a computer, accessed either directly or remotely"
+    },
+    "Emulsion": {
+      "label": "Emulsion",
+      "definition": "Suspension of light-sensitive chemicals used as a coating on a microfilm or microfiche, e.g., silver halide"
+    },
+    "EncodedBitrate": {
+      "label": "Encoded bitrate",
+      "definition": "Speed at which streaming audio, video, etc., is designed to play, e.g., 32 kbps"
+    },
+    "EncodingFormat": {
+      "label": "Encoding format",
+      "definition": "Schema, standard, etc., used to encode the digital content of a resource, e.g., MP3, XML, JPEG"
+    },
+    "Ensemble": {
+      "label": "Ensemble",
+      "definition": "Composition of the ensemble, including the size of the ensemble and the medium of performance components"
+    },
+    "EnsembleSize": {
+      "label": "Ensemble size",
+      "definition": "A designation of the size of the individual musical ensemble"
+    },
+    "Enumeration": {
+      "label": "Enumeration",
+      "definition": "Numbering or other enumeration associated with issues or items held"
+    },
+    "EnumerationAndChronology": {
+      "label": "Enumeration and chronology",
+      "definition": "Numbering or other enumeration and dates associated with issues or items held"
+    },
+    "Event": {
+      "label": "Event entity",
+      "definition": "Something that happens at a certain time and location, such as a performance, speech, or athletic event"
+    },
+    "Extent": {
+      "label": "Extent",
+      "definition": "Number and type of units and/or subunits making up a resource"
+    },
+    "Family": {
+      "label": "Family",
+      "definition": "Two or more persons related by birth, marriage, adoption, civil union, or similar legal status, or who otherwise present themselves as a family"
+    },
+    "FileSize": {
+      "label": "File size",
+      "definition": "Number of bytes in a digital file, e.g., 162 KB"
+    },
+    "FileType": {
+      "label": "File type",
+      "definition": "General type of data content encoded in a computer file, e.g., text file, audio file"
+    },
+    "Fingerprint": {
+      "label": "Fingerprint identifier",
+      "definition": "Identifier that is used to assist in the identification of antiquarian books by recording information comprising groups of characters taken from specified positions on specified pages of the book"
+    },
+    "FontSize": {
+      "label": "Font size",
+      "definition": "Size of the type used to represent the characters and symbols in a resource"
+    },
+    "Frequency": {
+      "label": "Frequency",
+      "definition": "Information about intervals at which the parts of a serially produced resource or the updates to an integrating resource are issued"
+    },
+    "Generation": {
+      "label": "Generation",
+      "definition": "Relationship between an original carrier and the carrier of a reproduction made from the original"
+    },
+    "GenerationProcess": {
+      "label": "Generation process",
+      "definition": "Indication of the program or process used to generate the description by application of a particular transformation"
+    },
+    "GenreForm": {
+      "label": "Genre/form",
+      "definition": "Form category or genre to which a resource belongs"
+    },
+    "GeographicCoverage": {
+      "label": "Geographic coverage",
+      "definition": "Geographic coverage of the content of the resource"
+    },
+    "GrooveCharacteristic": {
+      "label": "Groove characteristic",
+      "definition": "Groove width of an analog disc or the groove pitch of an analog cylinder, e.g., coarse groove, microgroove"
+    },
+    "Gtin14Number": {
+      "label": "Global Trade Item Number 14",
+      "definition": "14-digit number assigned to identify trade items as various packaging levels that encompasses EAN/UCC-128 and ITF-14"
+    },
+    "Hdl": {
+      "label": "Handle",
+      "definition": "Unique and persistent identifier for digital objects developed by the Corporation for National Research Initiatives"
+    },
+    "Hub": {
+      "label": "Hub",
+      "definition": "An abstract resource that functions as a bridge between two Works"
+    },
+    "Identifier": {
+      "label": "Identifier",
+      "definition": "Token or name that is associated with a resource, such as a URI or an ISBN"
+    },
+    "Illustration": {
+      "label": "Illustrative content",
+      "definition": "Information about content intended to illustrate a resource"
+    },
+    "ImmediateAcquisition": {
+      "label": "Immediate acquisition",
+      "definition": "Information about the circumstances, e.g., source, date, method, under which the resource was directly acquired"
+    },
+    "Instance": {
+      "label": "Instance",
+      "definition": "Resource reflecting an individual, material embodiment of a Work"
+    },
+    "Integrating": {
+      "label": "Integrating resource",
+      "definition": "Resource that is added to or changed by updates that do not remain discrete but are integrated into the whole"
+    },
+    "IntendedAudience": {
+      "label": "Intended audience information",
+      "definition": "Information that identifies the specific intended or target audience or intellectual level for which the content described is considered appropriate; also used to record interest and motivation levels and special learner characteristics"
+    },
+    "Isan": {
+      "label": "ISAN",
+      "definition": "International Standard Audiovisual Number"
+    },
+    "Isbn": {
+      "label": "ISBN",
+      "definition": "International Standard Book Number"
+    },
+    "Ismn": {
+      "label": "ISMN",
+      "definition": "International Standard Music Number"
+    },
+    "Isni": {
+      "label": "ISNI",
+      "definition": "International Standard Name Identifier, a unique, persistent reference number for the identities of contributors to creative works"
+    },
+    "Iso": {
+      "label": "ISO number",
+      "definition": "International Organization for Standardization standard number"
+    },
+    "Isrc": {
+      "label": "ISRC",
+      "definition": "International Standard Recording Code"
+    },
+    "Issn": {
+      "label": "ISSN",
+      "definition": "International Standard Serial Number"
+    },
+    "IssnL": {
+      "label": "ISSN-L",
+      "definition": "International Standard Serial Number that links together various media versions of a continuing resource"
+    },
+    "Issuance": {
+      "label": "Mode of issuance",
+      "definition": "Information about whether a resource is issued in one or more parts, the way it is updated, and its intended termination"
+    },
+    "Istc": {
+      "label": "ISTC",
+      "definition": "International Standard Text Code, a numbering system developed to enable the unique identification of textual works"
+    },
+    "Iswc": {
+      "label": "ISWC",
+      "definition": "International Standard Musical Work Code, a unique, persistent reference number for the identification of musical works"
+    },
+    "Item": {
+      "label": "Item",
+      "definition": "Single example of an Instance"
+    },
+    "Jurisdiction": {
+      "label": "Jurisdiction",
+      "definition": "Legal or political unit administering a geographic area"
+    },
+    "KeyMode": {
+      "label": "Key and mode",
+      "definition": "Key and mode, or key only if no mode is present, of a music work"
+    },
+    "KeyTitle": {
+      "label": "Key title",
+      "definition": "Unique title for a continuing resource that is assigned by the ISSN International Center in conjunction with an ISSN"
+    },
+    "Kit": {
+      "label": "Kit",
+      "definition": "Resource that contains a mixture of various components issued as a unit and intended primarily for instructional purposes"
+    },
+    "Language": {
+      "label": "Language entity",
+      "definition": "Language entity"
+    },
+    "Layout": {
+      "label": "Layout",
+      "definition": "Arrangement of text, images, tactile notation, etc., in a resource"
+    },
+    "LcOverseasAcq": {
+      "label": "LC acquisition program",
+      "definition": "Identification number assigned by the Library of Congress to works acquired through one of its collaborative overseas acquisition programs"
+    },
+    "Lccn": {
+      "label": "LCCN",
+      "definition": "Library of Congress Control Number that identifies a resource description"
+    },
+    "Local": {
+      "label": "Local identifier",
+      "definition": "Identifier established locally and not a standard number"
+    },
+    "Manufacture": {
+      "label": "Manufacturer",
+      "definition": "Information relating to manufacture of a resource"
+    },
+    "Manuscript": {
+      "label": "Manuscript",
+      "definition": "Resource which is written in handwriting or typescript"
+    },
+    "Material": {
+      "label": "Material",
+      "definition": "Substance or composition of the resource"
+    },
+    "MatrixNumber": {
+      "label": "Audio matrix number",
+      "definition": "Matrix identifier assigned to the master from which a specific sound recording was pressed"
+    },
+    "Media": {
+      "label": "Media type",
+      "definition": "Categorization reflecting the general type of intermediation device required to view, play, run, etc., the content of a resource"
+    },
+    "MediumComponent": {
+      "label": "Medium component",
+      "definition": "An individual component of a medium of performance, gathering together the medium of performance, medium count, number of hands, and component qualifier"
+    },
+    "MediumComponentQualifier": {
+      "label": "Medium component qualifier",
+      "definition": "Relates a medium component to a qualifier (solo, optional, etc.) that affects the medium component"
+    },
+    "MediumOfPerformance": {
+      "label": "Medium of performance",
+      "definition": "An individual instrument, voice, ensemble, or instrumental group"
+    },
+    "Meeting": {
+      "label": "Meeting",
+      "definition": "Gathering of individuals or representatives of various bodies for the purpose of discussing and/or acting on topics of common interest"
+    },
+    "Microform": {
+      "label": "Microform",
+      "definition": "Resource that contains microimages, either transparent or opaque, that may be reproductions of existing textual or graphic materials or may be original publications"
+    },
+    "MixedMaterial": {
+      "label": "Mixed material",
+      "definition": "Resource comprised of multiple types which is not driven by software, e.g. an archival collection of text, photographs and sound recordings"
+    },
+    "Mode": {
+      "label": "Mode",
+      "definition": "Mode (not associated with a key) of a musical work"
+    },
+    "Modification": {
+      "label": "Modification",
+      "definition": "Information relating to modification of a resource"
+    },
+    "Monograph": {
+      "label": "Monograph",
+      "definition": "Resource that is issued as a single physical unit or intangible single logical unit"
+    },
+    "Mount": {
+      "label": "Mount",
+      "definition": "Physical material or object used for the support or backing to which the base material of a resource has been attached"
+    },
+    "MovementNotation": {
+      "label": "Movement notation",
+      "definition": "Information on the symbol system used to convey the content of a movement resource"
+    },
+    "MovingImage": {
+      "label": "Moving image",
+      "definition": "Images intended to be perceived as moving, including motion pictures (using live action and/or animation) or video recordings of performances or events"
+    },
+    "Multimedia": {
+      "label": "Software or multimedia",
+      "definition": "Electronic resource which is a computer program or consists of multiple media types that are software driven, such as videogames"
+    },
+    "MusicAudio": {
+      "label": "Music audio",
+      "definition": "Music resource expressed in an audible form"
+    },
+    "MusicDistributorNumber": {
+      "label": "Music distributor number",
+      "definition": "Identifier appearing on a resource assigned by a distributor to a specific audio recording, notated music publication, music-related publication, or videorecording"
+    },
+    "MusicEnsemble": {
+      "label": "Music ensemble",
+      "definition": "Ensemble for which a musical work is appropriate"
+    },
+    "MusicFormat": {
+      "label": "Notated music format",
+      "definition": "Layout for content of a resource that is presented in the form of musical notation"
+    },
+    "MusicInstrument": {
+      "label": "Musical instrument",
+      "definition": "Instrument for which a musical work is appropriate"
+    },
+    "MusicMedium": {
+      "label": "Music medium information",
+      "definition": "Summary statement of the medium for a musical work"
+    },
+    "MusicNotation": {
+      "label": "Music notation",
+      "definition": "Information on the symbol system used to convey the content of a music resource"
+    },
+    "MusicPlate": {
+      "label": "Music plate number",
+      "definition": "Identifiers assigned by a music publisher or printer to the printing plates for the notated portion of a notated music publication, or an identifier that emulates the printing plate tradition in contemporary publications"
+    },
+    "MusicPublisherNumber": {
+      "label": "Music publisher number",
+      "definition": "Identifier assigned to a notated music publication other than an issue, matrix, or plate number"
+    },
+    "MusicVoice": {
+      "label": "Music voice",
+      "definition": "Voice for which a musical work is appropriate"
+    },
+    "Nbn": {
+      "label": "NBN",
+      "definition": "National Bibliography Number that identifies a resource description"
+    },
+    "NonMusicAudio": {
+      "label": "Non-music audio",
+      "definition": "Resource expressed in an audible form, including spoken word and other non-musical sounds"
+    },
+    "NotatedMovement": {
+      "label": "Notated movement",
+      "definition": "Graphic, non-realized representations of movement intended to be perceived visually, e.g. dance"
+    },
+    "NotatedMusic": {
+      "label": "Notated music",
+      "definition": "Graphic, non-realized representations of musical works intended to be perceived visually"
+    },
+    "Notation": {
+      "label": "Notation",
+      "definition": "Information on the alphabet, script, or symbol system used to convey the content of the resource, including specialized scripts, typefaces, tactile notation, movement notation, and musical notation"
+    },
+    "Note": {
+      "label": "Note",
+      "definition": "Information, usually in textual form, on attributes of a resource or some aspect of a resource"
+    },
+    "Object": {
+      "label": "Three-dimensional object",
+      "definition": "Resource in a form intended to be perceived visually in three-dimensions, including man-made objects such as models, sculptures, clothing, and toys, as well as naturally occurring objects such as specimens mounted for viewing"
+    },
+    "ObjectCount": {
+      "label": "Digital cartographic object count",
+      "definition": "Number of objects in encoded geospatial information in a cartographic resource"
+    },
+    "OclcNumber": {
+      "label": "OCLC number",
+      "definition": "Identifier assigned by OCLC"
+    },
+    "OpusNumber": {
+      "label": "Opus number",
+      "definition": "An opus number assigned to a musical work"
+    },
+    "Organization": {
+      "label": "Organization",
+      "definition": "Corporation or group of persons and/or organizations that acts, or may act, as a unit"
+    },
+    "ParallelTitle": {
+      "label": "Parallel title proper",
+      "definition": "Title in another language and/or script"
+    },
+    "Person": {
+      "label": "Person",
+      "definition": "Individual or identity established by an individual (either alone or in collaboration with one or more other individuals)"
+    },
+    "Place": {
+      "label": "Place",
+      "definition": "Geographic location"
+    },
+    "PlaybackChannels": {
+      "label": "Configuration of playback channels",
+      "definition": "Configuration/number of sound channels used to make a recording, such as one channel for a monophonic recording, e.g., mono, stereo, quadraphonic, surround"
+    },
+    "PlaybackCharacteristic": {
+      "label": "Special playback characteristics",
+      "definition": "Equalization system, noise reduction system, etc., used in making an audio recording, e.g., CCIR standard, CX encoded, Dolby"
+    },
+    "PlayingSpeed": {
+      "label": "Playing speed",
+      "definition": "Speed at which an audio carrier must be operated to produce the sound intended, e.g., 78 rpm, 19 cm/s"
+    },
+    "Polarity": {
+      "label": "Polarity",
+      "definition": "Relationship of the colors and tones in an image to the colors and tones of the object reproduced"
+    },
+    "PostalRegistration": {
+      "label": "Postal registration number",
+      "definition": "Number assigned to a publication for which the specified postal service permits the use of a special mailing class privilege"
+    },
+    "PresentationFormat": {
+      "label": "Presentation format",
+      "definition": "Format used in the production of a projected image, e.g., Cinerama, IMAX"
+    },
+    "PrimaryContribution": {
+      "label": "Primary contribution",
+      "definition": "Contribution for which the agent is the name chosen as the name part of the name and title access point"
+    },
+    "Print": {
+      "label": "Printed",
+      "definition": "Resource that is printed"
+    },
+    "Production": {
+      "label": "Producer",
+      "definition": "Information relating to production of a resource"
+    },
+    "ProductionMethod": {
+      "label": "Production method",
+      "definition": "Process used to produce a resource"
+    },
+    "Projection": {
+      "label": "Projection",
+      "definition": "Method or system used to represent the surface of the earth or of a celestial sphere on a plane"
+    },
+    "ProjectionCharacteristic": {
+      "label": "Projection characteristic",
+      "definition": "Technical specification relating to the projection of a motion picture film"
+    },
+    "ProjectionSpeed": {
+      "label": "Projection speed",
+      "definition": "Speed at which a projected carrier must be operated to produce the moving image intended, e.g., 20 fps"
+    },
+    "ProvisionActivity": {
+      "label": "Provider entity",
+      "definition": "Information about the agent or place relating to the publication, printing, distribution, issue, release, or production of a resource"
+    },
+    "PubFrequency": {
+      "label": "Publication Frequency",
+      "definition": "Information about the publication frequency of a resource"
+    },
+    "Publication": {
+      "label": "Publisher",
+      "definition": "Information relating to publication of a resource"
+    },
+    "PublisherNumber": {
+      "label": "Publisher number",
+      "definition": "Number assigned by a publisher that is not one of the specific defined types"
+    },
+    "RecordingMedium": {
+      "label": "Recording medium",
+      "definition": "Type of medium used to record sound on an audio carrier, e.g., magnetic, optical"
+    },
+    "RecordingMethod": {
+      "label": "Type of recording",
+      "definition": "Method used to encode audio content for playback, e.g., analog, digital"
+    },
+    "ReductionRatio": {
+      "label": "Reduction ratio",
+      "definition": "Size of a micro-image in relation to the original from which it was produced"
+    },
+    "RegionalEncoding": {
+      "label": "Regional encoding",
+      "definition": "Identification of the region of the world for which a videodisc has been encoded, e.g., region 4"
+    },
+    "Relation": {
+      "label": "Relation",
+      "definition": "Associated resource and its relationship to the resource being described"
+    },
+    "Relationship": {
+      "label": "Relationship",
+      "definition": "Type of relationship between resources"
+    },
+    "Relief": {
+      "label": "Relief",
+      "definition": "Relief term specified on a cartographic resource"
+    },
+    "ReportNumber": {
+      "label": "Technical report number",
+      "definition": "Identification number of a technical report that is not a Standard Technical Report Number"
+    },
+    "Resolution": {
+      "label": "Resolution",
+      "definition": "Clarity or fineness of detail in a digital image, expressed by the measurement of the image in pixels, etc., e.g., 3.1 megapixels"
+    },
+    "RetentionPolicy": {
+      "label": "Retention policy",
+      "definition": "Policy of holding institution for retaining resource"
+    },
+    "Review": {
+      "label": "Review",
+      "definition": "Review of a resource"
+    },
+    "Role": {
+      "label": "Role",
+      "definition": "Function played or provided by a contributor, e.g., author or illustrator"
+    },
+    "Scale": {
+      "label": "Scale",
+      "definition": "Ratio of the dimensions of a form contained or embodied in a resource to the dimensions of the entity it represents, e.g., for images or cartographic resources"
+    },
+    "Script": {
+      "label": "Script",
+      "definition": "Information on the script, or symbol system used to convey the content of a text resource"
+    },
+    "Serial": {
+      "label": "Serial",
+      "definition": "Resource that is issued in successive parts, usually numbered, that has no predetermined conclusion"
+    },
+    "SerialNumber": {
+      "label": "Serial number",
+      "definition": "A serial number assigned to a work"
+    },
+    "Series": {
+      "label": "Series",
+      "definition": "Resource with a collective title that applies to a group of separate resources, each of which also has its own title"
+    },
+    "ShelfMark": {
+      "label": "Shelf location",
+      "definition": "Piece/item identifier, such as a call or other type of number"
+    },
+    "ShelfMarkDdc": {
+      "label": "DDC call number",
+      "definition": "Shelf mark based on Dewey Decimal Classification"
+    },
+    "ShelfMarkLcc": {
+      "label": "LCC call number",
+      "definition": "Shelf mark based on Library of Congress Classification"
+    },
+    "ShelfMarkNlm": {
+      "label": "NLM call number",
+      "definition": "Shelf mark based on National Library of Medicine Classification"
+    },
+    "ShelfMarkUdc": {
+      "label": "UDC call number",
+      "definition": "Shelf mark based on Universal Decimal Classification"
+    },
+    "Sici": {
+      "label": "SICI",
+      "definition": "Serial Item and Contribution Identifier"
+    },
+    "SoundCharacteristic": {
+      "label": "Sound characteristic",
+      "definition": "Technical specification relating to the encoding of sound in a resource"
+    },
+    "SoundContent": {
+      "label": "Sound content",
+      "definition": "Indication of whether the production of sound is an integral part of the resource"
+    },
+    "Source": {
+      "label": "Source",
+      "definition": "Resource from which value or label came or was derived"
+    },
+    "Status": {
+      "label": "Status",
+      "definition": "Designation of the validity or position of something, e.g., whether something is incorrect or available"
+    },
+    "StillImage": {
+      "label": "Still image",
+      "definition": "Resource expressed through line, shape, shading, etc., intended to be perceived visually as a still image or images in two dimensions, including two-dimensional images and slides and transparencies"
+    },
+    "StockNumber": {
+      "label": "Stock number",
+      "definition": "Identification number used for stock purposes and assigned by agencies such as distributors, publishers, or vendors"
+    },
+    "Strn": {
+      "label": "STRN",
+      "definition": "Standard Technical Report Number"
+    },
+    "StudyNumber": {
+      "label": "Study number",
+      "definition": "Identification number for a computer data file"
+    },
+    "Sublocation": {
+      "label": "Sublocation",
+      "definition": "Specific place within the holding entity where the item is located or made available"
+    },
+    "Summary": {
+      "label": "Summary",
+      "definition": "Description of the content of a resource, such as an abstract, summary, etc."
+    },
+    "SupplementaryContent": {
+      "label": "Supplementary material",
+      "definition": "Index, bibliography, appendix, etc. intended to supplement the primary content of a resource"
+    },
+    "SystemRequirement": {
+      "label": "System Requirement",
+      "definition": "Equipment or system requirements beyond what is normal and obvious for the type of carrier or type of file, such as make and model of equipment or hardware, operating system, amount of memory, programming language, other necessary software, any plug-ins or peripherals required to play, view, or run the resource"
+    },
+    "TableOfContents": {
+      "label": "Table of contents",
+      "definition": "Table of contents of a resource"
+    },
+    "Tactile": {
+      "label": "Tactile material",
+      "definition": "Resource that is intended to be perceived by touch"
+    },
+    "TactileNotation": {
+      "label": "Tactile notation",
+      "definition": "Information on the symbol system used to convey the content of a tactile resource"
+    },
+    "TapeConfig": {
+      "label": "Tape configuration",
+      "definition": "Number of tracks on an audiotape, e.g., 12 track"
+    },
+    "Tempo": {
+      "label": "Tempo",
+      "definition": "The speed of pace of a music work, whether declared in a score or performed"
+    },
+    "Temporal": {
+      "label": "Temporal concept",
+      "definition": "Chronological period"
+    },
+    "Text": {
+      "label": "Text",
+      "definition": "Resource intended to be perceived visually and understood through the use of language in written or spoken form"
+    },
+    "ThematicCatalogNumber": {
+      "label": "Thematic catalog number",
+      "definition": "A numeric or alphanumeric designation of a musical work as found in a thematic index or catalog"
+    },
+    "Title": {
+      "label": "Title entity",
+      "definition": "Title information relating to a resource: work title, preferred title, instance title, transcribed title, translated title, variant form of title, etc."
+    },
+    "Topic": {
+      "label": "Topic",
+      "definition": "Concept or area of knowledge"
+    },
+    "TrackConfig": {
+      "label": "Track configuration",
+      "definition": "Configuration of the audio track on a sound-track film, e.g., center track, edge track"
+    },
+    "TransliteratedTitle": {
+      "label": "Transliterated title",
+      "definition": "Title transliterated from one script to another"
+    },
+    "Unit": {
+      "label": "Unit",
+      "definition": "Units in which a value is expressed"
+    },
+    "Upc": {
+      "label": "UPC",
+      "definition": "Universal Product Code"
+    },
+    "Urn": {
+      "label": "URN",
+      "definition": "Uniform Resource Name"
+    },
+    "UsageAndAccessPolicy": {
+      "label": "Use and access conditions",
+      "definition": "General statement of allowances and restrictions on access to a resource, including retention, reproduction, access, and lending"
+    },
+    "UsePolicy": {
+      "label": "Use policy",
+      "definition": "Usage limitations placed on a resource with respect to reproduction, publication, exhibition, etc."
+    },
+    "VariantTitle": {
+      "label": "Title variation",
+      "definition": "Title associated with the resource that is different from the Work or Instance title"
+    },
+    "VideoCharacteristic": {
+      "label": "Video characteristic",
+      "definition": "Technical specification relating to the encoding of video images in a resource"
+    },
+    "VideoFormat": {
+      "label": "Video format",
+      "definition": "Standard, etc., used to encode the analog video content of a resource, e.g., Beta, 8mm"
+    },
+    "VideoRecordingNumber": {
+      "label": "Video recording number",
+      "definition": "Number assigned by a publisher to a video recording"
+    },
+    "VideogamePlatformId": {
+      "label": "Videogame platform identifier",
+      "definition": "An identifier assigned to a videogame platform"
+    },
+    "Work": {
+      "label": "Work",
+      "definition": "Resource reflecting a conceptual essence of a cataloging resource"
+    },
+    "absorbed": {
+      "label": "Absorption of",
+      "definition": "Resource that has been incorporated into another resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "absorbedBy": {
+      "label": "Absorbed by",
+      "definition": "Resource that incorporates another resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "accompaniedBy": {
+      "label": "Accompanied by",
+      "definition": "Resource that accompanies the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "accompanies": {
+      "label": "Accompanies",
+      "definition": "Resource that adds to or is issued with the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "acquisitionSource": {
+      "label": "Source of acquisition",
+      "definition": "Information about an organization, person, etc., from which a resource may be obtained.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "acquisitionTerms": {
+      "label": "Terms of acquisition",
+      "definition": "Conditions under which the publisher, distributor, etc., will normally supply a resource, e.g., price of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "adminMetadata": {
+      "label": "Administrative metadata",
+      "definition": "Metadata about the metadata, especially provenance information."
+    },
+    "adminMetadataFor": {
+      "label": "Administrative metadata for",
+      "definition": "Relates an Administrative metadata resource to the resource it captures information about."
+    },
+    "agent": {
+      "label": "Associated agent",
+      "definition": "Entity associated with a resource or element of description, such as the name of the entity responsible for the content or of the publication, printing, distribution, issue, release or production of a resource.",
+      "notes": [
+        "Suggested value - bf:Agent or foaf:Agent"
+      ]
+    },
+    "agentOf": {
+      "label": "Associated agent of",
+      "definition": "Property relating an agent, such as an entity responsible for the content or of the publication, printing, distribution, issue, release or production, to another resource.",
+      "notes": [
+        "Suggested use - With bf:Agent or foaf:Agent"
+      ]
+    },
+    "appliedMaterial": {
+      "label": "Applied material",
+      "definition": "Physical or chemical substance applied to a base material of a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "appliedMaterialOf": {
+      "label": "Applied material of",
+      "definition": "Relates a Material resource to that which it is the applied material of."
+    },
+    "arrangement": {
+      "label": "Arrangement",
+      "definition": "Relates one resource to another of which it is an arrangement of the first"
+    },
+    "arrangementOf": {
+      "label": "Arrangement of",
+      "definition": "Relates an arrangement to the resource of which it is an arrangement."
+    },
+    "ascensionAndDeclination": {
+      "label": "Cartographic ascension and declination",
+      "definition": "System for identifying the location of a celestial object in the sky covered by the cartographic content of a resource using the angles of right ascension and declination."
+    },
+    "aspectRatio": {
+      "label": "Aspect ratio",
+      "definition": "Proportional relationship between an image's width and its height.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "assigner": {
+      "label": "Assigner",
+      "definition": "Entity that assigned the metadata, such as the entity that assigned a classification number, entity that assigned a name, entity that assigned an identifier."
+    },
+    "associatedResource": {
+      "label": "Associated resource",
+      "definition": "Associated resource",
+      "notes": [
+        "Suggested value - With Work or Hub"
+      ]
+    },
+    "awards": {
+      "label": "Award note",
+      "definition": "Information on awards associated with the described resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "baseMaterial": {
+      "label": "Base material",
+      "definition": "Underlying physical material of a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "baseMaterialOf": {
+      "label": "Base material of",
+      "definition": "Relates a Material resource to that which it is the base material of."
+    },
+    "binding": {
+      "label": "Binding method",
+      "definition": "A method used to bind a published or unpublished resource,or other binding information."
+    },
+    "bookFormat": {
+      "label": "Book format",
+      "definition": "Result of folding a printed sheet to form a gathering of leaves."
+    },
+    "capture": {
+      "label": "Capture of content",
+      "definition": "Information about place and date associated with the capture (e.g., recording, filming) of the content of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "carrier": {
+      "label": "Carrier type",
+      "definition": "Categorization reflecting the format of the storage medium and housing of a carrier.",
+      "notes": [
+        "Suggested value - bf:Carrier or skos:Concept"
+      ]
+    },
+    "cartographicAttributes": {
+      "label": "Cartographic data",
+      "definition": "Cartographic data that identifies characteristics of the resource, such as coordinates, projection, etc.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "changeDate": {
+      "label": "Description change date",
+      "definition": "Date or date and time on which the metadata was modified"
+    },
+    "classification": {
+      "label": "Classification",
+      "definition": "Classification number in any scheme.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "classificationPortion": {
+      "label": "Classification number",
+      "definition": "Classification number (single class number or beginning number of a span) that indicates the subject by applying a formal system of coding and organizing resources."
+    },
+    "code": {
+      "label": "Code",
+      "definition": "String of characters that serves as a code representing information."
+    },
+    "collectionArrangement": {
+      "label": "Collection Organization and arrangement",
+      "definition": "Information about the organization and arrangement of a collection of resources.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "collectionArrangementOf": {
+      "label": "Organization and arrangement of Collection",
+      "definition": "Relates an Arrangement resource to that which it describes.",
+      "notes": [
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "collectionOrganization": {
+      "label": "Organization of material",
+      "definition": "Manner in which the resource is divided into smaller units."
+    },
+    "colorContent": {
+      "label": "Color content",
+      "definition": "Color characteristics, e.g., black and white, multicolored.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "content": {
+      "label": "Content type",
+      "definition": "Categorization reflecting the fundamental form of communication in which the content is expressed and the human sense through which it is intended to be perceived.",
+      "notes": [
+        "Suggested value - bf:Content or skos:Concept"
+      ]
+    },
+    "contentAccessibility": {
+      "label": "Content accessibility information",
+      "definition": "Information that assists those with a sensory impairment for greater understanding of content, e.g., captions.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "continuedBy": {
+      "label": "Continued by",
+      "definition": "Resource whose content continues an earlier resource under a new title",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "continuedInPartBy": {
+      "label": "Continued in part by",
+      "definition": "Resource part of whose content separated from an earlier resource to form a new resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "continues": {
+      "label": "Continuation of",
+      "definition": "Resource that is continued by the content of a later resource under a new title",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "continuesInPart": {
+      "label": "Continuation in part of",
+      "definition": "Resource that split into two or more separate resources with new titles",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "contribution": {
+      "label": "Contributor and role",
+      "definition": "Agent and its role in relation to the resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "contributionOf": {
+      "label": "Contribution of",
+      "definition": "Relates a contribution resource, which associates an Agent and Role together, to the relevant resource",
+      "notes": [
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "coordinates": {
+      "label": "Cartographic coordinates",
+      "definition": "Mathematical system for identifying the area covered by the cartographic content of a resource, expressed either by means of longitude and latitude on the surface of planets or by the angles of right ascension and declination for celestial cartographic content."
+    },
+    "copyrightDate": {
+      "label": "Copyright date",
+      "definition": "Date associated with a claim of protection under copyright or a similar regime.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "copyrightRegistration": {
+      "label": "Copyright registration information",
+      "definition": "Copyright and Legal Deposit registration information",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "count": {
+      "label": "Number of units",
+      "definition": "Number associated with a measure of units, such as the number of units and/or subunits making up a resource."
+    },
+    "coverArt": {
+      "label": "Cover art",
+      "definition": "Cover art image of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "creationDate": {
+      "label": "Description creation date",
+      "definition": "Date or date and time on which the original metadata first created"
+    },
+    "credits": {
+      "label": "Credits note",
+      "definition": "Information in note form of credits for persons or organizations who have participated in the creation and/or production of the resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "custodialHistory": {
+      "label": "Custodial history",
+      "definition": "Information about the provenance, such as origin, ownership and custodial history (chain of custody), of a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "dataSource": {
+      "label": "Data source",
+      "definition": "Resource that is a data source to which the described resource is related; may contain information about other files, printed sources, or collection procedures",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "date": {
+      "label": "Date",
+      "definition": "Date designation associated with a resource or element of description, such as date of title variation; year a degree was awarded; date associated with the publication, printing, distribution, issue, release or production of a resource. May be date typed."
+    },
+    "degree": {
+      "label": "Degree",
+      "definition": "Degree for which author was a candidate."
+    },
+    "derivativeOf": {
+      "label": "Is derivative of",
+      "definition": "A relationship that records the fact that one resource is a derivative of another resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "derivedFrom": {
+      "label": "Source metadata",
+      "definition": "Meant to establish a link from a description that was derived from, perhaps via copy, another description; example: X description/metadata was derived from Y description/metadata"
+    },
+    "descriptionAuthentication": {
+      "label": "Description authentication",
+      "definition": "Indication of specific types of reviews that have been carried out on the description information"
+    },
+    "descriptionConventions": {
+      "label": "Description conventions",
+      "definition": "Rules used for the descriptive content of the resource description"
+    },
+    "descriptionLanguage": {
+      "label": "Description language",
+      "definition": "Language used for the metadata"
+    },
+    "descriptionLevel": {
+      "label": "Description level",
+      "definition": "Designation of the descriptive content of the metadata"
+    },
+    "descriptionModifier": {
+      "label": "Description modifier",
+      "definition": "Agency that modified a description"
+    },
+    "digitalCharacteristic": {
+      "label": "Digital characteristic",
+      "definition": "Technical specification relating to the digital encoding of text, image, audio, video, and other types of data in a resource."
+    },
+    "dimensions": {
+      "label": "Dimensions",
+      "definition": "Measurements of the carrier or carriers and/or the container of a resource."
+    },
+    "dissertation": {
+      "label": "Dissertation Information",
+      "definition": "Work presented as part of the formal requirements for an academic degree.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "distributionStatement": {
+      "label": "Distribution statement",
+      "definition": "Statement related to the distribution of the resources; usually transcribed."
+    },
+    "dramaticRole": {
+      "label": "Dramatic Role",
+      "definition": "Relates a contribution to a dramatic role"
+    },
+    "duration": {
+      "label": "Duration",
+      "definition": "Information about the playing time, running time, etc. of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "edition": {
+      "label": "Classification scheme edition",
+      "definition": "Edition of the classification scheme, such as full, abridged or a number, when a classification scheme designates editions."
+    },
+    "editionEnumeration": {
+      "label": "Edition enumeration",
+      "definition": "Enumeration of the edition; usually transcribed."
+    },
+    "editionStatement": {
+      "label": "Edition statement",
+      "definition": "Information identifying the edition or version of the resource and associated statements of responsibility for the edition; usually transcribed."
+    },
+    "electronicLocator": {
+      "label": "Electronic location",
+      "definition": "Electronic location from which the resource is available."
+    },
+    "emulsion": {
+      "label": "Emulsion",
+      "definition": "Suspension of light-sensitive chemicals used as a coating on a microfilm or microfiche, e.g., silver halide."
+    },
+    "ensemble": {
+      "label": "Ensemble",
+      "definition": "Composition of the ensemble applicable to the Work."
+    },
+    "ensembleSize": {
+      "label": "Ensemble size",
+      "definition": "Relates a work to the musical ensemble size"
+    },
+    "ensembleType": {
+      "label": "Ensemble type",
+      "definition": "Specific type of ensemble, such as orchestra, band, guitar ensemble."
+    },
+    "enumerationAndChronology": {
+      "label": "Enumeration and chronology",
+      "definition": "Numbering and dates of issues or items held."
+    },
+    "equinox": {
+      "label": "Cartographic equinox",
+      "definition": "One of two points of intersection of the ecliptic and the celestial equator, occupied by the sun when its declination is 0 degrees."
+    },
+    "eventContent": {
+      "label": "Event content",
+      "definition": "Work whose content is the described event"
+    },
+    "eventContentOf": {
+      "label": "Has event content",
+      "definition": "Event that is the content of the described work"
+    },
+    "exclusionGRing": {
+      "label": "Cartographic G ring area excluded",
+      "definition": "Coordinate pairs that identify the closed non-intersecting boundary of the area contained within the G-polygon outer ring that is excluded."
+    },
+    "expressionOf": {
+      "label": "Expression of",
+      "definition": "Work or Hub that the described Work or Hub is an expression of; used to connect Works and/or Hubs under LRM/RDA guidelines or similar implementations",
+      "notes": [
+        "Suggested use - With Work or Hub",
+        "Suggested value - With Work or Hub"
+      ]
+    },
+    "extent": {
+      "label": "Extent",
+      "definition": "Number and type of units and/or subunits making up a resource."
+    },
+    "findingAid": {
+      "label": "Finding aid",
+      "definition": "Relationship for archival, visual, and manuscript resources to a finding aid or similar control materials",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "findingAidOf": {
+      "label": "Finding aid for",
+      "definition": "Finding aid or similar control materials for archival, visual, and manuscript resources",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "firstIssue": {
+      "label": "Multipart first issue",
+      "definition": "Beginning date of a resource and/or the sequential designations."
+    },
+    "fontSize": {
+      "label": "Font size",
+      "definition": "Size of the type used to represent the characters and symbols in a resource."
+    },
+    "frequency": {
+      "label": "Frequency",
+      "definition": "Intervals at which the parts of a serially produced resource or the updates to an integrating resource are issued."
+    },
+    "generation": {
+      "label": "Generation",
+      "definition": "Relationship between an original carrier and the carrier of a reproduction made from the original."
+    },
+    "generationDate": {
+      "label": "Date generated",
+      "definition": "Date of conversion of the metadata from another format"
+    },
+    "generationProcess": {
+      "label": "Description generation",
+      "definition": "Indication of the program or process used to generate the description by application of a particular transformation"
+    },
+    "genreForm": {
+      "label": "Genre/form",
+      "definition": "Form category or genre to which a resource belongs",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - bf:GenreForm or madsrdf:GenreForm or skos:Concept"
+      ]
+    },
+    "geographicCoverage": {
+      "label": "Geographic coverage",
+      "definition": "Geographic coverage of the content of the resource.",
+      "notes": [
+        "Suggested value - bf:GeographicCoverage or bf:Place or madsrdf:Geographic"
+      ]
+    },
+    "grantingInstitution": {
+      "label": "Degree issuing institution",
+      "definition": "Name of degree granting institution."
+    },
+    "hasDerivative": {
+      "label": "Has derivative",
+      "definition": "A relationship which records that the described resource has a derivative resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "hasEquivalent": {
+      "label": "Equivalence",
+      "definition": "Resource embodies the same content as the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "hasExpression": {
+      "label": "Expressed as",
+      "definition": "Work or Hub that is an expression of a described Work or Hub; used to relate Works and/or Hubs under LRM/RDA guidelines or similar implementations",
+      "notes": [
+        "Suggested use - With Work or Hub",
+        "Suggested value - With Work or Hub"
+      ]
+    },
+    "hasInstance": {
+      "label": "Instance of Work",
+      "definition": "Instance is related to described Work ; used to connect Works to Instances in the BIBFRAME structure"
+    },
+    "hasItem": {
+      "label": "Has holding",
+      "definition": "Item which is an example of the described Instance"
+    },
+    "hasPart": {
+      "label": "Has part",
+      "definition": "Resource that is included either physically or logically in the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance, Item or Event",
+        "Suggested value - Work, Instance, Item or Event"
+      ]
+    },
+    "hasReproduction": {
+      "label": "Reproduced as",
+      "definition": "Resource that reproduces another Resource"
+    },
+    "hasSeries": {
+      "label": "In series",
+      "definition": "Relation between a resource and the larger resource in which it has been issued; the title of the encompassing larger resource features on the part",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "hasSubseries": {
+      "label": "Subseries",
+      "definition": "Relation between a resource and the larger Series resource in which it has been issued; the larger Series resource is part of another overarching Series resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "heldBy": {
+      "label": "Held by",
+      "definition": "Entity holding the item or from which it is available."
+    },
+    "hierarchicalLevel": {
+      "label": "Hierarchical level of material",
+      "definition": "Hierarchical position of the described materials relative to other material from the same source."
+    },
+    "historyOfWork": {
+      "label": "History of the work",
+      "definition": "Information about the history of a Work."
+    },
+    "identifiedBy": {
+      "label": "Identifier",
+      "definition": "Character string associated with a resource that serves to differentiate that resource from other resources, i.e., that uniquely identifies an entity."
+    },
+    "identifies": {
+      "label": "Resource identified",
+      "definition": "Resource that is associated with a character string that serves to differentiate one resource from another."
+    },
+    "illustrativeContent": {
+      "label": "Illustrative content information",
+      "definition": "Information about content intended to illustrate a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "immediateAcquisition": {
+      "label": "Immediate acquisition",
+      "definition": "Information about the circumstances, e.g., source, date, method, under which the resource was directly acquired."
+    },
+    "index": {
+      "label": "Has index",
+      "definition": "Resource has an accompanying index",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "indexOf": {
+      "label": "Index to",
+      "definition": "Index that accompanies a resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "instanceOf": {
+      "label": "Instance of",
+      "definition": "Work the Instance described instantiates or manifests; used to connect Instances to Works in the BIBFRAME structure"
+    },
+    "instrument": {
+      "label": "Instrument",
+      "definition": "Instrument for which a musical Work is appropriate."
+    },
+    "instrumentalType": {
+      "label": "Instrument role",
+      "definition": "Specific role of instrument, such as alternate, doubling, solo, ensemble."
+    },
+    "intendedAudience": {
+      "label": "Intended audience",
+      "definition": "Information that identifies the specific audience or intellectual level for which the content of the resource is considered appropriate.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "issuance": {
+      "label": "Mode of issuance",
+      "definition": "Categorization reflecting whether a resource is issued in one or more parts, the way it is updated, and its intended termination.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "issuedWith": {
+      "label": "Issued with",
+      "definition": "Resource that is issued on the same carrier as the resource being described",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "itemOf": {
+      "label": "Holding for",
+      "definition": "Instance for which the described Item is an example"
+    },
+    "itemPortion": {
+      "label": "Classification item number",
+      "definition": "Number attached to a classification string that indicates a particular item."
+    },
+    "keyMode": {
+      "label": "Key and mode",
+      "definition": "Relates a work to a musical key and mode",
+      "notes": [
+        "Suggested use - With Work or Hub"
+      ]
+    },
+    "language": {
+      "label": "Language information",
+      "definition": "Language associated with a resource or its parts.",
+      "notes": [
+        "Suggested value - bf:Language or madsrdf:Language"
+      ]
+    },
+    "lastIssue": {
+      "label": "Multipart last issue",
+      "definition": "Ending date of a resource and/or the sequential designations."
+    },
+    "layout": {
+      "label": "Layout",
+      "definition": "Arrangement of text, images, tactile notation, etc., in a resource."
+    },
+    "legalDate": {
+      "label": "Date of legal work",
+      "definition": "Date of legal work, or promulgation of a law, or signing of a treaty."
+    },
+    "mainTitle": {
+      "label": "Main title",
+      "definition": "Title being addressed. Possible title component."
+    },
+    "manufactureStatement": {
+      "label": "Manufacture statement",
+      "definition": "Statement related to the manufacture of the resources; usually transcribed."
+    },
+    "material": {
+      "label": "Material",
+      "definition": "Resource uses, is composed of, integrates, etc. the related material.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "materialOf": {
+      "label": "Material of",
+      "definition": "This material is related to a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "media": {
+      "label": "Media type",
+      "definition": "Categorization reflecting the general type of intermediation device required to view, play, run, etc., the content of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - bf:Media or skos:Concept"
+      ]
+    },
+    "mediumComponent": {
+      "label": "Medium component",
+      "definition": "Relates a work to a medium component"
+    },
+    "mediumComponentQualifier": {
+      "label": "Medium component qualifier",
+      "definition": "Relates a medium component to a qualifier that affects the medium of component"
+    },
+    "mediumOfPerformance": {
+      "label": "Medium of performance",
+      "definition": "Relates a work to a musical medium of performance",
+      "notes": [
+        "Suggested use - With MediumComponent or Contribution"
+      ]
+    },
+    "mergedToForm": {
+      "label": "Merged to form",
+      "definition": "One of two or more resources that come together to form a new resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "mergerOf": {
+      "label": "Merger of",
+      "definition": "One of two or more resources which came together to form a new resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "mode": {
+      "label": "Mode",
+      "definition": "Relates a work to a music mode",
+      "notes": [
+        "Suggested use - With Work or Hub"
+      ]
+    },
+    "mount": {
+      "label": "Mount material or object",
+      "definition": "Physical material or object used for the support or backing to which the base material of a resource has been attached."
+    },
+    "musicFormat": {
+      "label": "Format of notated music",
+      "definition": "Layout for content of a resource that is presented in the form of musical notation, such as full score, condensed score, vocal score, etc.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "musicKey": {
+      "label": "Music key",
+      "definition": "Pitch and mode for music."
+    },
+    "musicMedium": {
+      "label": "Music medium",
+      "definition": "Instrumental, vocal, and/or other medium of performance for which a musical resource was originally conceived, written or performed."
+    },
+    "musicOpusNumber": {
+      "label": "Music opus number",
+      "definition": "Numeric designation of a musical work assigned by a composer, publisher, or a musicologist."
+    },
+    "musicSerialNumber": {
+      "label": "Music serial number",
+      "definition": "Numeric designation for musical works consecutively numbered in music reference sources."
+    },
+    "musicThematicNumber": {
+      "label": "Music thematic number",
+      "definition": "Numeric designation for a musical work as found in a thematic index for the composer."
+    },
+    "natureOfContent": {
+      "label": "Content nature",
+      "definition": "Characterization that epitomizes the primary content of a resource, e.g., field recording of birdsong; combined time series analysis and graph plotting system.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "notation": {
+      "label": "Notation system",
+      "definition": "Alphabet, script, or symbol system used to convey the content of the resource, including specialized scripts, typefaces, tactile notation, movement notation, and musical notation.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "note": {
+      "label": "Note",
+      "definition": "General textual information relating to a resource, such as Information about a specific copy of a resource or information about a particular attribute of a resource."
+    },
+    "noteFor": {
+      "label": "Note for",
+      "definition": "Relates a Note resource to the resource to which the note pertains."
+    },
+    "noteType": {
+      "label": "Note type",
+      "definition": "Type of note."
+    },
+    "numberOfHands": {
+      "label": "Number of hands",
+      "definition": "Relates a medium component to the number of hands required for performance"
+    },
+    "originDate": {
+      "label": "Origin date",
+      "definition": "Date or date range associated with the creation of a Work."
+    },
+    "originPlace": {
+      "label": "Origin place",
+      "definition": "Place from which the creation of the resource originated.",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - bf:Place or madsrdf:Geographic"
+      ]
+    },
+    "originalVersion": {
+      "label": "Original version",
+      "definition": "Resource is the original version of which this resource is a reproduction",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "originalVersionOf": {
+      "label": "Original version of",
+      "definition": "Original version of a resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "otherEdition": {
+      "label": "Other edition",
+      "definition": "Resource has other available editions, for example simultaneously published language editions or reprints",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "otherPhysicalFormat": {
+      "label": "Has other physical format",
+      "definition": "Resource that is manifested in another physical carrier",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "outerGRing": {
+      "label": "Cartographic outer G ring area covered",
+      "definition": "Coordinate pairs that identify the closed non-intersecting boundary of the area covered."
+    },
+    "part": {
+      "label": "Part",
+      "definition": "Part of a resource to which information applies."
+    },
+    "partName": {
+      "label": "Part title",
+      "definition": "Part or section name of a title. Possible title component."
+    },
+    "partNumber": {
+      "label": "Part number",
+      "definition": "Part or section enumeration of a title. Possible title component."
+    },
+    "partOf": {
+      "label": "Is part of",
+      "definition": "Resource in which the described resource is physically or logically contained",
+      "notes": [
+        "Suggested use - With Work, Instance, Item or Event",
+        "Suggested value - Work, Instance, Item or Event"
+      ]
+    },
+    "pattern": {
+      "label": "Arrangement of material",
+      "definition": "Pattern of arrangement of materials within a unit."
+    },
+    "phonogramDate": {
+      "label": "Phonogram date",
+      "definition": "Relates a work or instance to a phonogram copyright date for a work that is an audio recording",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "physicalLocation": {
+      "label": "Storing or shelving location",
+      "definition": "Location in the holding agency where the item is shelved or stored."
+    },
+    "place": {
+      "label": "Place",
+      "definition": "Geographic location or place entity associated with a resource or element of description, such as the place associated with the publication, printing, distribution, issue, release or production of a resource, place of an event.",
+      "notes": [
+        "Suggested value - bf:Place or madsrdf:Geographic"
+      ]
+    },
+    "polarity": {
+      "label": "Polarity",
+      "definition": "Relationship of the colors and tones in an image to the colors and tones of the object reproduced."
+    },
+    "precededBy": {
+      "label": "Preceded by",
+      "definition": "Resource that precedes the resource being described, e.g., is earlier in time or before in narrative",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "preferredCitation": {
+      "label": "Preferred citation",
+      "definition": "Citation to the resource preferred by its custodian of the resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "productionMethod": {
+      "label": "Production method",
+      "definition": "Process used to produce a resource."
+    },
+    "productionStatement": {
+      "label": "Production statement",
+      "definition": "Statement related to the production of the resources; usually transcribed."
+    },
+    "projection": {
+      "label": "Cartographic projection",
+      "definition": "Method or system used to represent the surface of the earth or of a celestial sphere on a plane."
+    },
+    "projectionCharacteristic": {
+      "label": "Projection characteristic",
+      "definition": "Technical specification relating to the projection of a motion picture film."
+    },
+    "provisionActivity": {
+      "label": "Provision activity",
+      "definition": "Place, name, and/or date information relating to the publication, printing, distribution, issue, release, production, etc. of a resource."
+    },
+    "provisionActivityStatement": {
+      "label": "Provider statement",
+      "definition": "Statement relating to providers of a resource; usually transcribed."
+    },
+    "pubFrequency": {
+      "label": "Publication frequency",
+      "definition": "Relates a resource to a publication frequency resource to capture such details as first issue, last issue, status, etc.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "publicationStatement": {
+      "label": "Publication statement",
+      "definition": "Statement related to the publication of the resources; usually transcribed."
+    },
+    "qualifier": {
+      "label": "Qualifier",
+      "definition": "Qualifier of information, such as an addition to a title to make it unique or qualifying information associated with an identifier."
+    },
+    "reductionRatio": {
+      "label": "Reduction ratio",
+      "definition": "Size of a micro-image in relation to the original from which it was produced."
+    },
+    "referencedBy": {
+      "label": "Referenced by",
+      "definition": "Resource that references the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "references": {
+      "label": "References",
+      "definition": "Resource that is referenced by the described resource",
+      "notes": [
+        "Suggested use - With Work, Instance or Item",
+        "Suggested value - Work, Instance or Item"
+      ]
+    },
+    "relatedTo": {
+      "label": "Related resource",
+      "definition": "Any relationship between Work, Instance, Item, and Event resources"
+    },
+    "relation": {
+      "label": "Relation",
+      "definition": "Associated resource and its relationship to the resource being described",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "relationship": {
+      "label": "Relationship",
+      "definition": "Type of relationship between resources"
+    },
+    "relief": {
+      "label": "Relief",
+      "definition": "Relief term specified on a cartographic resource"
+    },
+    "replacedBy": {
+      "label": "Replaced by",
+      "definition": "Later resource used in place of an earlier resource, usually because the later resource contains updated or new information",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "replacementOf": {
+      "label": "Replacement of",
+      "definition": "Earlier resource whose content has been replaced by a later resource, usually because the later resource contains updated or new information",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "reproductionOf": {
+      "label": "Reproduction of",
+      "definition": "Resource that is a reproduction of another Resource"
+    },
+    "responsibilityStatement": {
+      "label": "Creative responsibility statement",
+      "definition": "Statement relating to any persons, families, or corporate bodies responsible for the creation of, or contributing to the content of a resource; usually transcribed."
+    },
+    "review": {
+      "label": "Review content",
+      "definition": "Review of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "role": {
+      "label": "Contributor role",
+      "definition": "Function provided by a contributor, e.g., author, illustrator, etc."
+    },
+    "scale": {
+      "label": "Scale",
+      "definition": "Ratio of the dimensions of a form contained or embodied in a resource to the dimensions of the entity it represents, e.g., for images or cartographic resources.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "schedulePart": {
+      "label": "Classification designation",
+      "definition": "Designates whether the classification number is from the standard or optional part of a schedule or table."
+    },
+    "separatedFrom": {
+      "label": "Separated from",
+      "definition": "Resource that spun off a part of its content to form a new resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "seriesEnumeration": {
+      "label": "Series enumeration",
+      "definition": "Series enumeration of the resource; usually transcribed.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "seriesOf": {
+      "label": "Series container of",
+      "definition": "Relation between a larger resource and the resources it encompasses, forming a series, the title of the larger resource appears on the parts",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "seriesStatement": {
+      "label": "Series statement",
+      "definition": "Statement of the series the resource is in; usually transcribed; includes the ISSN if applicable."
+    },
+    "shelfMark": {
+      "label": "Shelf mark",
+      "definition": "Piece identifier, such as a call or other type of number."
+    },
+    "soundCharacteristic": {
+      "label": "Sound characteristic",
+      "definition": "Technical specification relating to the encoding of sound in a resource."
+    },
+    "soundContent": {
+      "label": "Sound content",
+      "definition": "Indication of whether the production of sound is an integral part of the resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "source": {
+      "label": "Source",
+      "definition": "Resource from which value or label came or was derived, such as the formal source/scheme from which a classification number is taken or derived, list from which an agent name is taken or derived, source within which an identifier is unique."
+    },
+    "spanEnd": {
+      "label": "Classification number span end",
+      "definition": "Ending number of classification number span."
+    },
+    "splitInto": {
+      "label": "Split into",
+      "definition": "One of two or more resources resulting from the division of an earlier resource into separate resources",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "status": {
+      "label": "Status",
+      "definition": "Designation of the validity or position of something, such as indication that the classification number is canceled or invalid, circulation availability of an item, indication of whether the identifier is canceled or invalid."
+    },
+    "subject": {
+      "label": "Subject",
+      "definition": "Subject term(s) describing a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance, Item or Event",
+        "Suggested value - bf:Agent or bf:Topic or bf:Hub"
+      ]
+    },
+    "subjectOf": {
+      "label": "Subject of",
+      "definition": "Relates a subject to that which it describes.",
+      "notes": [
+        "Suggested use - With bf:Agent or bf:Topic or bf:Hub",
+        "Suggested value - Work, Instance, Item or Event"
+      ]
+    },
+    "sublocation": {
+      "label": "Held in sublocation",
+      "definition": "Specific place within the holding entity where the item is located or made available."
+    },
+    "subseriesEnumeration": {
+      "label": "Subseries enumeration",
+      "definition": "Subseries enumeration of the resource; usually transcribed."
+    },
+    "subseriesOf": {
+      "label": "Subseries of",
+      "definition": "Relation between a Series resource and the resources it encompasses, forming a Subseries; the Series resource itself has a relation with a larger resource, of which it is a part",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "subseriesStatement": {
+      "label": "Subseries statement",
+      "definition": "Statement of the subseries the resource is in; usually transcribed; includes the ISSN if applicable."
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "definition": "Word, character, or group of words and/or characters that contains the remainder of the title after the main title. Possible title component."
+    },
+    "succeededBy": {
+      "label": "Succeeded by",
+      "definition": "Resource that succeeds the resource being described, e.g., later in time or after in a narrative",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "summary": {
+      "label": "Summary content",
+      "definition": "Summary or abstract of the resource described.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "supplement": {
+      "label": "Supplement",
+      "definition": "Resource that updates or otherwise complements the predominant resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "supplementTo": {
+      "label": "Supplement to",
+      "definition": "Resource that is updated or otherwise complemented by the augmenting resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "supplementaryContent": {
+      "label": "Supplementary material",
+      "definition": "Material such as an index, bibliography, appendix intended to supplement the primary content of a resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "systemRequirement": {
+      "label": "Equipment or system requirements",
+      "definition": "Equipment or system requirement beyond what is normal and obvious for the type of carrier or type of file, such as make and model of equipment or hardware, operating system, amount of memory, programming language, other necessary software, any plug-ins or peripherals required to play, view, or run the resource, etc."
+    },
+    "table": {
+      "label": "Classification table identification",
+      "definition": "Number of the table from which the classification number in a subdivision entry is taken, e.g., a DDC table."
+    },
+    "tableOfContents": {
+      "label": "Table of contents content",
+      "definition": "Table of contents of the described resource.",
+      "notes": [
+        "Suggested use - With Work or Instance"
+      ]
+    },
+    "tableSeq": {
+      "label": "Classification table sequence number",
+      "definition": "Sequence number or other identifier for an internal classification sub arrangement or add in a classification scheme."
+    },
+    "tempo": {
+      "label": "Tempo",
+      "definition": "Relates a work to a music tempo",
+      "notes": [
+        "Suggested use - With Work or Hub"
+      ]
+    },
+    "temporalCoverage": {
+      "label": "Temporal coverage",
+      "definition": "Time period coverage of the content of the resource."
+    },
+    "title": {
+      "label": "Title resource",
+      "definition": "Name given to a resource.",
+      "notes": [
+        "Suggested use - With Work, Instance, Item or Event"
+      ]
+    },
+    "titleOf": {
+      "label": "Title of",
+      "definition": "Relates a title resource to that which it is the title of.",
+      "notes": [
+        "Suggested value - Work, Instance, Item or Event"
+      ]
+    },
+    "translation": {
+      "label": "Translation as",
+      "definition": "Resource that translates the text of the source entity into a language different from that of the original",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "translationOf": {
+      "label": "Translation of",
+      "definition": "Resource that has been translated, i.e., the text is expressed in a language different from that of the original resource",
+      "notes": [
+        "Suggested use - With Work or Instance",
+        "Suggested value - Work or Instance"
+      ]
+    },
+    "unit": {
+      "label": "Type of unit",
+      "definition": "Units in which a value is expressed, such as the physical or logical constituent of a resource (e.g., a volume, audiocassette, film reel, a map, a digital file)."
+    },
+    "usageAndAccessPolicy": {
+      "label": "Use and access condition",
+      "definition": "General statement of allowances and restrictions on access to a resource, including retention, reproduction, access, and lending.",
+      "notes": [
+        "Suggested use - With Work, Instance or Item"
+      ]
+    },
+    "usesMediumOfPerformance": {
+      "label": "Uses medium of performance",
+      "definition": "The medium of performance used by a contributing agent"
+    },
+    "validDate": {
+      "label": "Valid date",
+      "definition": "The date or date range during which the resource is accurate."
+    },
+    "variantType": {
+      "label": "Variant title type",
+      "definition": "Type of title variation, e.g., acronym, cover, spine, earlier, later, series version."
+    },
+    "version": {
+      "label": "Version",
+      "definition": "Term or terms that identify works such as arranged for music, vulgate for religious work, etc."
+    },
+    "videoCharacteristic": {
+      "label": "Video characteristic",
+      "definition": "Technical specification relating to the encoding of video images in a resource"
+    },
+    "voice": {
+      "label": "Voice",
+      "definition": "Voice for which a musical work is appropriate, such as soprano, tenor, mixed."
+    },
+    "voiceType": {
+      "label": "Type of voice",
+      "definition": "Specific type of voice group, such as chorus, solo."
+    }
+  }
+}
