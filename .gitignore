@@ -20,9 +20,9 @@ cbd-01.md
 
 
 # The Starlight docs site: dependencies, build output and Astro cache.
-docs/node_modules/
-docs/dist/
-docs/.astro/
+node_modules/
+dist/
+.astro/
 # Artifacts copied in by the artifacts integration from where they already
 # live in the repository. Generated, so not checked in.
 docs/public/
