@@ -94,6 +94,7 @@ export default defineConfig({
         { label: "Producing it", link: "/producing/" },
         { label: "Validating", link: "/validating/" },
         { label: "Checking an implementation", link: "/conformance/" },
+        { label: "Contributing", link: "/contributing/" },
         {
           // Built from the schema directory rather than listed, so a new
           // definition appears here without anyone remembering to add it.

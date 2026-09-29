@@ -1,0 +1,52 @@
+---
+title: Contributing
+description: How to get in touch, and what kinds of help the Blue Core project is looking for.
+---
+
+The shape is not settled. [Blue Core](https://bluecore.info/) is actively
+looking for ways to improve these schemas, and the most valuable thing you can
+tell us is where they get a real record wrong.
+
+**The best way to reach us is the
+[issue tracker](https://github.com/blue-core-lod/bibframe-json/issues).** You
+do not need a fix, or a pull request, or any Python. A description of what you
+were holding and what happened is enough to start from.
+
+## What helps most
+
+**A record this shape handles badly.** Whether it is rejected and you think it
+should pass, or accepted and you think it should fail, that disagreement is
+the useful thing. Paste the record, or as much of it as you can share, and say
+what you expected.
+
+**An ambiguity you hit while implementing.** If you are writing a reader or a
+producer in another language and the schemas left you guessing, that is a gap
+in the specification rather than a gap in your understanding. Those are worth
+knowing about even when you have already worked around them.
+
+**A rule that should exist and does not**, or one that exists and should not.
+The dialect is deliberately narrow, and every constraint in it was added
+because some real record needed it. If yours needs another, say so.
+
+**A question.** If something here is unclear, the documentation is wrong even
+when the schema is right.
+
+## Sending a change
+
+Pull requests are welcome, and the most useful kind adds a case to
+[the conformance corpus](/bibframe-json/conformance/). A case is one JSON file
+holding a document and the verdict it should get. It takes no Python, it
+survives any rewrite of the implementation, and it turns a disagreement about
+BIBFRAME into something two implementations can be measured against.
+
+A rule the corpus does not cover is a rule nobody else has been asked to
+honour, and nothing will notice when it stops holding. So a change to the
+schemas wants a case with it.
+[`conformance/README.md`](https://github.com/blue-core-lod/bibframe-json/blob/main/conformance/README.md)
+has the details, including how to name one and how to check it.
+
+## What this project is for
+
+Blue Core drives the work, and the wider aim is to make BIBFRAME more
+shareable as JSON, in any language. Anything that serves that is in scope:
+this is not only for people working on Blue Core.
