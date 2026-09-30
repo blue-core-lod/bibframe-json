@@ -1,6 +1,6 @@
 /* bibframe-json
    ----------------------------------------------------------------------------
-   Two fonts, one accent, and the catalogue card. Everything else is
+   Two fonts, one accent, and the catalog card. Everything else is
    Starlight's, deliberately: the point of moving here was to stop
    hand-crafting a site.
 
@@ -51,14 +51,47 @@ pre.astro-code {
 /* --- the plate: a card, and the record it describes ---------------------- */
 
 .plate {
-    margin: 2rem 0 2.5rem;
+    /* the extra bottom margin is the stack's own 10px, plus its shadow */
+    margin: 2rem 0 3.25rem;
 }
 
+/* A catalog card is a physical object, so it is the same object in both
+   themes: buff stock, graphite ink, square corners, lifted off the page. It
+   used to take its colors from the theme, which made it a panel in the dark
+   and a faint outline in the light. Cards are not either of those.
+
+   The stock is muted rather than bright, so that in dark mode it reads as
+   paper under a lamp and not as a lightbox. */
 .card {
-    background: var(--sl-color-gray-6);
-    border: 1px solid var(--sl-color-hairline);
-    box-shadow: 3px 3px 0 var(--sl-color-hairline);
-    padding: 1.5rem 1.6rem 1.2rem;
+    background: #ece9dd;
+    color: #23211e;
+    border: 1px solid #cdc7b6;
+    border-radius: 0;
+    position: relative;
+    /* Two more cards behind this one, the way it sat in the drawer, then the
+       whole stack lifted off the page. Each pair of shadows is one card: the
+       inset one draws its face, the flush one its edge. Same motif as the
+       favicon, which is a card edge and nothing else. */
+    box-shadow:
+        5px 5px 0 -1px #e4e0d2,
+        5px 5px 0 0 #cdc7b6,
+        10px 10px 0 -1px #dbd6c6,
+        10px 10px 0 0 #cdc7b6,
+        0 14px 28px -12px rgb(24 22 20 / 45%);
+    /* a card's margins, which are wider than a panel's padding */
+    padding: 2rem 2.2rem 2.4rem;
+    max-width: min(46rem, calc(100% - 12px));
+}
+
+/* The delimiters stay quiet. A wash and a bold weight made a teaching
+   device out of them, which reads as coy to anyone who already knows ISBD --
+   and catalogers do. So: the red, at the text's own weight, for readers who
+   notice it, and nothing pointing at it for readers who don't.
+
+   Fixed rather than themed, because the stock it sits on no longer follows
+   the page. */
+.card .d {
+    color: #a8322b;
 }
 
 .card .description {
@@ -81,23 +114,24 @@ pre.astro-code {
     overflow-wrap: anywhere;
 }
 
-.plate .between,
-.plate figcaption {
+.plate .between {
     font-size: 0.95rem;
     color: var(--sl-color-gray-3);
     max-width: 34rem;
 }
 
 .plate .between { margin: 1.1rem 0 0.8rem; }
-.plate figcaption { margin-top: 1rem; }
+/* The slot arrives as a paragraph from MDX, which brings its own margins. */
+.plate .between > :first-child { margin-top: 0; }
+.plate .between > :last-child { margin-bottom: 0; }
 
-/* The delimiters. No animation: the design rests on this colour being a fact
+/* The delimiters. No animation: the design rests on this color being a fact
    about the text rather than an event the page performs. */
 .d { color: var(--stamp); }
 
 /* A property name, and a string value. Weight for the name because it is a
    name rather than a different kind of thing, and the palette's other hue for
-   the value. Numbers and booleans stay in the ink colour: three distinctions
+   the value. Numbers and booleans stay in the ink color: three distinctions
    are enough, and a fourth would start to cost the red its meaning. */
 .plate .record .k { font-weight: 600; }
 .plate .record .s { color: var(--sl-color-accent); }

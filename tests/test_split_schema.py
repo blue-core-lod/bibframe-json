@@ -38,7 +38,7 @@ def documents() -> list[tuple[str, dict, bool]]:
             cases.append((path.stem, json.loads(path.read_text())["document"], valid))
     # an empty list here makes pytest skip the parametrized tests rather than
     # fail them, which is how this stopped checking anything when the corpus
-    # was reorganised and nothing said so
+    # was reorganized and nothing said so
     assert cases, f"no dialect cases found under {CORPUS}"
     return cases
 
@@ -145,7 +145,7 @@ def test_every_node_carries_the_shared_rules(path):
 
     array_rule = node.get("additionalProperties")
     assert isinstance(array_rule, dict) and array_rule.get("type") == "array", (
-        "every unmodelled property is still an array"
+        "every unmodeled property is still an array"
     )
     assert "^@" in node.get("patternProperties", {}), (
         "a JSON-LD keyword is not a property, so the array rule must not reach it"

@@ -19,7 +19,7 @@ will hold once the DAG has run, rather than this script's idea of it.
 
 This is not `conformance/`, and the two should not be confused. Conformance
 cases are written by hand, one per rule, and say what the shape requires.
-These are whatever the catalogue actually holds, and are here to answer
+These are whatever the catalog actually holds, and are here to answer
 questions about it: how often a property appears, what shapes it takes in
 practice, whether a rule we are considering would reject real data. A claim
 about real records wants measuring against these; a claim about the shape

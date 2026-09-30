@@ -45,10 +45,10 @@ ONTOLOGY_IRI = URIRef(BF)
 # flipped constraint *every* real use violates -- measured over 200 corpus
 # records, zero conforming uses each. When data and ontology disagree on every
 # single occurrence, the ontology is the likelier culprit: music and cartographic
-# modelling it has not caught up with, and MADS classes it does not know about.
+# modeling it has not caught up with, and MADS classes it does not know about.
 #
 # Kept here rather than silently dropped, so that the next person can disagree
-# with the judgement, and so that the generated file can record what was skipped.
+# with the judgment, and so that the generated file can record what was skipped.
 OVERRIDES: dict[tuple[str, str], str] = {
     ("domain", "relief"): (
         "declares bf:Instance; every use is on bf:Cartographic, a Work. The "
@@ -57,7 +57,7 @@ OVERRIDES: dict[tuple[str, str], str] = {
     ),
     ("domain", "mediumComponent"): (
         "declares bf:Work; every use is on bf:Ensemble, which is not a Work "
-        "subclass. Music modelling the ontology has not caught up with."
+        "subclass. Music modeling the ontology has not caught up with."
     ),
     ("domain", "ensembleSize"): (
         "declares bf:Work; every use is on bf:Ensemble, as with mediumComponent."
@@ -154,7 +154,7 @@ LITERAL_DEF = "#/$defs/literal"
 def class_matcher(closures: dict[URIRef, set[URIRef]], target: URIRef) -> dict:
     """Matches an @type that includes this class or one of its subclasses.
 
-    @type may be a string or an array. The dialect normalises to an array, but a
+    @type may be a string or an array. The dialect normalizes to an array, but a
     record written before that did not, so both are accepted.
     """
     acceptable = subclasses_of(closures, target)

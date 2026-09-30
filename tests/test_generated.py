@@ -50,7 +50,7 @@ def test_the_four_exclusions_are_recorded():
 
     Each is a property where every real use violates the flipped constraint,
     which makes the ontology the likelier culprit than the data. Recorded rather
-    than silently dropped so the judgement can be disagreed with.
+    than silently dropped so the judgment can be disagreed with.
     """
     skipped = SCHEMA["x-skipped"]
     assert set(skipped) == {
@@ -162,7 +162,7 @@ def test_the_four_exclusions_are_recorded():
         ),
     ],
 )
-def test_constraint_behaviour(validator, name, document, flagged):
+def test_constraint_behavior(validator, name, document, flagged):
     """The flip, case by case.
 
     Two of these guard against the schema reporting nothing at all, which it did

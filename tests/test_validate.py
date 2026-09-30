@@ -137,12 +137,12 @@ def test_validate_reports_the_rules_nothing_else_enforces():
     assert any("at most one of @type or @language" in m for m in messages), messages
 
 
-def test_unmodelled_properties_must_still_be_arrays():
+def test_unmodeled_properties_must_still_be_arrays():
     """The guarantee the whole shape rests on, for the properties that have no
     field: about 120 of the 136 in real records.
 
     pydantic emits additionalProperties: true for extra="allow", so before this
-    was constrained only the dozen modelled properties were checked.
+    was constrained only the dozen modeled properties were checked.
     """
     findings = validate({**CLEAN, "bflc:aap": "not a list"}, ontology=False)
     assert [f.path for f in findings] == ["bflc:aap"]

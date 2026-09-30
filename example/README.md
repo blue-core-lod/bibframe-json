@@ -1,7 +1,7 @@
 # `cbd.json`: a Concise Bounded Description
 
 A real record, framed. It validates against
-`../bibframe_json/schema/cbd.json`, and a cataloguer typed every value in it.
+`../bibframe_json/schema/cbd.json`, and a cataloger typed every value in it.
 You are looking at a sample of the shape, not a tidied illustration of one.
 
 We changed one thing, the host in the URIs, which reads `bibframe.example`
@@ -28,8 +28,8 @@ resource side by side under a single `rdf:RDF`. XML has no natural root, so
 siblings are the only option there. JSON has one, so we use it. Marva reads the
 RDF/XML and is unaffected.
 
-**`instanceOf` embeds the Work.** In a stored record it holds a bare URI,
-because the Work is a row of its own. `schema/cbd.json` checks that one
+**`instanceOf` embeds the Work.** A record for one resource holds a bare URI
+there, because the Work is a resource of its own. `schema/cbd.json` checks that one
 difference, and it carries the whole structural claim: a CBD explains its
 Instance without you fetching anything.
 
@@ -70,7 +70,7 @@ after framing.
 
 **Put `@type` in an array.** `@type` is a keyword, so no `@container` reaches
 it, and a node with a single type compacts to a string. The dialect tolerates
-both, and this normalises for consistency.
+both, and this normalizes for consistency.
 
 **Replace the context with its URL.** You have to hand framing the terms, and
 pyld returns them inlined, so the document comes back carrying all 258 entries

@@ -4,7 +4,7 @@ description: A consistent JSON shape for BIBFRAME data.
 editUrl: false
 ---
 
-import CatalogueCard from "../../components/CatalogueCard.astro";
+import CatalogCard from "../../components/CatalogCard.astro";
 
 *bibframe-json* is a [JSON Schema](https://json-schema.org/understanding-json-schema/reference) that provide a consistently shaped JSON representation for BIBFRAME data, in the spirit of [Linked Open and Usable Data](https://linked.art/loud/) (LOUD).
 
@@ -15,17 +15,36 @@ catalog cards, *bibframe-json* prescribes a consistent JSON serialization for
 BIBFRAME data, for building tools and workflows that don't necessarily require
 RDF parsing and processing. 
 
-<CatalogueCard />
+<CatalogCard>
+
+Below is the same record as *bibframe-json*. If you understand JSON but are new
+to JSON-LD you may be surprised by a few keys that are specific to the JSON-LD
+syntax:
+
+* `@context` names the bibframe-json JSON-LD context which defines the vocabulary the other keys that are present in the document
+* `@id` identifies the resource being described, in this case the Instance
+* `@type` lists the classes the identified resource belongs to
+
+You will notice that this is a [linked description](/bibframe-json/shape/), so `instanceOf`
+holds the Work's URI and stops there. A [bounded description](/bibframe-json/cbd/) of the same Instance embeds that Work instead,
+and is what you would send someone who doesn't want to (or is unable to) fetch
+it.
+
+The record below is cut to the areas ISBD covers. The whole of it is served at
+[`https://blue-core-lod.github.io/bibframe-json/example/instance.json`](https://blue-core-lod.github.io/bibframe-json/example/instance.json).
+
+</CatalogCard>
 
 ## What the shape guarantees
 
-- fixed vocabulary terms
-- every property value is an array, even with one value
+- a JSON object framed for a particular BIBFRAME resource (not a JSON-LD @graph of triples)
+- predictable vocabulary terms (e.g. "title" instead of "bf:title" or "http://id.loc.gov/ontologies/bibframe/title")
+- every property value is an array, even when it's one value
 - references are plain URI strings, not `{"@id": ...}` wrappers
 - no blank node carries an `@id`
 - a value object has `@value` and at most one of `@type` or `@language`
-- `@type` is a list of classes on a node, and a datatype string on a value
-  object. Tell them apart by whether `@value` is present
+- `@type` is always a list of classes on a node, and a datatype string on a value
+  object.
 
 ## The files
 
@@ -35,11 +54,9 @@ maintains it.
 | | |
 | --- | --- |
 | [`https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld`](https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
-| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect.json) | one resource: a Work, Instance, Hub or Item |
-| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json) | the same schema, one file per definition |
-| [`https://blue-core-lod.github.io/bibframe-json/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/schema/cbd.json) | a Concise Bounded Description |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect.json) | a [linked description](/bibframe-json/shape/) of a Work, Instance, Hub or Item |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/schema/cbd.json) | a [bounded description](/bibframe-json/cbd/) |
 | [`https://blue-core-lod.github.io/bibframe-json/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/schema/ontology.json) | BIBFRAME's own domains and ranges |
-| [`https://blue-core-lod.github.io/bibframe-json/example/instance.json`](https://blue-core-lod.github.io/bibframe-json/example/instance.json) | the record on the card above |
 
 The schemas reference each other relatively, `{"$ref": "Ref.json"}` and
 `{"$ref": "dialect.json"}`, so they resolve against wherever you serve them
