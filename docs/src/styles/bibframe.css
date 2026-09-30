@@ -83,11 +83,18 @@ pre.astro-code {
     max-width: min(46rem, calc(100% - 12px));
 }
 
-/* The delimiters stay the oxidised red whatever the page is doing, because
-   the stock they sit on no longer changes. The lightened red exists for dark
-   backgrounds and this is not one. */
+/* On the stock, the delimiters need weight as well as colour. Against the
+   old dark panel the ink was pale and the red warm, so hue and brightness
+   both separated them; against buff the ink is graphite and the red is dark
+   too, which leaves hue alone doing the work at thirteen pixels. So: a more
+   saturated red, and bold.
+
+   The red is fixed rather than themed, because the stock it sits on no longer
+   follows the page. The lighter red exists for dark backgrounds and this is
+   not one. */
 .card .d {
-    color: #a8322b;
+    color: #b52d1e;
+    font-weight: 700;
 }
 
 .card .description {
