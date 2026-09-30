@@ -51,14 +51,43 @@ pre.astro-code {
 /* --- the plate: a card, and the record it describes ---------------------- */
 
 .plate {
-    margin: 2rem 0 2.5rem;
+    /* the extra bottom margin is the stack's own 10px, plus its shadow */
+    margin: 2rem 0 3.25rem;
 }
 
+/* A catalogue card is a physical object, so it is the same object in both
+   themes: buff stock, graphite ink, square corners, lifted off the page. It
+   used to take its colours from the theme, which made it a panel in the dark
+   and a faint outline in the light. Cards are not either of those.
+
+   The stock is muted rather than bright, so that in dark mode it reads as
+   paper under a lamp and not as a lightbox. */
 .card {
-    background: var(--sl-color-gray-6);
-    border: 1px solid var(--sl-color-hairline);
-    box-shadow: 3px 3px 0 var(--sl-color-hairline);
-    padding: 1.5rem 1.6rem 1.2rem;
+    background: #ece9dd;
+    color: #23211e;
+    border: 1px solid #cdc7b6;
+    border-radius: 0;
+    position: relative;
+    /* Two more cards behind this one, the way it sat in the drawer, then the
+       whole stack lifted off the page. Each pair of shadows is one card: the
+       inset one draws its face, the flush one its edge. Same motif as the
+       favicon, which is a card edge and nothing else. */
+    box-shadow:
+        5px 5px 0 -1px #e4e0d2,
+        5px 5px 0 0 #cdc7b6,
+        10px 10px 0 -1px #dbd6c6,
+        10px 10px 0 0 #cdc7b6,
+        0 14px 28px -12px rgb(24 22 20 / 45%);
+    /* a card's margins, which are wider than a panel's padding */
+    padding: 2rem 2.2rem 2.4rem;
+    max-width: min(46rem, calc(100% - 12px));
+}
+
+/* The delimiters stay the oxidised red whatever the page is doing, because
+   the stock they sit on no longer changes. The lightened red exists for dark
+   backgrounds and this is not one. */
+.card .d {
+    color: #a8322b;
 }
 
 .card .description {
