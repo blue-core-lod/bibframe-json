@@ -6,7 +6,7 @@
   "x-bibframe-version": "3.0.1",
   "x-skipped": {
     "domain ensembleSize": "declares bf:Work; every use is on bf:Ensemble, as with mediumComponent.",
-    "domain mediumComponent": "declares bf:Work; every use is on bf:Ensemble, which is not a Work subclass. Music modelling the ontology has not caught up with.",
+    "domain mediumComponent": "declares bf:Work; every use is on bf:Ensemble, which is not a Work subclass. Music modeling the ontology has not caught up with.",
     "range mediumOfPerformance": "declares bf:MediumOfPerformance; every use points at mads:Medium, a class from a vocabulary BIBFRAME does not reference.",
     "domain relief": "declares bf:Instance; every use is on bf:Cartographic, a Work. The ontology looks simply wrong -- relief is a work-level characteristic. Worth reporting upstream."
   },

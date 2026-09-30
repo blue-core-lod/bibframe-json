@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <!-- A hanging indent seen from the side: the card's edge in the delimiter
-       colour, the description beside it. No tile, because a header has a
+       color, the description beside it. No tile, because a header has a
        known background; the favicon keeps its tile because a browser tab
        does not. -->
   <rect x="4" y="5" width="4" height="22" rx="2" fill="#a8322b"/>

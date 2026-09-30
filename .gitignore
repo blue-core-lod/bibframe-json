@@ -8,7 +8,7 @@ dist/
 
 # A sample of real records, fetched by generate/sample.py to measure things
 # about the data rather than about the shape. Not checked in: it is whatever
-# stage happened to hold on the day, it goes stale the moment the catalogue
+# stage happened to hold on the day, it goes stale the moment the catalog
 # moves, and conformance/ is the part that belongs in the repository -- cases
 # written by hand, one per rule, that say what the shape requires.
 corpus/
