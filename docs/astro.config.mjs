@@ -46,7 +46,7 @@ export default defineConfig({
     artifacts(),
     starlight({
       title: "bibframe-json",
-      // A catalogue card's hanging indent, with the edge in the delimiter
+      // A catalog card's hanging indent, with the edge in the delimiter
       // red: the same claim the front page makes, at 16 pixels.
       favicon: "/favicon.svg",
       // The same mark beside the wordmark. replacesTitle is left off: the
@@ -89,11 +89,9 @@ export default defineConfig({
       ],
       sidebar: [
         { label: "Overview", link: "/" },
-        { label: "The shape", link: "/shape/" },
-        { label: "A CBD", link: "/cbd/" },
-        { label: "Producing it", link: "/producing/" },
+        { label: "A Linked Description", link: "/shape/" },
+        { label: "A Bounded Description", link: "/cbd/" },
         { label: "Validating", link: "/validating/" },
-        { label: "Checking an implementation", link: "/conformance/" },
         { label: "Contributing", link: "/contributing/" },
         {
           // Built from the schema directory rather than listed, so a new

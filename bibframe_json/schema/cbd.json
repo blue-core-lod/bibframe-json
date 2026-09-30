@@ -3,7 +3,7 @@
   "$id": "https://blue-core-lod.github.io/bibframe-json/schema/cbd.json",
   "title": "A Concise Bounded Description",
   "description": "An Instance with its Work embedded, and with the resources they name described in place: enough in one document to explain the Instance without fetching anything.",
-  "$comment": "cbd-01.md is LC's description of how they serialize a CBD, and it describes RDF/XML: all principal resources as siblings under one rdf:RDF, linked by rdf:resource. That arrangement suits XML, where there is no natural root, and Marva reads it.\n\nJSON has a natural root, and LC never specified the JSON-LD -- their .cbd.jsonld is a flat array of expanded nodes, and Blue Core's was the same. So this takes the other option: the document is the Instance, and everything else is described where it is referenced. Measured over 59 CBDs from a running system it is 11% smaller than the sibling arrangement and describes exactly the same resources, and it puts a related Work where it belongs -- under the relation that reaches it -- rather than leaving a reader to rejoin URIs.\n\nThe one structural claim, and the thing that tells a CBD from a stored record: bf:instanceOf embeds the Work. In a stored record it is a bare URI, because the Work is a row of its own. The back-reference from the embedded Work is still bare, which is how a JSON-LD processor breaks the cycle and is what dialect.json already permits.\n\nEverything else is dialect.json, referenced rather than copied so the definitions exist in one place.",
+  "$comment": "cbd-01.md is LC's description of how they serialize a CBD, and it describes RDF/XML: all principal resources as siblings under one rdf:RDF, linked by rdf:resource. That arrangement suits XML, where there is no natural root, and Marva reads it.\n\nJSON has a natural root, and LC never specified the JSON-LD -- their .cbd.jsonld is a flat array of expanded nodes, and Blue Core's was the same. So this takes the other option: the document is the Instance, and everything else is described where it is referenced. Measured over 59 CBDs from a running system it is 11% smaller than the sibling arrangement and describes exactly the same resources, and it puts a related Work where it belongs -- under the relation that reaches it -- rather than leaving a reader to rejoin URIs.\n\nThe one structural claim, and the thing that tells a bounded description from a linked one: bf:instanceOf embeds the Work. A linked description holds a bare URI there, because the Work is a resource of its own. The back-reference from the embedded Work is still bare, which is how a JSON-LD processor breaks the cycle and is what dialect.json already permits.\n\nEverything else is dialect.json, referenced rather than copied so the definitions exist in one place.",
   "allOf": [
     {
       "$ref": "dialect.json"
@@ -42,7 +42,7 @@
     },
     "work-embedded": {
       "title": "With its Work embedded",
-      "description": "Not a bare URI, which is what a stored record holds. This is the difference between the two, and the reason a CBD is self-explaining.",
+      "description": "Not a bare URI, which is what a linked description holds. This is the difference between the two, and the reason a CBD is self-explaining.",
       "type": "object",
       "required": [
         "instanceOf"

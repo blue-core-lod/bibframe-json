@@ -5,14 +5,14 @@ against the one in this repository. It is JSON rather than Python so that a
 second implementation, in any language, can prove it agrees.
 
 ```
-dialect/accept/<name>.json    one resource, which must validate
-dialect/reject/<name>.json    one resource, which must not, and where it fails
-cbd/accept/<name>.json        a Concise Bounded Description, which must validate
+dialect/accept/<name>.json    a linked description, which must validate
+dialect/reject/<name>.json    a linked description, which must not, and where it fails
+cbd/accept/<name>.json        a bounded description, which must validate
 cbd/reject/<name>.json        ... which must not
 ```
 
-A directory per schema, because a document is either one resource or a
-description holding several, and the structural rules differ. `dialect/` cases
+A directory per schema, because a document is either a linked
+description or a bounded one, and the structural rules differ. `dialect/` cases
 are checked against `schema/dialect.json` and `cbd/` cases against
 `schema/cbd.json`.
 
@@ -50,7 +50,7 @@ the document.
 **Messages sit outside the contract, by choice.** Each implementation words
 them its own way, and pinning them would turn the corpus into a test of one
 library instead of the shape. Paths are the portable half of a finding: any
-validator can say where, and the where is what a cataloguer needs.
+validator can say where, and the where is what a cataloger needs.
 
 Insist on point 3. A schema can reject a document for the wrong reason and
 still look right from a count of passes and failures.
