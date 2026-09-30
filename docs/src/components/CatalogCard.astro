@@ -1,16 +1,25 @@
 ---
 /**
- * A catalogue card, and the same record as JSON.
+ * A catalog card, and the same record as JSON.
  *
  * ISBD has structured bibliographic description with delimiters since 1971:
  * title / responsibility. -- edition. -- place : publisher, date. That is the
- * same idea as this project, so the front page shows both halves with the
- * structural punctuation marked in the same colour.
+ * same idea as this project, so the front page shows both halves. The
+ * prescribed punctuation carries the red, quietly and without comment: a
+ * cataloger reads it without being told, and nobody else needs to.
  *
  * Generated from example/instance.json, which validates, rather than typed
- * out. A card with a hand-written title would look identical and mean
+ * out. The Instance and not a CBD: ISBD's nine areas are all description,
+ * and description is Instance-level. A CBD would put an embedded Work on the
+ * page with nothing on the card answering to it -- the heading, the tracings
+ * and the call number a real card shows are the cataloging code's business,
+ * not ISBD's. A card with a hand-written title would look identical and mean
  * nothing. Every field below is indexed directly, so a record missing one
  * fails the build instead of quietly rendering a gap.
+ *
+ * The prose between the two halves is a slot, so it lives in index.mdx where
+ * it can be edited without touching this file. Everything here is either
+ * generated from the record or structure.
  *
  * Ported from generate/site.py. The Python version had a test asserting every
  * fragment here is a real string in the record; pytest cannot reach an Astro
@@ -21,6 +30,7 @@ import record from "../../../example/instance.json";
 import { url } from "../data/published";
 
 const CARD_MONO = "0.8rem";
+
 
 type Area = { key: string; delimiter: string; breaks: number; value: string };
 
@@ -75,7 +85,7 @@ const escape = (text: string) =>
 const mark = (text: string) => `<span class="d">${escape(text)}</span>`;
 
 /**
- * An area delimiter, marked up so it can be coloured.
+ * An area delimiter, marked up so it can be colored.
  *
  * No arithmetic. ISBD A.3.2.7 is explicit that when an element ends with a
  * point and the next area's prescribed punctuation begins with one, both
@@ -138,16 +148,16 @@ function compact(node: unknown, level = 0): string {
  *
  * Three distinctions, two of them free. Structural punctuation takes the
  * stamp red, because that is the claim this page makes. A property name is
- * set in weight rather than in another colour, because it is a name and not
+ * set in weight rather than in another color, because it is a name and not
  * a different kind of thing. A string value takes the one other hue already
  * in the palette. Anything else -- a number, a boolean, null -- stays in the
- * ink colour.
+ * ink color.
  *
  * Walked rather than matched with a pattern, so punctuation inside a string
  * is left alone. That is not a detail: the ";" in "Chakravorti ; foreward by
  * Prof. Penna Madhusudan" is a real ISBD delimiter sitting inside a
  * transcribed literal, where no parser can reach it. It stays in the ink
- * colour in both halves, and that is the argument for putting the structure
+ * color in both halves, and that is the argument for putting the structure
  * in the JSON instead.
  *
  * A string is a property name when the next thing that is not whitespace is a
@@ -200,35 +210,78 @@ function highlight(json: string): string {
     .join("");
 }
 
-// The card has room for one publication statement, so showing the record's
-// two here would make the halves disagree.
-const shown = Object.fromEntries(
-  AREAS.map(({ key }) => [
+// Cut to what the card above draws on, so the two halves say the same thing
+// and a reader can find any line of one in the other. The record carries
+// adminMetadata, carrier, media and issuance too, and none of them has an
+// ISBD counterpart -- on the page they read as noise the card is ignoring.
+//
+// @context, @id and @type come along regardless. They are not ISBD, but a
+// document without them is not this shape either, and @context is the one
+// thing the schema requires.
+const KEYWORDS = ["@context", "@id", "@type"] as const;
+// instanceOf is not an ISBD area and is here anyway: it is the one place the
+// page can show a reference rather than an embedding, which is the whole
+// difference between this record and a CBD of it.
+const shown = Object.fromEntries([
+  ...KEYWORDS.map((key) => [key, record[key]]),
+  ["instanceOf", record.instanceOf],
+  ...AREAS.map(({ key }) => [
     key,
+    // one publication statement, because ISBD transcribes one
     key === "provisionActivity"
       ? record.provisionActivity.slice(0, 1)
       : record[key as keyof typeof record],
   ]),
-);
+]);
+/**
+ * One @type per node, for this page only.
+ *
+ * Two nodes in the record carry several, and the schema wants them all: @type
+ * is a list of classes and a reader must not assume one. Trimming here is the
+ * front page keeping an example legible, not a claim about the shape, which is
+ * why the whole record is linked beside it.
+ *
+ * Which one to keep is a judgment, so it is written down rather than derived
+ * from the ontology. A node whose types are not listed throws, because a
+ * silent guess is how the page would come to disagree with the record.
+ */
+const ONE_TYPE: Record<string, string> = {
+  // Publication is a subclass of ProvisionActivity, so it says more.
+  "ProvisionActivity|Publication": "Publication",
+  // The other one is an mnotetype vocabulary term rather than an ontology
+  // class, so the class is the readable half.
+  "Note|http://id.loc.gov/vocabulary/mnotetype/biblio": "Note",
+};
+
+function oneType(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(oneType);
+  if (node === null || typeof node !== "object") return node;
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(node)) {
+    if (key === "@type" && Array.isArray(value) && value.length > 1) {
+      const chosen = ONE_TYPE[value.join("|")];
+      if (!chosen) {
+        throw new Error(
+          `CatalogCard: no choice recorded for @type ${JSON.stringify(value)}. ` +
+            `Add it to ONE_TYPE rather than letting the page guess.`,
+        );
+      }
+      out[key] = [chosen];
+    } else {
+      out[key] = oneType(value);
+    }
+  }
+  return out;
+}
 ---
 
 <figure class="plate" style={`--card-mono: ${CARD_MONO}`}>
-  <div class="card" role="img" aria-label="A catalogue card for the record below">
+  <div class="card" role="img" aria-label="A catalog card for the record below">
     <p class="description" set:html={description} />
   </div>
 
-  <p class="between">
-    In the ISBD description above the punctuation in red conveys the structure. Below is the <em>bibframe-json</em> equivalent.
-  </p>
+  <div class="between"><slot /></div>
 
-  <pre class="record"><code set:html={highlight(compact(shown))} /></pre>
+  <pre class="record"><code set:html={highlight(compact(oneType(shown)))} /></pre>
 
-  <figcaption>
-    This has been abridged to the areas a card has room for. The whole record is{" "}
-    <a href={url("example/instance.json")}>
-      <code>{url("example/instance.json")}</code>
-    </a>
-    . The one delimiter left in the ink colour sits inside a transcribed
-    string, where nothing can reach it.
-  </figcaption>
 </figure>
