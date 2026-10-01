@@ -89,8 +89,8 @@ export default defineConfig({
       ],
       sidebar: [
         { label: "Overview", link: "/" },
-        { label: "A Linked Description", link: "/shape/" },
-        { label: "A Bounded Description", link: "/cbd/" },
+        { label: "Linked Description", link: "/shape/" },
+        { label: "Bounded Description", link: "/cbd/" },
         { label: "Validating", link: "/validating/" },
         { label: "Contributing", link: "/contributing/" },
         {
