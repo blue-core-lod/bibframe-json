@@ -9,64 +9,65 @@ https://bibframe-json.org/v0.1/context/bibframe.jsonld
 https://bibframe-json.org/v0.1/schema/linked.json
 ```
 
-A document names a context and a `$ref` resolves against a `$id`, so both are
-promises. The segment is what lets a promise made today still hold after the
-shape has moved on.
+A document names a context. A `$ref` resolves against a `$id`. Both are
+promises, and the version segment is what keeps them: a URL you write today
+still resolves after the shape moves on.
 
-It sits above the trees rather than inside them, so a schema's references
-never change: the split files stay siblings within their version, and
-`{"$ref": "Work.json"}` resolves the same whether there is one version or six.
+The segment sits above the trees rather than inside them, so a schema's
+references never change. The split files stay siblings within their version,
+and `{"$ref": "Work.json"}` resolves the same whether there is one version or
+six.
 
 ## What moves it
 
-Only a change that invalidates documents written against the version before
-it. Removing a term, renaming one, or changing a term's `@type` or
-`@container`, because each of those changes what the same JSON means. Adding a
-term does not, and neither does a new definition, a clearer description or a
-tightened constraint that nothing conforming was relying on.
+A change that invalidates documents written against the version before it.
+Remove a term, rename one, or change a term's `@type` or `@container`, and the
+same JSON now means something else.
+
+Adding a term does not move it. Neither does a clearer description, or a
+constraint tightened so that nothing conforming notices.
 
 `example/` and `conformance/` carry no version. They are illustration and test
-material that tracks the current version; nothing names them in a document.
+material, they track the current version, and no document names them.
 
-## Every version is frozen, including this one
+## Every version is frozen
 
-A published version's bytes never change. What makes the 0.x versions
-unsettled is not that one changes underneath you, it is that the next one may
-break you with little notice, and that several of them are expected before v1.
+A published version's bytes never change. The 0.x versions are unsettled
+because the next one may break you with little notice, and because several are
+expected before v1.
 
-That distinction is doing real work rather than being a nicety. Data written
-against `v0.1` has to be migrated to `v0.2`, and a migration can only read one
-version and write another if each name means exactly one thing. A version that
-changed in place would leave every stored document saying `v0` and meaning
-whichever `v0` happened to be live when it was written.
+Freezing is what makes migration possible. Data written against `v0.1` has to
+reach `v0.2`, and a migration reads one version and writes another. If a
+version changed in place, every stored document would say `v0` and mean
+whichever `v0` was live on the day somebody wrote it.
 
-So expect `v0.1`, `v0.2` and so on, each a real move and each the source of a
-migration. **v1 is the point at which the shape is something to build on**,
-and from then on the version is major only.
+So expect `v0.1`, `v0.2` and onward. Each one is a real move, and each one is
+the source of a migration. At v1 the shape becomes something to build on, and
+from there the version is major only.
 
 ## The package version
 
-While the package is on 0.x the two numbers move together: `0.2.0` ships both
-`v0.1` and `v0.2`, so a reader can hold each side of a migration, and the
-version in a URL tells you which release introduced it.
+While the package is on 0.x the two numbers move together. `0.2.0` ships both
+`v0.1` and `v0.2`, so you can hold each side of a migration, and the version in
+a URL says which release introduced it.
 
 From `1.0.0` they come apart. The artifact version moves only on a breaking
-change to the context or the schemas; the package version is ordinary
-semantic versioning. Shipping a new artifact version alongside the old ones is
-additive, so it is a minor release. A major release means dropping an artifact
-version or changing the Python API.
+change to the context or the schemas. The package version is ordinary semantic
+versioning: shipping a new artifact version alongside the old ones is
+additive, so it is a minor release, and a major release means dropping an
+artifact version or changing the Python API.
 
 ## Asking for a particular version
 
 ```python
 import bibframe_json
 
-bibframe_json.VERSIONS          # ("v0",) oldest first
-bibframe_json.CURRENT           # "v0", the one written today
-bibframe_json.context("v0")     # that version's context
-bibframe_json.schema("linked", "v0")
-bibframe_json.context_url("v0")
+bibframe_json.VERSIONS                  # ("v0.1",) oldest first
+bibframe_json.CURRENT                   # "v0.1", the one written today
+bibframe_json.context("v0.1")           # that version's context
+bibframe_json.schema("linked", "v0.1")
+bibframe_json.context_url("v0.1")
 ```
 
-Asking for a version the package does not ship raises `ValueError` rather
-than reading a path that happens not to exist.
+Ask for a version the package does not ship and you get a `ValueError`, rather
+than a read of some path that happens not to exist.
