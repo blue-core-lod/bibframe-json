@@ -1,7 +1,7 @@
-# `cbd.json`: a Concise Bounded Description
+# `bounded.json`: a Concise Bounded Description
 
 A real record, framed. It validates against
-`../bibframe_json/schema/cbd.json`, and a cataloger typed every value in it.
+`../bibframe_json/schema/bounded.json`, and a cataloger typed every value in it.
 You are looking at a sample of the shape, not a tidied illustration of one.
 
 We changed one thing, the host in the URIs, which reads `bibframe.example`
@@ -11,8 +11,8 @@ one announcing itself as an example. [RFC
 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves `.example` for this. We
 left the paths alone, so you can still see the shape of a Blue Core URI.
 
-LC defined how to serialize a CBD as RDF/XML and left the JSON-LD as an RDF
-dump: `.cbd.jsonld` from id.loc.gov is a flat array of expanded nodes with full
+LC defined how to serialize a bounded description as RDF/XML and left the JSON-LD as an RDF
+dump: `.bounded.jsonld` from id.loc.gov is a flat array of expanded nodes with full
 property URIs and no nesting, and Blue Core's was the same. This proposes
 something else. The RDF is identical either way, and only the serialization
 differs.
@@ -29,8 +29,8 @@ siblings are the only option there. JSON has one, so we use it. Marva reads the
 RDF/XML and is unaffected.
 
 **`instanceOf` embeds the Work.** A record for one resource holds a bare URI
-there, because the Work is a resource of its own. `schema/cbd.json` checks that one
-difference, and it carries the whole structural claim: a CBD explains its
+there, because the Work is a resource of its own. `schema/bounded.json` checks that one
+difference, and it carries the whole structural claim: a bounded description explains its
 Instance without you fetching anything.
 
 **The Work's `hasInstance` points back by URI.** A JSON-LD processor breaks the
@@ -69,7 +69,7 @@ value and breaks the guarantee. 57 of 59 sampled records tripped on that.
 after framing.
 
 **Put `@type` in an array.** `@type` is a keyword, so no `@container` reaches
-it, and a node with a single type compacts to a string. The dialect tolerates
+it, and a node with a single type compacts to a string. The shape tolerates
 both, and this normalizes for consistency.
 
 **Replace the context with its URL.** You have to hand framing the terms, and
@@ -79,7 +79,7 @@ against. Put `bibframe_json.CONTEXT_URL` back.
 
 ## Measurements
 
-Against 59 CBDs from a running system, comparing this with the sibling
+Against 59 bounded descriptions from a running system, comparing this with the sibling
 arrangement. Both figures exclude `@context`, which is the same either way and
 would otherwise swamp the difference:
 

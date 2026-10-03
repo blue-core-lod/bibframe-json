@@ -1,5 +1,5 @@
 {
-  "description": "the ontology's business, not the dialect's",
+  "description": "the ontology's business, not the shape's",
   "document": {
     "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
     "@id": "https://x/1",

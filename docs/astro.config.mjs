@@ -21,10 +21,10 @@ const RESOURCES = ["Work", "Instance", "Hub", "Item"];
 function definitionNames() {
   // resolved against this file, not the working directory, so it does not
   // matter whether npm is run from here or from the repository root
-  const dialect = fileURLToPath(
-    new URL("../bibframe_json/v0/schema/dialect", import.meta.url),
+  const definitions = fileURLToPath(
+    new URL("../bibframe_json/v0/schema/linked", import.meta.url),
   );
-  const names = readdirSync(dialect)
+  const names = readdirSync(definitions)
     .filter((file) => file.endsWith(".json"))
     .map((file) => file.replace(".json", ""))
     // main.json is the dispatch between the four resource types rather than a
@@ -65,7 +65,7 @@ function moved() {
 }
 
 // A project page, so the site lives under a path. `base` is what puts
-// public/schema/dialect.json at /bibframe-json/schema/dialect.json, which is
+// public/schema/linked.json at /bibframe-json/schema/linked.json, which is
 // the URL every $id in the repository claims.
 export default defineConfig({
   vite: { server: { fs: { allow: [".."] } } },

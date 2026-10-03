@@ -80,9 +80,9 @@ def produce(expanded: object, uri: str, *, embed: str = "@once") -> dict:
     the frame names with null.
 
     For a per-resource record, frame the resource on its own and its links
-    come out as bare URIs. For a CBD, frame the Instance over a graph that
+    come out as bare URIs. For a BOUNDED, frame the Instance over a graph that
     also holds its Work, and the Work arrives embedded -- that difference is
-    the whole of schema/cbd.json.
+    the whole of schema/bounded.json.
     """
     framed = jsonld.frame(
         expanded,

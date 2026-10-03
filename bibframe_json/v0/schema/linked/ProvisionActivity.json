@@ -1,26 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Resource.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/ProvisionActivity.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "What a Work, Instance, Hub and Item have in common.",
+  "description": "A publication, distribution or manufacture: who, where and when.",
   "examples": [
     {
-      "@id": "https://bibframe.example/works/9937996a",
       "@type": [
-        "Work"
+        "ProvisionActivity",
+        "Publication"
       ],
-      "title": [
-        {
-          "@type": [
-            "Title"
-          ],
-          "mainTitle": [
-            "A short history of Sanskrit literature"
-          ]
-        }
+      "bflc:simplePlace": [
+        "Delhi, India"
+      ],
+      "bflc:simpleAgent": [
+        "New Bharatiya Book Corporation"
+      ],
+      "bflc:simpleDate": [
+        "2026"
       ]
     }
   ],
@@ -56,98 +55,44 @@
       },
       "type": "array"
     },
-    "title": {
-      "items": {
-        "$ref": "Title.json"
-      },
-      "type": "array"
-    },
-    "note": {
+    "place": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "subject": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "identifiedBy": {
-      "items": {
-        "$ref": "Identifier.json"
-      },
-      "type": "array"
-    },
-    "adminMetadata": {
-      "items": {
-        "$ref": "AdminMetadata.json"
-      },
-      "type": "array"
-    },
-    "contribution": {
-      "items": {
-        "$ref": "Contribution.json"
-      },
-      "type": "array"
-    },
-    "classification": {
-      "items": {
-        "$ref": "Classification.json"
-      },
-      "type": "array"
-    },
-    "language": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "genreForm": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "provisionActivity": {
-      "items": {
-        "$ref": "ProvisionActivity.json"
-      },
-      "type": "array"
-    },
-    "relation": {
-      "items": {
-        "$ref": "Relation.json"
-      },
-      "type": "array"
-    },
-    "seriesStatement": {
+    "date": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     },
-    "electronicLocator": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "bflc:aap": {
+    "bflc:simpleDate": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     },
-    "expressionOf": {
+    "bflc:simplePlace": {
       "items": {
-        "$ref": "Ref.json"
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "bflc:simpleAgent": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "bflc:simpleStatement": {
+      "items": {
+        "$ref": "Text.json"
       },
       "type": "array"
     }
   },
-  "title": "Resource",
+  "title": "ProvisionActivity",
   "type": "object",
   "patternProperties": {
     "^@": {

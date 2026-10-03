@@ -1,5 +1,5 @@
 {
-  "description": "the dialect reaches inside: a blank node keeping its @id is wrong wherever it is",
+  "description": "the shape reaches inside: a blank node keeping its @id is wrong wherever it is",
   "document": {
     "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
     "@id": "https://x/instances/1",

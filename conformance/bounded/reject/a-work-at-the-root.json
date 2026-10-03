@@ -1,5 +1,5 @@
 {
-  "description": "a CBD is bounded by an Instance. A Hub or a Work is described by the decomposed form, which is a different document",
+  "description": "a bounded description covers an Instance. A Hub or a Work is described by the decomposed form, which is a different document",
   "document": {
     "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
     "@id": "https://x/works/1",

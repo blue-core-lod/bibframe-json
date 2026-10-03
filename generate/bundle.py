@@ -1,8 +1,8 @@
-"""Bundle the split dialect schema into one file.
+"""Bundle the split linked schema into one file.
 
-`bibframe_json/<version>/schema/dialect/` is the source: one hand-maintained file per
+`bibframe_json/<version>/schema/linked/` is the source: one hand-maintained file per
 definition, plus `main.json`, following IIIF v4's layout. This inlines them
-into `bibframe_json/<version>/schema/dialect.json` so a consumer who would rather not
+into `bibframe_json/<version>/schema/linked.json` so a consumer who would rather not
 resolve references across files does not have to.
 
     uv run python generate/bundle.py
@@ -26,8 +26,8 @@ from bibframe_json.validate import CURRENT
 
 HERE = pathlib.Path(__file__).resolve().parent
 SCHEMA = HERE.parent / "bibframe_json" / CURRENT / "schema"
-SPLIT = SCHEMA / "dialect"
-OUTPUT = SCHEMA / "dialect.json"
+SPLIT = SCHEMA / "linked"
+OUTPUT = SCHEMA / "linked.json"
 
 # Written into each file so it can be served and referenced on its own; the
 # bundle has one $id of its own and needs none of them.
@@ -66,7 +66,7 @@ def build() -> dict:
     assert isinstance(root, dict)
     return {
         **root,
-        "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json",
+        "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json",
         "$defs": {
             path.stem: definition(path)
             for path in sorted(SPLIT.glob("*.json"))

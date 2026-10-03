@@ -8,9 +8,9 @@
  * prescribed punctuation carries the red, quietly and without comment: a
  * cataloger reads it without being told, and nobody else needs to.
  *
- * Generated from example/instance.json, which validates, rather than typed
- * out. The Instance and not a CBD: ISBD's nine areas are all description,
- * and description is Instance-level. A CBD would put an embedded Work on the
+ * Generated from example/linked.json, which validates, rather than typed
+ * out. The Instance and not a BOUNDED: ISBD's nine areas are all description,
+ * and description is Instance-level. A bounded description would put an embedded Work on the
  * page with nothing on the card answering to it -- the heading, the tracings
  * and the call number a real card shows are the cataloging code's business,
  * not ISBD's. A card with a hand-written title would look identical and mean
@@ -26,7 +26,7 @@
  * component, so that guarantee is weaker now -- direct indexing catches a
  * missing field but not an invented one.
  */
-import record from "../../../example/instance.json";
+import record from "../../../example/linked.json";
 import { url } from "../data/published";
 
 const CARD_MONO = "0.8rem";
@@ -221,7 +221,7 @@ function highlight(json: string): string {
 const KEYWORDS = ["@context", "@id", "@type"] as const;
 // instanceOf is not an ISBD area and is here anyway: it is the one place the
 // page can show a reference rather than an embedding, which is the whole
-// difference between this record and a CBD of it.
+// difference between this record and a bounded description of it.
 const shown = Object.fromEntries([
   ...KEYWORDS.map((key) => [key, record[key]]),
   ["instanceOf", record.instanceOf],

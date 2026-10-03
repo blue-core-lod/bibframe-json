@@ -7,13 +7,13 @@ Three schemas, and which you want depends on what you are holding.
 
 | Schema | Checks |
 | --- | --- |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/cbd.json) | a [bounded description](/bibframe-json/bounded-description/): an Instance with its Work embedded |
+| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json) | a [bounded description](/bibframe-json/bounded-description/): an Instance with its Work embedded |
 | [`https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
 
 They are draft 2020-12 and reference nothing outside themselves, so any
-validator will run them. One thing to know before you start: `cbd.json` says
-`{"$ref": "dialect.json"}` rather than carrying a copy of every definition, so
+validator will run them. One thing to know before you start: `bounded.json` says
+`{"$ref": "linked.json"}` rather than carrying a copy of every definition, so
 a validator needs both files loaded and something to resolve between them.
 
 The examples below read the two files from a local `schema/` directory, which
@@ -29,25 +29,25 @@ import bibframe_json
 for finding in bibframe_json.validate(record):
     print(finding)
 
-# [dialect] subject/0: a blank node must not carry an @id
+# [linked] subject/0: a blank node must not carry an @id
 # [ontology] the record: mainTitle does not belong on ['Work']
 ```
 
 Each `Finding` has a `layer`, a `path` and a `message`, and `is_error` is true
-for the dialect layer. `validate(record, ontology=False)` is the useful gate in
+for the shape layer. `validate(record, ontology=False)` is the useful gate in
 a pipeline, since those are the guarantees a consumer depends on. Which
-structural schema applies is worked out from the document; `kind="cbd"` says so
+structural schema applies is worked out from the document; `kind="bounded"` says so
 outright.
 
 To drive `jsonschema` yourself, `registry()` is the part that resolves
-`cbd.json`'s reference to `dialect.json`:
+`bounded.json`'s reference to `linked.json`:
 
 ```python
 import jsonschema
-from bibframe_json import CBD, registry, schema
+from bibframe_json import BOUNDED, registry, schema
 
 validator = jsonschema.Draft202012Validator(
-    schema(CBD), registry=registry()
+    schema(BOUNDED), registry=registry()
 )
 ```
 
@@ -63,9 +63,9 @@ const base = "https://blue-core-lod.github.io/bibframe-json/v0/schema/";
 const read = (name) => JSON.parse(readFileSync(`schema/${name}`, "utf8"));
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
-ajv.addSchema([read("dialect.json"), read("cbd.json")]);
+ajv.addSchema([read("linked.json"), read("bounded.json")]);
 
-const check = ajv.getSchema(base + "dialect.json");
+const check = ajv.getSchema(base + "linked.json");
 if (!check(record)) {
     for (const error of check.errors) {
         console.log(error.instancePath || "(root)", error.message);
@@ -90,7 +90,7 @@ require "json_schemer"
 resolver = ->(uri) do
   JSON.parse(File.read(File.join("schema", File.basename(uri.path))))
 end
-schema = JSON.parse(File.read("schema/dialect.json"))
+schema = JSON.parse(File.read("schema/linked.json"))
 check = JSONSchemer.schema(schema, ref_resolver: resolver)
 
 check.validate(record).each do |error|
@@ -112,7 +112,7 @@ the record matched neither branch. Both true, neither the thing that is wrong.
 ## At the command line
 
 ```sh
-check-jsonschema --schemafile dialect.json record.json
+check-jsonschema --schemafile linked.json record.json
 ```
 
 ## What the schemas will not tell you
@@ -129,4 +129,4 @@ or a node, and a literal may be a bare string or a value object, so both are an
 neither. Finding the branch you meant takes a short walk into `error.context`,
 around fifteen lines in any language, and `validate()` does it in `_causes()`.
 If you already know what you are holding, point straight at the type instead,
-`dialect.json#/$defs/Work`, and the errors localise without any of that.
+`linked.json#/$defs/Work`, and the errors localise without any of that.

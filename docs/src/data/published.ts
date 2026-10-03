@@ -10,5 +10,5 @@ import artifacts from "../../../artifacts.json";
  */
 export const PUBLISHED = artifacts.base;
 
-/** The published URL of an artifact, e.g. `schema/dialect.json`. */
+/** The published URL of an artifact, e.g. `schema/linked.json`. */
 export const url = (path: string) => `${PUBLISHED}/${path}`;

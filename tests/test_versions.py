@@ -38,7 +38,7 @@ def test_the_versions_declared_are_the_versions_on_disk():
     assert on_disk == set(VERSIONS)
     for version in VERSIONS:
         assert bibframe_json.context(version), version
-        for name in ("dialect", "cbd", "ontology"):
+        for name in ("linked", "bounded", "ontology"):
             assert bibframe_json.schema(name, version)["$id"].startswith(
                 f"{BASE}/{version}/"
             ), (name, version)
@@ -71,7 +71,7 @@ def test_an_unknown_version_is_refused():
     """Rather than reading a path that happens not to exist."""
     for call in (
         lambda: bibframe_json.context("v999"),
-        lambda: bibframe_json.schema("dialect", "v999"),
+        lambda: bibframe_json.schema("linked", "v999"),
         lambda: bibframe_json.context_url("v999"),
     ):
         with pytest.raises(ValueError, match="no such version"):
@@ -105,7 +105,7 @@ def test_the_shipped_examples_name_a_context_that_resolves():
     named a version this package does not ship, every consumer following the
     documentation would fetch a 404 on their first attempt.
     """
-    for name in ("cbd.json", "instance.json"):
+    for name in ("bounded.json", "linked.json"):
         document = json.loads((ROOT / "example" / name).read_text())
         url = document["@context"]
         assert bibframe_json.context_for(url) is not None, f"{name} names {url}"

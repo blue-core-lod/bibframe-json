@@ -1,26 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Contribution.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/Classification.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "An agent's part in making the resource, and what that part was.",
+  "description": "A call number, and who assigned it.",
   "examples": [
     {
       "@type": [
-        "Contribution",
-        "PrimaryContribution"
+        "ClassificationUdc"
       ],
-      "agent": [
-        {
-          "@id": "http://id.loc.gov/rwo/agents/n94051979"
-        }
-      ],
-      "role": [
-        {
-          "@id": "http://id.loc.gov/vocabulary/relators/aut"
-        }
+      "classificationPortion": [
+        "721"
       ]
     }
   ],
@@ -56,20 +48,32 @@
       },
       "type": "array"
     },
-    "agent": {
+    "classificationPortion": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "itemPortion": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "assigner": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "role": {
+    "status": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     }
   },
-  "title": "Contribution",
+  "title": "Classification",
   "type": "object",
   "patternProperties": {
     "^@": {

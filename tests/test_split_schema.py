@@ -1,7 +1,7 @@
 """The split schema and the bundle, held to each other.
 
-`schema/dialect/` is one file per definition, following IIIF v4's layout, and
-`schema/dialect.json` is the same schema with the definitions inlined. Both are
+`schema/linked/` is one file per definition, following IIIF v4's layout, and
+`schema/linked.json` is the same schema with the definitions inlined. Both are
 written from one build, so they cannot drift by accident -- but "cannot drift
 by accident" is a claim about a generator, and the thing a consumer depends on
 is that the two accept and reject the same documents. That is what this checks,
@@ -20,7 +20,7 @@ import pytest
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
-from bibframe_json import DIALECT, schema
+from bibframe_json import LINKED, schema
 from bibframe_json.validate import CURRENT
 
 SPLIT = (
@@ -28,7 +28,7 @@ SPLIT = (
     / "bibframe_json"
     / CURRENT
     / "schema"
-    / "dialect"
+    / "linked"
 )
 CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 
@@ -36,17 +36,18 @@ CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 def documents() -> list[tuple[str, dict, bool]]:
     """Every per-resource case, whichever verdict it expects.
 
-    The dialect cases only: the split files are the per-resource schema, and a
-    CBD is checked against the envelope in schema/cbd.json.
+    The linked cases only: the split files are the one-resource schema, and a
+    bounded description is checked against the envelope in
+    schema/bounded.json.
     """
     cases = []
     for verdict, valid in (("accept", True), ("reject", False)):
-        for path in sorted((CORPUS / "dialect" / verdict).glob("*.json")):
+        for path in sorted((CORPUS / "linked" / verdict).glob("*.json")):
             cases.append((path.stem, json.loads(path.read_text())["document"], valid))
     # an empty list here makes pytest skip the parametrized tests rather than
     # fail them, which is how this stopped checking anything when the corpus
     # was reorganized and nothing said so
-    assert cases, f"no dialect cases found under {CORPUS}"
+    assert cases, f"no linked cases found under {CORPUS}"
     return cases
 
 
@@ -63,7 +64,7 @@ def from_split():
 
 @pytest.fixture(scope="module")
 def from_bundle():
-    return jsonschema.Draft202012Validator(schema(DIALECT))
+    return jsonschema.Draft202012Validator(schema(LINKED))
 
 
 @pytest.mark.parametrize(
@@ -90,7 +91,7 @@ def test_every_definition_is_a_file_and_every_file_is_reachable():
     """The bundle's $defs and the directory are the same set, and main.json is
     the only extra -- a definition that is not a file cannot be referenced by
     one, and a file nothing refers to is dead."""
-    bundled = set(schema(DIALECT)["$defs"])
+    bundled = set(schema(LINKED)["$defs"])
     files = {path.stem for path in SPLIT.glob("*.json")}
     assert files == bundled | {"main"}
 
@@ -102,7 +103,7 @@ def test_the_files_reference_each_other_relatively():
     for path in sorted(SPLIT.glob("*.json")):
         contents = path.read_text()
         assert (
-            f'"$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/{path.name}"'
+            f'"$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/{path.name}"'
             in contents
         )
         for ref in json.loads(contents).get("$defs", {}):

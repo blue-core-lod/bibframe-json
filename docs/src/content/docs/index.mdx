@@ -9,9 +9,12 @@ import CatalogCard from "../../components/CatalogCard.astro";
 *bibframe-json* is a [JSON
 Schema](https://json-schema.org/understanding-json-schema/reference) that
 provides a consistently shaped JSON representation for BIBFRAME data, in the
-spirit of [Linked Open and Usable Data](https://linked.art/loud/) (LOUD). It is
-not a finished thing, and is mostly a provocation at this stage. If you are
-interested please consider [contributing](/bibframe-json/contributing/).
+spirit of [Linked Open and Usable Data](https://linked.art/loud/) (LOUD). It
+is published as [v0](/bibframe-json/versioning/), which means it can still
+change in ways that break documents written against it. v1 is not far off, and
+is the point at which it becomes something to build on. Until then it is as
+much a provocation as a specification, so if you disagree with any of it
+please consider [contributing](/bibframe-json/contributing/).
 
 Just as the [International Standard for Book
 Description](https://en.wikipedia.org/wiki/International_Standard_Bibliographic_Description)
@@ -36,7 +39,7 @@ and is what you would send someone who doesn't want to (or is unable to) fetch
 it.
 
 The record below is cut to the areas ISBD covers. The whole of it is served at
-[`https://blue-core-lod.github.io/bibframe-json/example/instance.json`](https://blue-core-lod.github.io/bibframe-json/example/instance.json).
+[`https://blue-core-lod.github.io/bibframe-json/example/linked.json`](https://blue-core-lod.github.io/bibframe-json/example/linked.json).
 
 </CatalogCard>
 
@@ -59,10 +62,10 @@ maintains it.
 | | |
 | --- | --- |
 | [`https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld`](https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/cbd.json) | a [bounded description](/bibframe-json/bounded-description/) |
+| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json) | a [bounded description](/bibframe-json/bounded-description/) |
 | [`https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json) | BIBFRAME's own domains and ranges |
 
 The schemas reference each other relatively, `{"$ref": "Ref.json"}` and
-`{"$ref": "dialect.json"}`, so they resolve against wherever you serve them
+`{"$ref": "linked.json"}`, so they resolve against wherever you serve them
 from, this site or a copy on your disk.
