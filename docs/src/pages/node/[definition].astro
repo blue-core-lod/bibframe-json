@@ -51,7 +51,8 @@ export function getStaticPaths() {
   return Object.keys(files)
     .map((path) => path.split("/").pop()!.replace(".json", ""))
     // main.json is the dispatch rather than a definition, and there is
-    // nothing to say about it that the shape page does not say better.
+    // nothing to say about it that the linked description page does not say
+    // better.
     .filter((name) => name !== "main")
     .map((name) => ({ params: { definition: name } }));
 }
@@ -248,7 +249,7 @@ const headings = [
                 </td>
                 <td>
                   {target ? (
-                    <a href={`${import.meta.env.BASE_URL}shape/${target}/`}>
+                    <a href={`${import.meta.env.BASE_URL}node/${target}/`}>
                       {target}
                     </a>
                   ) : (

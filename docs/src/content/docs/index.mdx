@@ -30,8 +30,8 @@ syntax:
 * `@id` identifies the resource being described, in this case the Instance
 * `@type` lists the classes the identified resource belongs to
 
-You will notice that this is a [linked description](/bibframe-json/shape/), so `instanceOf`
-holds the Work's URI and stops there. A [bounded description](/bibframe-json/cbd/) of the same Instance embeds that Work instead,
+You will notice that this is a [linked description](/bibframe-json/linked-description/), so `instanceOf`
+holds the Work's URI and stops there. A [bounded description](/bibframe-json/bounded-description/) of the same Instance embeds that Work instead,
 and is what you would send someone who doesn't want to (or is unable to) fetch
 it.
 
@@ -59,8 +59,8 @@ maintains it.
 | | |
 | --- | --- |
 | [`https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld`](https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
-| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect.json) | a [linked description](/bibframe-json/shape/) of a Work, Instance, Hub or Item |
-| [`https://blue-core-lod.github.io/bibframe-json/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/schema/cbd.json) | a [bounded description](/bibframe-json/cbd/) |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/dialect.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://blue-core-lod.github.io/bibframe-json/schema/cbd.json`](https://blue-core-lod.github.io/bibframe-json/schema/cbd.json) | a [bounded description](/bibframe-json/bounded-description/) |
 | [`https://blue-core-lod.github.io/bibframe-json/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/schema/ontology.json) | BIBFRAME's own domains and ranges |
 
 The schemas reference each other relatively, `{"$ref": "Ref.json"}` and

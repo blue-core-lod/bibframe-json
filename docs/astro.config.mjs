@@ -12,10 +12,13 @@ import { artifacts } from "./src/integrations/artifacts.mjs";
 // conformance corpus live above it, and Vite refuses to read outside the
 // project root unless told, so the root is widened by one level.
 
+// A project page, so everything is served under a path.
+const BASE = "/bibframe-json";
+
 const RESOURCES = ["Work", "Instance", "Hub", "Item"];
 
-/** One sidebar entry per definition, resource types first. */
-function definitions() {
+/** Every definition, resource types first. */
+function definitionNames() {
   // resolved against this file, not the working directory, so it does not
   // matter whether npm is run from here or from the repository root
   const dialect = fileURLToPath(
@@ -28,10 +31,37 @@ function definitions() {
     // definition of its own.
     .filter((name) => name !== "main");
   const rest = names.filter((name) => !RESOURCES.includes(name)).sort();
-  return [...RESOURCES, ...rest].map((name) => ({
+  return [...RESOURCES, ...rest];
+}
+
+/** One sidebar entry per definition. */
+function definitions() {
+  return definitionNames().map((name) => ({
     label: name,
-    link: `/shape/${name}/`,
+    link: `/node/${name}/`,
   }));
+}
+
+/**
+ * The URLs these pages used to have.
+ *
+ * They were published, so somebody may have linked or bookmarked one, and a
+ * URL that worked yesterday is a promise. Astro writes a meta-refresh page at
+ * each of these in a static build. Built from the same directory listing as
+ * the sidebar, so a new definition cannot arrive with a redirect missing.
+ */
+function moved() {
+  // Astro applies `base` to the redirect's own path but not to where it
+  // sends you, so the destinations carry it and the keys do not. Without
+  // this every old URL would send a reader to the root of github.io.
+  const to = (path) => `${BASE}${path}`;
+  return {
+    "/shape/": to("/linked-description/"),
+    "/cbd/": to("/bounded-description/"),
+    ...Object.fromEntries(
+      definitionNames().map((name) => [`/shape/${name}/`, to(`/node/${name}/`)]),
+    ),
+  };
 }
 
 // A project page, so the site lives under a path. `base` is what puts
@@ -40,8 +70,9 @@ function definitions() {
 export default defineConfig({
   vite: { server: { fs: { allow: [".."] } } },
   site: "https://blue-core-lod.github.io",
-  base: "/bibframe-json",
+  base: BASE,
   trailingSlash: "always",
+  redirects: moved(),
   integrations: [
     artifacts(),
     starlight({
@@ -89,8 +120,8 @@ export default defineConfig({
       ],
       sidebar: [
         { label: "Overview", link: "/" },
-        { label: "Linked Description", link: "/shape/" },
-        { label: "Bounded Description", link: "/cbd/" },
+        { label: "Linked Description", link: "/linked-description/" },
+        { label: "Bounded Description", link: "/bounded-description/" },
         { label: "Validating", link: "/validating/" },
         { label: "Contributing", link: "/contributing/" },
         {
