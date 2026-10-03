@@ -31,18 +31,32 @@ export function artifacts() {
         // this file rather than against astro.root, which is docs/.
         const root = fileURLToPath(new URL("../../../", import.meta.url));
         const publicDir = fileURLToPath(astro.publicDir);
-        for (const [from, to] of Object.entries(config.publish)) {
-          // The first segment, so moving schema/ to v0/schema/ clears the old
-          // schema/ as well as the new target.
-          const top = to.split("/")[0];
+        // Clearing happens in its own pass, before anything is copied.
+        // Doing it inside the copy loop looks equivalent and is not: two
+        // targets can share a top-level segment -- v0/context and v0/schema
+        // do -- so clearing v0 for the second deletes what the first just
+        // wrote. That shipped once, and took the published context with it.
+        for (const top of new Set(
+          Object.values(config.publish).map((to) => to.split("/")[0]),
+        )) {
           await rm(`${publicDir}/${top}`, { recursive: true, force: true });
+        }
+
+        for (const [from, to] of Object.entries(config.publish)) {
           await mkdir(`${publicDir}/${to}`, { recursive: true });
           await cp(`${root}/${from}`, `${publicDir}/${to}`, {
             recursive: true,
-            // README.md next to a schema is for someone reading the
-            // repository, not something to serve.
+            // artifacts.json says what to leave out -- a README.md next
+            // to a schema is for someone reading the repository, not
+            // something to serve. Read from there rather than repeated
+            // here, so this and tests/test_artifacts.py cannot disagree
+            // about what is published.
             filter: (path) =>
-              !path.endsWith(".md") && !path.includes("__pycache__"),
+              !config.skip.some((rule) =>
+                rule.startsWith("*")
+                  ? path.endsWith(rule.slice(1))
+                  : path.split("/").includes(rule),
+              ),
           });
           logger.info(`published ${from} at /${to}`);
         }
