@@ -3,8 +3,21 @@
 [![Test](https://github.com/blue-core-lod/bibframe-json/actions/workflows/test.yml/badge.svg)](https://github.com/blue-core-lod/bibframe-json/actions/workflows/test.yml)
 
 *bibframe-json* provides a predictable, opinionated JSON shape for
-[BIBFRAME](https://bibframe.org) data. You can parse it without an RDF library
-or any knowledge of the RDF data model.
+[BIBFRAME](https://bibframe.org) data, in the spirit of [Linked Open and
+Usable Data](https://linked.art/loud/) (LOUD).
+
+LOUD names the audience as developers, and holds that use cases rather than
+ontological purity should drive what passes between systems. Two of its five
+principles do most of the work here: *comprehensible by introspection*, so
+the data makes sense by being looked at, and *few exceptions, instead many
+consistent patterns*, so there is less to learn.
+
+Here that means every property is an array, so you can loop without checking
+whether this one happens to hold a single value. A blank node never carries
+an identifier you have to reconcile. `title` means `bf:title` rather than a
+URI you have to expand. You can read a record without an RDF library or any
+knowledge of the RDF data model, and check one against the JSON Schemas
+without reading any of this.
 
 It ships a JSON-LD context that produces the shape, JSON Schemas that check
 it, and a corpus of documents with expected verdicts so you can hold a reader
