@@ -30,12 +30,29 @@ BASE = CONFIG["base"]
 PUBLISH: dict[str, str] = CONFIG["publish"]
 
 
+SKIP: list[str] = CONFIG["skip"]
+
+
+def skipped(path: Path) -> bool:
+    """Whether the integration would leave this file out.
+
+    Reads artifacts.json's `skip`, which both sides used to ignore: this
+    helper hardcoded `.md` and the integration hardcoded `.md` and
+    `__pycache__`, so the two disagreed about what is published and the key
+    documenting it was decoration.
+    """
+    return any(
+        path.name.endswith(rule[1:]) if rule.startswith("*") else rule in path.parts
+        for rule in SKIP
+    )
+
+
 def published() -> dict[str, Path]:
     """Every file that will be served, by the path it will be served at."""
     served = {}
     for source, prefix in PUBLISH.items():
         for path in sorted((ROOT / source).rglob("*")):
-            if not path.is_file() or path.suffix == ".md":
+            if not path.is_file() or skipped(path):
                 continue
             relative = path.relative_to(ROOT / source)
             served[f"{prefix}/{relative.as_posix()}"] = path
@@ -187,3 +204,27 @@ def test_every_artifact_link_in_the_pages_resolves():
             )
             checked += 1
     assert checked >= 6, f"only {checked} artifact links found; pattern wrong?"
+
+
+def test_the_built_site_actually_contains_every_artifact():
+    """What the mapping promises, against what the build produced.
+
+    Everything above reasons about the mapping and the source tree, which is
+    enough to know where a file *should* land and not enough to know that it
+    did. The integration that does the copying is JavaScript and had a bug
+    that this would have caught: it cleared each target before copying, and
+    two targets share the `v0` segment, so writing v0/schema deleted the
+    v0/context written a moment earlier. The schemas were served and the
+    context 404'd -- and every document names the context.
+
+    Skipped unless the site has been built, so `pytest` alone stays a Python
+    test run. The docs CI job builds first and then runs this.
+    """
+    dist = ROOT / "docs" / "dist"
+    if not dist.is_dir():
+        pytest.skip("no docs/dist; run `npm run build` in docs/ first")
+    missing = [url for url in published() if not (dist / url).is_file()]
+    assert not missing, (
+        f"{len(missing)} artifacts are published in artifacts.json and absent "
+        f"from the build: {sorted(missing)[:5]}"
+    )
