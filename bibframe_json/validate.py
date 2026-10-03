@@ -43,11 +43,15 @@ ONTOLOGY = "ontology"
 # the whole point: a migration can only read what was written against v0.1
 # and write v0.2 if those two names mean exactly one thing each.
 #
-# While the package is on 0.x the two numbers move together, so 0.2.0 ships
-# v0.1 and v0.2 and the version in a URL tells you which release introduced
-# it. From 1.0.0 they decouple: the artifact version goes major-only, and
-# adding one is a minor package release because the old ones are still
-# shipped.
+# This number and the package's version on PyPI are independent. The artifact
+# version describes the shape and every language binding shares it; a package
+# version describes one binding's API, and this one moves when validate() or
+# document_loader() changes. Tying them would privilege Python over the npm
+# and Ruby packages, which share the artifacts and not the API.
+#
+# Shipping a new artifact version beside the old ones is additive, so a minor
+# package release. Dropping one, or changing the API, is major. VERSIONS is
+# how a caller finds out what this package ships.
 VERSIONS = ("v0.1",)
 CURRENT = VERSIONS[-1]
 
