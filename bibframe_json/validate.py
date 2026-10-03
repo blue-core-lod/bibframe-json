@@ -1,7 +1,7 @@
 """Validate a record against the shipped JSON Schemas.
 
 `validate()` checks a record against the two JSON Schemas in
-`bibframe_json/schema/`. That is where the guarantees live:
+`bibframe_json/<version>/schema/`. That is where the guarantees live:
 
     dialect    the shape: arrays, references, value objects, blank nodes.
                Errors -- a document that breaks these cannot be read reliably.
@@ -29,12 +29,50 @@ DIALECT = "dialect"
 CBD = "cbd"
 ONTOLOGY = "ontology"
 
-# Where context() is published. A document that names its context rather than
-# inlining it -- which is what a document leaving your system should do -- has
-# to name this exact URL, because a relative $ref and a context reference both
-# resolve against where the file actually is. Anything that writes it needs
-# the same string, so there is one.
-CONTEXT_URL = "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+# Every artifact version this package ships, oldest first, and the one it
+# writes. A version is a path segment in the published URLs and moves only
+# when the context or the schemas change in a way that invalidates documents
+# written against the previous one. The package's own version on PyPI is
+# ordinary semver and moves for any change at all, including adding a version
+# here -- which is additive, because the old one is still shipped.
+#
+# v0 is the pre-release and is allowed to change in place. Freezing starts at
+# v1: from then on a version's bytes never change, because a document naming
+# one is entitled to find what it was written against.
+VERSIONS = ("v0",)
+CURRENT = VERSIONS[-1]
+
+# Where the artifacts are published. The version sits above the trees so that
+# a relative $ref never changes: the schemas stay siblings inside a version,
+# and {"$ref": "dialect.json"} resolves within it exactly as it did when there
+# was no version at all.
+BASE = "https://blue-core-lod.github.io/bibframe-json"
+
+
+def context_url(version: str = CURRENT) -> str:
+    """Where a version's context is published.
+
+    A document that names its context rather than inlining it -- which is what
+    a document leaving your system should do -- has to name this exact URL,
+    because a relative $ref and a context reference both resolve against where
+    the file actually is. Anything that writes one needs the same string, so
+    there is one place that builds it.
+    """
+    _check(version)
+    return f"{BASE}/{version}/context/bibframe.jsonld"
+
+
+def _check(version: str) -> None:
+    if version not in VERSIONS:
+        raise ValueError(
+            f"no such version: {version!r}; shipped: {', '.join(VERSIONS)}"
+        )
+
+
+# The current version's context URL, for callers that do not care about
+# versions. Kept as a constant because it is what a producer writes into a
+# document, and a constant is easier to grep for than a call.
+CONTEXT_URL = context_url(CURRENT)
 
 
 class Finding(NamedTuple):
@@ -60,7 +98,7 @@ class Finding(NamedTuple):
 
 
 @cache
-def schema(name: str) -> dict[str, Any]:
+def schema(name: str, version: str = CURRENT) -> dict[str, Any]:
     """One of the shipped schemas, by name.
 
     Read through importlib.resources rather than a relative path, so it works
@@ -69,19 +107,74 @@ def schema(name: str) -> dict[str, Any]:
     """
     if name not in (DIALECT, CBD, ONTOLOGY):
         raise ValueError(f"no such schema: {name!r}")
-    text = (files("bibframe_json") / "schema" / f"{name}.json").read_text()
+    _check(version)
+    text = (files("bibframe_json") / version / "schema" / f"{name}.json").read_text()
     return json.loads(text)
 
 
 @cache
-def context() -> dict[str, Any]:
+def context(version: str = CURRENT) -> dict[str, Any]:
     """The JSON-LD context that produces this shape.
 
     Shipped so a consumer can frame their own records into it, or point a
     JSON-LD processor at the same terms this library assumes.
     """
-    text = (files("bibframe_json") / "context" / "bibframe.jsonld").read_text()
+    _check(version)
+    text = (
+        files("bibframe_json") / version / "context" / "bibframe.jsonld"
+    ).read_text()
     return json.loads(text)
+
+
+def context_for(url: str) -> dict[str, Any] | None:
+    """The shipped context a published URL names, or None if it names none.
+
+    So that nothing has to go to the network to read a document that names its
+    context. rdflib fetches a remote @context while parsing and pyld fetches
+    one while framing, which is slow enough that `bluecore_models` strips the
+    context on write and puts a hardcoded one back on read -- losing, in the
+    process, any record of which version framed the document.
+
+    With this the URL can stay in the document and still cost nothing:
+
+        url = document.pop("@context")
+        graph.parse(data=document, format="json-ld", context=context_for(url))
+
+    See document_loader() for the pyld half.
+    """
+    for version in VERSIONS:
+        if url == context_url(version):
+            return context(version)
+    return None
+
+
+def document_loader(fallback: Any = None) -> Any:
+    """A pyld document loader that answers for the shipped contexts offline.
+
+        from pyld import jsonld
+        jsonld.set_document_loader(bibframe_json.document_loader())
+
+    Anything this package does not ship falls through to pyld's own loader, so
+    installing this does not stop a caller resolving someone else's context --
+    it only stops the network being asked for one we already have on disk.
+    """
+    from pyld import jsonld
+
+    if fallback is None:
+        fallback = jsonld.get_document_loader()
+
+    def load(url: str, options: dict | None = None) -> dict:
+        shipped = context_for(url)
+        if shipped is None:
+            return fallback(url, options or {})
+        return {
+            "contentType": "application/ld+json",
+            "contextUrl": None,
+            "documentUrl": url,
+            "document": shipped,
+        }
+
+    return load
 
 
 @cache

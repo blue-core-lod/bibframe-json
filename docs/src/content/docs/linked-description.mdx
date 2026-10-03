@@ -24,7 +24,7 @@ As a quick illustration here is an abridged JSON Instance:
 
 ```json
 {
-  "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
+  "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
   "@id": "http://id.loc.gov/resources/instances/23867197",
   "@type": ["Instance"],
   "instanceOf": ["http://id.loc.gov/resources/works/23867197"],
@@ -62,7 +62,7 @@ The schema requires `@context` on the document. Carry it as a URL or carry it
 inlined; the URI below is provisional while this proposal is worked out.
 
 ```json
-"@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+"@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld"
 ```
 
 The requirement reaches the document and nothing else. A nested node carries
@@ -113,7 +113,7 @@ what BIBFRAME says each of them is.
 
 <Definitions />
 
-Start at [`https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json). It
+Start at [`https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/main.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/main.json). It
 dispatches on `@type` with `if`/`then`, so a failure is reported against the
 resource type the record claims rather than as "the document matched none of
 four types".

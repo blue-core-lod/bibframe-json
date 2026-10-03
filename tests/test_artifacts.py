@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 
 import bibframe_json
+from bibframe_json.validate import CURRENT
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = json.loads((ROOT / "artifacts.json").read_text())
@@ -43,7 +44,16 @@ def published() -> dict[str, Path]:
 
 def test_the_mapping_covers_what_it_claims():
     """An empty mapping would make every test below pass by doing nothing."""
-    assert set(PUBLISH.values()) == {"context", "schema", "conformance", "example"}
+    # The context and the schemas carry a version segment; example/ and
+    # conformance/ track the current version and do not. Compared by the tree
+    # each one ends in, so adding a version does not have to be restated here.
+    assert {path.rsplit("/", 1)[-1] for path in PUBLISH.values()} == {
+        "context",
+        "schema",
+        "conformance",
+        "example",
+    }
+    assert f"{CURRENT}/context" in PUBLISH.values(), PUBLISH
     assert len(published()) > 40
 
 
@@ -79,9 +89,9 @@ def test_the_context_is_published_where_bibframe_json_says_it_is():
     naming a context that is not there is worse than one naming none: a
     JSON-LD processor fails on it, where it would have ignored the absence.
     """
-    served = f"{BASE}/context/bibframe.jsonld"
+    served = f"{BASE}/{CURRENT}/context/bibframe.jsonld"
     assert bibframe_json.CONTEXT_URL == served
-    assert "context/bibframe.jsonld" in published()
+    assert f"{CURRENT}/context/bibframe.jsonld" in published()
     example = json.loads((ROOT / "example" / "cbd.json").read_text())
     assert example["@context"] == served
 

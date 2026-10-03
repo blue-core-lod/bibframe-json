@@ -22,7 +22,7 @@ function definitionNames() {
   // resolved against this file, not the working directory, so it does not
   // matter whether npm is run from here or from the repository root
   const dialect = fileURLToPath(
-    new URL("../bibframe_json/schema/dialect", import.meta.url),
+    new URL("../bibframe_json/v0/schema/dialect", import.meta.url),
   );
   const names = readdirSync(dialect)
     .filter((file) => file.endsWith(".json"))
@@ -123,6 +123,7 @@ export default defineConfig({
         { label: "Linked Description", link: "/linked-description/" },
         { label: "Bounded Description", link: "/bounded-description/" },
         { label: "Validating", link: "/validating/" },
+        { label: "Versioning", link: "/versioning/" },
         { label: "Contributing", link: "/contributing/" },
         {
           // Built from the schema directory rather than listed, so a new

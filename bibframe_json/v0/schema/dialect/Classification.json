@@ -1,21 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Identifier.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Classification.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "A number that names the resource, and the scheme it belongs to.",
+  "description": "A call number, and who assigned it.",
   "examples": [
     {
       "@type": [
-        "Isbn"
+        "ClassificationUdc"
       ],
-      "qualifier": [
-        "hardback"
-      ],
-      "rdf:value": [
-        "9788183155984"
+      "classificationPortion": [
+        "721"
       ]
     }
   ],
@@ -51,15 +48,21 @@
       },
       "type": "array"
     },
-    "rdf:value": {
+    "classificationPortion": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     },
-    "qualifier": {
+    "itemPortion": {
       "items": {
         "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "assigner": {
+      "items": {
+        "$ref": "Ref.json"
       },
       "type": "array"
     },
@@ -70,7 +73,7 @@
       "type": "array"
     }
   },
-  "title": "Identifier",
+  "title": "Classification",
   "type": "object",
   "patternProperties": {
     "^@": {

@@ -72,7 +72,7 @@ jobs:
         run: |
           uv run python generate/from_ontology.py
           uv run python generate/bundle.py
-          git diff --exit-code bibframe_json/context bibframe_json/schema
+          git diff --exit-code bibframe_json/v0/context bibframe_json/v0/schema
 
       - name: Bump patch version
         id: bump_version

@@ -1,11 +1,30 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Item.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Hub.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "One physical or electronic copy of an Instance.",
+  "description": "The record gathering everything said about a single work.",
+  "examples": [
+    {
+      "@id": "https://bibframe.example/hubs/62a26d82",
+      "@type": [
+        "Work",
+        "Hub"
+      ],
+      "title": [
+        {
+          "@type": [
+            "Title"
+          ],
+          "mainTitle": [
+            "Chŏngch'aek yŏn'gu sirijŭ"
+          ]
+        }
+      ]
+    }
+  ],
   "properties": {
     "@id": {
       "anyOf": [
@@ -128,14 +147,14 @@
       },
       "type": "array"
     },
-    "itemOf": {
+    "hasExpression": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     }
   },
-  "title": "Item",
+  "title": "Hub",
   "type": "object",
   "patternProperties": {
     "^@": {

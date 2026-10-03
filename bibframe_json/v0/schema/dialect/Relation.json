@@ -1,24 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/AdminMetadata.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Relation.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "How the record itself came to be, rather than what it describes.",
+  "description": "How one resource points at another, and what the pointing means.",
   "examples": [
     {
       "@type": [
-        "AdminMetadata"
+        "Relation"
       ],
-      "descriptionAuthentication": [
+      "relationship": [
         {
-          "@id": "http://id.loc.gov/vocabulary/marcauthen/pcc"
-        }
-      ],
-      "descriptionLanguage": [
-        {
-          "@id": "http://id.loc.gov/vocabulary/languages/eng"
+          "@id": "http://id.loc.gov/vocabulary/relationship/series"
         }
       ]
     }
@@ -55,50 +50,26 @@
       },
       "type": "array"
     },
-    "agent": {
+    "relationship": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "date": {
+    "associatedResource": {
+      "items": {
+        "$ref": "Resource.json"
+      },
+      "type": "array"
+    },
+    "seriesEnumeration": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
-    },
-    "status": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "derivedFrom": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "descriptionConventions": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "generationProcess": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
-    },
-    "descriptionLevel": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
     }
   },
-  "title": "AdminMetadata",
+  "title": "Relation",
   "type": "object",
   "patternProperties": {
     "^@": {

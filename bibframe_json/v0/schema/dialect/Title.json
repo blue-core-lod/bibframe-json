@@ -1,20 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Relation.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Title.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "How one resource points at another, and what the pointing means.",
+  "description": "A title, or one of the variant forms of it a record carries.",
   "examples": [
     {
       "@type": [
-        "Relation"
+        "Title"
       ],
-      "relationship": [
-        {
-          "@id": "http://id.loc.gov/vocabulary/relationship/series"
-        }
+      "mainTitle": [
+        "A short history of Sanskrit literature"
       ]
     }
   ],
@@ -50,26 +48,32 @@
       },
       "type": "array"
     },
-    "relationship": {
+    "mainTitle": {
       "items": {
-        "$ref": "Ref.json"
+        "$ref": "Text.json"
       },
       "type": "array"
     },
-    "associatedResource": {
+    "subtitle": {
       "items": {
-        "$ref": "Resource.json"
+        "$ref": "Text.json"
       },
       "type": "array"
     },
-    "seriesEnumeration": {
+    "partNumber": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "partName": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     }
   },
-  "title": "Relation",
+  "title": "Title",
   "type": "object",
   "patternProperties": {
     "^@": {

@@ -21,8 +21,15 @@ from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
 from bibframe_json import DIALECT, schema
+from bibframe_json.validate import CURRENT
 
-SPLIT = pathlib.Path(__file__).parent.parent / "bibframe_json" / "schema" / "dialect"
+SPLIT = (
+    pathlib.Path(__file__).parent.parent
+    / "bibframe_json"
+    / CURRENT
+    / "schema"
+    / "dialect"
+)
 CORPUS = pathlib.Path(__file__).parent.parent / "conformance"
 
 
@@ -95,7 +102,7 @@ def test_the_files_reference_each_other_relatively():
     for path in sorted(SPLIT.glob("*.json")):
         contents = path.read_text()
         assert (
-            f'"$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/{path.name}"'
+            f'"$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/{path.name}"'
             in contents
         )
         for ref in json.loads(contents).get("$defs", {}):

@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Work.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Resource.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "The thing itself, apart from any published edition of it.",
+  "description": "What a Work, Instance, Hub and Item have in common.",
   "examples": [
     {
-      "@id": "https://bibframe.example/works/4be57b41-d67e-4064-a6ac-5161e89dc963",
+      "@id": "https://bibframe.example/works/9937996a",
       "@type": [
         "Work"
       ],
@@ -18,12 +18,9 @@
             "Title"
           ],
           "mainTitle": [
-            "The Conceptual Structure of Reality"
+            "A short history of Sanskrit literature"
           ]
         }
-      ],
-      "hasInstance": [
-        "https://bibframe.example/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4"
       ]
     }
   ],
@@ -148,15 +145,9 @@
         "$ref": "Ref.json"
       },
       "type": "array"
-    },
-    "hasInstance": {
-      "items": {
-        "$ref": "Ref.json"
-      },
-      "type": "array"
     }
   },
-  "title": "Work",
+  "title": "Resource",
   "type": "object",
   "patternProperties": {
     "^@": {

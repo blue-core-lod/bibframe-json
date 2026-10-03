@@ -1,25 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/ProvisionActivity.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Identifier.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "A publication, distribution or manufacture: who, where and when.",
+  "description": "A number that names the resource, and the scheme it belongs to.",
   "examples": [
     {
       "@type": [
-        "ProvisionActivity",
-        "Publication"
+        "Isbn"
       ],
-      "bflc:simplePlace": [
-        "Delhi, India"
+      "qualifier": [
+        "hardback"
       ],
-      "bflc:simpleAgent": [
-        "New Bharatiya Book Corporation"
-      ],
-      "bflc:simpleDate": [
-        "2026"
+      "rdf:value": [
+        "9788183155984"
       ]
     }
   ],
@@ -55,44 +51,26 @@
       },
       "type": "array"
     },
-    "place": {
+    "rdf:value": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "qualifier": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "status": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
-    },
-    "date": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleDate": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simplePlace": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleAgent": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleStatement": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
     }
   },
-  "title": "ProvisionActivity",
+  "title": "Identifier",
   "type": "object",
   "patternProperties": {
     "^@": {

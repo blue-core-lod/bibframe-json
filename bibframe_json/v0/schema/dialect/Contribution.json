@@ -1,18 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect/Title.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect/Contribution.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "A title, or one of the variant forms of it a record carries.",
+  "description": "An agent's part in making the resource, and what that part was.",
   "examples": [
     {
       "@type": [
-        "Title"
+        "Contribution",
+        "PrimaryContribution"
       ],
-      "mainTitle": [
-        "A short history of Sanskrit literature"
+      "agent": [
+        {
+          "@id": "http://id.loc.gov/rwo/agents/n94051979"
+        }
+      ],
+      "role": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/relators/aut"
+        }
       ]
     }
   ],
@@ -48,32 +56,20 @@
       },
       "type": "array"
     },
-    "mainTitle": {
+    "agent": {
       "items": {
-        "$ref": "Text.json"
+        "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "subtitle": {
+    "role": {
       "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "partNumber": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "partName": {
-      "items": {
-        "$ref": "Text.json"
+        "$ref": "Ref.json"
       },
       "type": "array"
     }
   },
-  "title": "Title",
+  "title": "Contribution",
   "type": "object",
   "patternProperties": {
     "^@": {

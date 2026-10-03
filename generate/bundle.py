@@ -1,8 +1,8 @@
 """Bundle the split dialect schema into one file.
 
-`bibframe_json/schema/dialect/` is the source: one hand-maintained file per
+`bibframe_json/<version>/schema/dialect/` is the source: one hand-maintained file per
 definition, plus `main.json`, following IIIF v4's layout. This inlines them
-into `bibframe_json/schema/dialect.json` so a consumer who would rather not
+into `bibframe_json/<version>/schema/dialect.json` so a consumer who would rather not
 resolve references across files does not have to.
 
     uv run python generate/bundle.py
@@ -22,8 +22,10 @@ without them fails rather than quietly validating less than its siblings.
 import json
 import pathlib
 
+from bibframe_json.validate import CURRENT
+
 HERE = pathlib.Path(__file__).resolve().parent
-SCHEMA = HERE.parent / "bibframe_json" / "schema"
+SCHEMA = HERE.parent / "bibframe_json" / CURRENT / "schema"
 SPLIT = SCHEMA / "dialect"
 OUTPUT = SCHEMA / "dialect.json"
 
@@ -64,7 +66,7 @@ def build() -> dict:
     assert isinstance(root, dict)
     return {
         **root,
-        "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect.json",
+        "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json",
         "$defs": {
             path.stem: definition(path)
             for path in sorted(SPLIT.glob("*.json"))

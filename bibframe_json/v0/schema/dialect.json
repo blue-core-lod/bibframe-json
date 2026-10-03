@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Blue Core's JSON shape, per resource type",
-  "$comment": "Written by hand, one definition per file, and bundled into schema/dialect.json by generate/bundle.py.\n\nStructural only: it says nothing about which BIBFRAME types may appear where, which is schema/ontology.json's job. A record can satisfy this and still put an Agent where a Title belongs.\n\nOpen by design. BIBFRAME has 226 properties and the data uses 136; additionalProperties is not restricted, so a property with no field here passes rather than failing.",
+  "$comment": "Written by hand, one definition per file, and bundled into dialect.json beside them by generate/bundle.py.\n\nStructural only: it says nothing about which BIBFRAME types may appear where, which is schema/ontology.json's job. A record can satisfy this and still put an Agent where a Title belongs.\n\nOpen by design. BIBFRAME has 226 properties and the data uses 136; additionalProperties is not restricted, so a property with no field here passes rather than failing.",
   "required": [
     "@context"
   ],
@@ -81,7 +81,7 @@
       }
     }
   },
-  "$id": "https://blue-core-lod.github.io/bibframe-json/schema/dialect.json",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/dialect.json",
   "$defs": {
     "AdminMetadata": {
       "additionalProperties": {
