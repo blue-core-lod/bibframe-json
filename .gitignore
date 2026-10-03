@@ -26,6 +26,6 @@ dist/
 # The trees the artifacts integration copies into docs/public/, named one by
 # one rather than ignoring the directory: the icons live there too and are
 # ours. Keep in step with the publish map in artifacts.json.
-docs/public/v0/
+docs/public/v0.1/
 docs/public/conformance/
 docs/public/example/

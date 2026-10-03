@@ -7,9 +7,9 @@ Three schemas, and which you want depends on what you are holding.
 
 | Schema | Checks |
 | --- | --- |
-| [`https://bibframe-json.org/v0/schema/linked.json`](https://bibframe-json.org/v0/schema/linked.json) | a [linked description](/linked-description/) of a Work, Instance, Hub or Item |
-| [`https://bibframe-json.org/v0/schema/bounded.json`](https://bibframe-json.org/v0/schema/bounded.json) | a [bounded description](/bounded-description/): an Instance with its Work embedded |
-| [`https://bibframe-json.org/v0/schema/ontology.json`](https://bibframe-json.org/v0/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
+| [`https://bibframe-json.org/v0.1/schema/linked.json`](https://bibframe-json.org/v0.1/schema/linked.json) | a [linked description](/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://bibframe-json.org/v0.1/schema/bounded.json`](https://bibframe-json.org/v0.1/schema/bounded.json) | a [bounded description](/bounded-description/): an Instance with its Work embedded |
+| [`https://bibframe-json.org/v0.1/schema/ontology.json`](https://bibframe-json.org/v0.1/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
 
 They are draft 2020-12 and reference nothing outside themselves, so any
 validator will run them. One thing to know before you start: `bounded.json` says
@@ -59,7 +59,7 @@ Ajv, with both schemas added so each is found by the `$id` it declares:
 import Ajv2020 from "ajv/dist/2020.js";
 import { readFileSync } from "node:fs";
 
-const base = "https://bibframe-json.org/v0/schema/";
+const base = "https://bibframe-json.org/v0.1/schema/";
 const read = (name) => JSON.parse(readFileSync(`schema/${name}`, "utf8"));
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });

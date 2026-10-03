@@ -14,7 +14,7 @@ import { artifacts } from "./src/integrations/artifacts.mjs";
 
 // A domain of its own, so the site is at the root and a published URL has no
 // project name in it. The artifacts are what that buys: a $id reads
-// https://bibframe-json.org/v0/schema/linked.json, which says nothing about
+// https://bibframe-json.org/v0.1/schema/linked.json, which says nothing about
 // who hosts it or what the repository is called.
 
 const RESOURCES = ["Work", "Instance", "Hub", "Item"];
@@ -24,7 +24,7 @@ function definitionNames() {
   // resolved against this file, not the working directory, so it does not
   // matter whether npm is run from here or from the repository root
   const definitions = fileURLToPath(
-    new URL("../bibframe_json/v0/schema/linked", import.meta.url),
+    new URL("../bibframe_json/v0.1/schema/linked", import.meta.url),
   );
   const names = readdirSync(definitions)
     .filter((file) => file.endsWith(".json"))
@@ -62,8 +62,8 @@ function moved() {
   };
 }
 
-// No `base`: the site is at the root of its own domain, so public/v0/schema/
-// linked.json is served at /v0/schema/linked.json, which is the URL every $id
+// No `base`: the site is at the root of its own domain, so public/v0.1/schema/
+// linked.json is served at /v0.1/schema/linked.json, which is the URL every $id
 // in the repository claims.
 export default defineConfig({
   vite: { server: { fs: { allow: [".."] } } },

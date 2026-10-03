@@ -1,7 +1,7 @@
 {
   "description": "principal resources side by side under @graph is LC's RDF/XML arrangement, which XML needs because it has no root and JSON does not",
   "document": {
-    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0.1/context/bibframe.jsonld",
     "@graph": [
       {
         "@id": "https://x/instances/1",

@@ -1,7 +1,7 @@
 {
   "description": "a literal keeping the language that tells two scripts apart",
   "document": {
-    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0.1/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Work"

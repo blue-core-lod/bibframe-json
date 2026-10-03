@@ -35,14 +35,20 @@ ONTOLOGY = "ontology"
 # Every artifact version this package ships, oldest first, and the one it
 # writes. A version is a path segment in the published URLs and moves only
 # when the context or the schemas change in a way that invalidates documents
-# written against the previous one. The package's own version on PyPI is
-# ordinary semver and moves for any change at all, including adding a version
-# here -- which is additive, because the old one is still shipped.
+# written against the previous one.
 #
-# v0 is the pre-release and is allowed to change in place. Freezing starts at
-# v1: from then on a version's bytes never change, because a document naming
-# one is entitled to find what it was written against.
-VERSIONS = ("v0",)
+# Every published version is frozen, including the 0.x ones. What makes 0.x
+# unstable is not that a version changes underneath you -- none of them do --
+# but that the next one may break you with little notice. That distinction is
+# the whole point: a migration can only read what was written against v0.1
+# and write v0.2 if those two names mean exactly one thing each.
+#
+# While the package is on 0.x the two numbers move together, so 0.2.0 ships
+# v0.1 and v0.2 and the version in a URL tells you which release introduced
+# it. From 1.0.0 they decouple: the artifact version goes major-only, and
+# adding one is a minor package release because the old ones are still
+# shipped.
+VERSIONS = ("v0.1",)
 CURRENT = VERSIONS[-1]
 
 # Where the artifacts are published. The version sits above the trees so that

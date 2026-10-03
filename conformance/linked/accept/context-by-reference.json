@@ -5,6 +5,6 @@
     "@type": [
       "Work"
     ],
-    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld"
+    "@context": "https://bibframe-json.org/v0.1/context/bibframe.jsonld"
   }
 }

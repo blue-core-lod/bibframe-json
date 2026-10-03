@@ -42,7 +42,7 @@ jobs:
         run: |
           uv run python generate/from_ontology.py
           uv run python generate/bundle.py
-          git diff --exit-code bibframe_json/v0/context bibframe_json/v0/schema \
+          git diff --exit-code bibframe_json/v0.1/context bibframe_json/v0.1/schema \
             bibframe_json/vocabulary.json
 
   docs:

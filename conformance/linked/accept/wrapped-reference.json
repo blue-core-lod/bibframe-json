@@ -1,7 +1,7 @@
 {
   "description": "the same reference as another context frames it",
   "document": {
-    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0.1/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Instance"

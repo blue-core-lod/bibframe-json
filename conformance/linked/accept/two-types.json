@@ -1,7 +1,7 @@
 {
   "description": "a second @type beside the base, which is what tells notes apart",
   "document": {
-    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0.1/context/bibframe.jsonld",
     "@id": "https://x/1",
     "@type": [
       "Instance"

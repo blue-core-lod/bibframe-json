@@ -66,7 +66,7 @@ def build() -> dict:
     assert isinstance(root, dict)
     return {
         **root,
-        "$id": "https://bibframe-json.org/v0/schema/linked.json",
+        "$id": "https://bibframe-json.org/v0.1/schema/linked.json",
         "$defs": {
             path.stem: definition(path)
             for path in sorted(SPLIT.glob("*.json"))

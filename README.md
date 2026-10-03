@@ -15,10 +15,10 @@ in any language to the same standard.
 It grew out of the [Blue Core](https://bluecore.info/) project, and the schema
 is meant to be shared by anyone working with BIBFRAME JSON data.
 
-The artifacts are published under **v0**, which means they can still change in
-ways that break documents written against them. v1 is the point at which this
-becomes something to build on. See
-[Versioning](https://bibframe-json.org/versioning/).
+The artifacts are published under **v0.1**. Every published version is
+frozen, but several more are expected before v1, and each is a breaking
+change from the one before. v1 is the point at which this becomes something
+to build on. See [Versioning](https://bibframe-json.org/versioning/).
 
 ## Working on it
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Ref.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Ref.json",
   "$comment": "A reference: a bare URI string, as @type: @id writes it, or a node.",
   "examples": [
     "https://bibframe.example/works/9937996a-1083-4357-b05f-4be85f7b7354",

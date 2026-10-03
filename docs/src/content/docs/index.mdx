@@ -16,8 +16,9 @@ JSON-LD and valid RDF. It is meant to simplify, not to replace.
 :::note[Who is it for?]
 *bibframe-json* grew out of the [Blue Core](https://bluecore.info/) project,
 but the JSON schema is meant to be shared by like-minded people working with
-BIBFRAME JSON data. It is published as [v0](/versioning/), which
-means it can still change in ways that break documents written against it. v1 is
+BIBFRAME JSON data. It is published as [v0.1](/versioning/), and
+later versions can still change in ways that break documents written against
+it. v1 is
 not far off, and is the point at which it becomes something to build on. Until
 then it is as much a provocation as a specification, so if you have ideas or
 concerns please consider [contributing](/contributing/).
@@ -68,10 +69,10 @@ maintains it.
 
 | | |
 | --- | --- |
-| [`https://bibframe-json.org/v0/context/bibframe.jsonld`](https://bibframe-json.org/v0/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
-| [`https://bibframe-json.org/v0/schema/linked.json`](https://bibframe-json.org/v0/schema/linked.json) | a [linked description](/linked-description/) of a Work, Instance, Hub or Item |
-| [`https://bibframe-json.org/v0/schema/bounded.json`](https://bibframe-json.org/v0/schema/bounded.json) | a [bounded description](/bounded-description/) |
-| [`https://bibframe-json.org/v0/schema/ontology.json`](https://bibframe-json.org/v0/schema/ontology.json) | BIBFRAME's own domains and ranges |
+| [`https://bibframe-json.org/v0.1/context/bibframe.jsonld`](https://bibframe-json.org/v0.1/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
+| [`https://bibframe-json.org/v0.1/schema/linked.json`](https://bibframe-json.org/v0.1/schema/linked.json) | a [linked description](/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://bibframe-json.org/v0.1/schema/bounded.json`](https://bibframe-json.org/v0.1/schema/bounded.json) | a [bounded description](/bounded-description/) |
+| [`https://bibframe-json.org/v0.1/schema/ontology.json`](https://bibframe-json.org/v0.1/schema/ontology.json) | BIBFRAME's own domains and ranges |
 
 The schemas reference each other relatively, `{"$ref": "Ref.json"}` and
 `{"$ref": "linked.json"}`, so they resolve against wherever you serve them
