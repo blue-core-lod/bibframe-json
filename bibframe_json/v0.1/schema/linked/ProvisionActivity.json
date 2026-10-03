@@ -1,20 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Relation.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/ProvisionActivity.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "How one resource points at another, and what the pointing means.",
+  "description": "A publication, distribution or manufacture: who, where and when.",
   "examples": [
     {
       "@type": [
-        "Relation"
+        "ProvisionActivity",
+        "Publication"
       ],
-      "relationship": [
-        {
-          "@id": "http://id.loc.gov/vocabulary/relationship/series"
-        }
+      "bflc:simplePlace": [
+        "Delhi, India"
+      ],
+      "bflc:simpleAgent": [
+        "New Bharatiya Book Corporation"
+      ],
+      "bflc:simpleDate": [
+        "2026"
       ]
     }
   ],
@@ -50,26 +55,44 @@
       },
       "type": "array"
     },
-    "relationship": {
+    "place": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "associatedResource": {
+    "date": {
       "items": {
-        "$ref": "Resource.json"
+        "$ref": "Text.json"
       },
       "type": "array"
     },
-    "seriesEnumeration": {
+    "bflc:simpleDate": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "bflc:simplePlace": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "bflc:simpleAgent": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "bflc:simpleStatement": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     }
   },
-  "title": "Relation",
+  "title": "ProvisionActivity",
   "type": "object",
   "patternProperties": {
     "^@": {

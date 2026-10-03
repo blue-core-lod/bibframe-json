@@ -1,25 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/ProvisionActivity.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Contribution.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "A publication, distribution or manufacture: who, where and when.",
+  "description": "An agent's part in making the resource, and what that part was.",
   "examples": [
     {
       "@type": [
-        "ProvisionActivity",
-        "Publication"
+        "Contribution",
+        "PrimaryContribution"
       ],
-      "bflc:simplePlace": [
-        "Delhi, India"
+      "agent": [
+        {
+          "@id": "http://id.loc.gov/rwo/agents/n94051979"
+        }
       ],
-      "bflc:simpleAgent": [
-        "New Bharatiya Book Corporation"
-      ],
-      "bflc:simpleDate": [
-        "2026"
+      "role": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/relators/aut"
+        }
       ]
     }
   ],
@@ -55,44 +56,20 @@
       },
       "type": "array"
     },
-    "place": {
+    "agent": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "date": {
+    "role": {
       "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleDate": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simplePlace": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleAgent": {
-      "items": {
-        "$ref": "Text.json"
-      },
-      "type": "array"
-    },
-    "bflc:simpleStatement": {
-      "items": {
-        "$ref": "Text.json"
+        "$ref": "Ref.json"
       },
       "type": "array"
     }
   },
-  "title": "ProvisionActivity",
+  "title": "Contribution",
   "type": "object",
   "patternProperties": {
     "^@": {

@@ -1,25 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Contribution.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Relation.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "An agent's part in making the resource, and what that part was.",
+  "description": "How one resource points at another, and what the pointing means.",
   "examples": [
     {
       "@type": [
-        "Contribution",
-        "PrimaryContribution"
+        "Relation"
       ],
-      "agent": [
+      "relationship": [
         {
-          "@id": "http://id.loc.gov/rwo/agents/n94051979"
-        }
-      ],
-      "role": [
-        {
-          "@id": "http://id.loc.gov/vocabulary/relators/aut"
+          "@id": "http://id.loc.gov/vocabulary/relationship/series"
         }
       ]
     }
@@ -56,20 +50,26 @@
       },
       "type": "array"
     },
-    "agent": {
+    "relationship": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "role": {
+    "associatedResource": {
       "items": {
-        "$ref": "Ref.json"
+        "$ref": "Resource.json"
+      },
+      "type": "array"
+    },
+    "seriesEnumeration": {
+      "items": {
+        "$ref": "Text.json"
       },
       "type": "array"
     }
   },
-  "title": "Contribution",
+  "title": "Relation",
   "type": "object",
   "patternProperties": {
     "^@": {

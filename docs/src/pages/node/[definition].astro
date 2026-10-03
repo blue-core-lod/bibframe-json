@@ -39,13 +39,13 @@ type Property = {
 };
 
 const schemas = import.meta.glob<Schema>(
-  "../../../../bibframe_json/v0/schema/linked/*.json",
+  "../../../../bibframe_json/v0.1/schema/linked/*.json",
   { eager: true, import: "default" },
 );
 
 export function getStaticPaths() {
   const files = import.meta.glob<Schema>(
-    "../../../../bibframe_json/v0/schema/linked/*.json",
+    "../../../../bibframe_json/v0.1/schema/linked/*.json",
     { eager: true, import: "default" },
   );
   return Object.keys(files)

@@ -1,16 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Resource.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Hub.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "What a Work, Instance, Hub and Item have in common.",
+  "description": "The record gathering everything said about a single work.",
   "examples": [
     {
-      "@id": "https://bibframe.example/works/9937996a",
+      "@id": "https://bibframe.example/hubs/62a26d82",
       "@type": [
-        "Work"
+        "Work",
+        "Hub"
       ],
       "title": [
         {
@@ -18,7 +19,7 @@
             "Title"
           ],
           "mainTitle": [
-            "A short history of Sanskrit literature"
+            "Chŏngch'aek yŏn'gu sirijŭ"
           ]
         }
       ]
@@ -145,9 +146,15 @@
         "$ref": "Ref.json"
       },
       "type": "array"
+    },
+    "hasExpression": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
     }
   },
-  "title": "Resource",
+  "title": "Hub",
   "type": "object",
   "patternProperties": {
     "^@": {

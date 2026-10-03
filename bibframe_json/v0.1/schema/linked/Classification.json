@@ -1,18 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Title.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Classification.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "A title, or one of the variant forms of it a record carries.",
+  "description": "A call number, and who assigned it.",
   "examples": [
     {
       "@type": [
-        "Title"
+        "ClassificationUdc"
       ],
-      "mainTitle": [
-        "A short history of Sanskrit literature"
+      "classificationPortion": [
+        "721"
       ]
     }
   ],
@@ -48,32 +48,32 @@
       },
       "type": "array"
     },
-    "mainTitle": {
+    "classificationPortion": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     },
-    "subtitle": {
+    "itemPortion": {
       "items": {
         "$ref": "Text.json"
       },
       "type": "array"
     },
-    "partNumber": {
+    "assigner": {
       "items": {
-        "$ref": "Text.json"
+        "$ref": "Ref.json"
       },
       "type": "array"
     },
-    "partName": {
+    "status": {
       "items": {
-        "$ref": "Text.json"
+        "$ref": "Ref.json"
       },
       "type": "array"
     }
   },
-  "title": "Title",
+  "title": "Classification",
   "type": "object",
   "patternProperties": {
     "^@": {

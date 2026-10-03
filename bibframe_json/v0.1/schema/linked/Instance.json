@@ -1,29 +1,45 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bibframe-json.org/v0/schema/linked/Work.json",
+  "$id": "https://bibframe-json.org/v0.1/schema/linked/Instance.json",
   "additionalProperties": {
     "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
     "type": "array"
   },
-  "description": "The thing itself, apart from any published edition of it.",
+  "description": "One published edition of a Work.",
   "examples": [
     {
-      "@id": "https://bibframe.example/works/4be57b41-d67e-4064-a6ac-5161e89dc963",
+      "@id": "https://bibframe.example/instances/fb857a3a-f454-4392-ba6d-a3653c12be47",
       "@type": [
-        "Work"
+        "Instance"
+      ],
+      "instanceOf": [
+        "https://bibframe.example/works/9937996a-1083-4357-b05f-4be85f7b7354"
       ],
       "title": [
         {
           "@type": [
             "Title"
           ],
+          "bflc:nonSortNum": [
+            "2"
+          ],
           "mainTitle": [
-            "The Conceptual Structure of Reality"
+            "A short history of Sanskrit literature"
           ]
         }
       ],
-      "hasInstance": [
-        "https://bibframe.example/instances/0b46c016-6bee-426e-a1a4-1f4d14bec4e4"
+      "identifiedBy": [
+        {
+          "@type": [
+            "Isbn"
+          ],
+          "qualifier": [
+            "hardback"
+          ],
+          "rdf:value": [
+            "9788183155984"
+          ]
+        }
       ]
     }
   ],
@@ -149,14 +165,26 @@
       },
       "type": "array"
     },
-    "hasInstance": {
+    "instanceOf": {
       "items": {
         "$ref": "Ref.json"
       },
       "type": "array"
+    },
+    "extent": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "publicationStatement": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
     }
   },
-  "title": "Work",
+  "title": "Instance",
   "type": "object",
   "patternProperties": {
     "^@": {

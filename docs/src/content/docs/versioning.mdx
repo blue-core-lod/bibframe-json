@@ -5,8 +5,8 @@ title: Versioning
 The context and the schemas are published under a version segment:
 
 ```
-https://bibframe-json.org/v0/context/bibframe.jsonld
-https://bibframe-json.org/v0/schema/linked.json
+https://bibframe-json.org/v0.1/context/bibframe.jsonld
+https://bibframe-json.org/v0.1/schema/linked.json
 ```
 
 A document names a context and a `$ref` resolves against a `$id`, so both are
@@ -28,17 +28,33 @@ tightened constraint that nothing conforming was relying on.
 `example/` and `conformance/` carry no version. They are illustration and test
 material that tracks the current version; nothing names them in a document.
 
-## v0 is not settled
+## Every version is frozen, including this one
 
-**v0 may change in place, without notice.** It is here so that the shape can
-be used and argued with, not so that it can be built on. Freezing starts at
-v1: from then on a version's bytes never change, and v0 stays served as it was
-last published.
+A published version's bytes never change. What makes the 0.x versions
+unsettled is not that one changes underneath you, it is that the next one may
+break you with little notice, and that several of them are expected before v1.
 
-The Python package follows ordinary semantic versioning and moves for any
-change, including shipping a new artifact version. Adding v1 while v0 is still
-shipped is additive, so it is a minor release; a major release means dropping
-a version or changing the Python API.
+That distinction is doing real work rather than being a nicety. Data written
+against `v0.1` has to be migrated to `v0.2`, and a migration can only read one
+version and write another if each name means exactly one thing. A version that
+changed in place would leave every stored document saying `v0` and meaning
+whichever `v0` happened to be live when it was written.
+
+So expect `v0.1`, `v0.2` and so on, each a real move and each the source of a
+migration. **v1 is the point at which the shape is something to build on**,
+and from then on the version is major only.
+
+## The package version
+
+While the package is on 0.x the two numbers move together: `0.2.0` ships both
+`v0.1` and `v0.2`, so a reader can hold each side of a migration, and the
+version in a URL tells you which release introduced it.
+
+From `1.0.0` they come apart. The artifact version moves only on a breaking
+change to the context or the schemas; the package version is ordinary
+semantic versioning. Shipping a new artifact version alongside the old ones is
+additive, so it is a minor release. A major release means dropping an artifact
+version or changing the Python API.
 
 ## Asking for a particular version
 
