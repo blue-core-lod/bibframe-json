@@ -8,7 +8,7 @@ import bounded from "../../../../example/bounded.json?raw";
 A bounded description, or Concise Bounded Description in full, embeds
 everything needed to explain the resource it is about. A real record,
 framed. It validates against
-[`https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json), and a cataloger typed every value in it.
+[`https://bibframe-json.org/v0/schema/bounded.json`](https://bibframe-json.org/v0/schema/bounded.json), and a cataloger typed every value in it.
 You are looking at a sample of the shape, not a tidied illustration of one.
 
 We changed one thing, the host in the URIs, which reads `bibframe.example`
@@ -35,7 +35,7 @@ resource side by side under a single `rdf:RDF`. XML has no natural root, so
 siblings are the only option there. JSON has one, so we use it. Marva reads the
 RDF/XML and is unaffected.
 
-**`instanceOf` embeds the Work.** A [linked description](/bibframe-json/linked-description/) holds a bare URI
+**`instanceOf` embeds the Work.** A [linked description](/linked-description/) holds a bare URI
 there, because the Work is a resource of its own. `schema/bounded.json` checks that one
 difference, and it carries the whole structural claim: a bounded description explains its
 Instance without you fetching anything.

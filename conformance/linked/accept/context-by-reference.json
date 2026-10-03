@@ -5,6 +5,6 @@
     "@type": [
       "Work"
     ],
-    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld"
+    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld"
   }
 }

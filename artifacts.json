@@ -1,6 +1,6 @@
 {
   "comment": "Where each artifact tree is published, relative to the site base. The context and the schemas carry a version segment because a document names the one and a $ref resolves against the other, so both have to keep meaning what they meant; example/ and conformance/ track the current version and are illustration and test material rather than things a document names. Read by src/integrations/artifacts.mjs, which copies them, and by tests/test_artifacts.py, which checks that every $id matches the URL it lands at. One file because the two must not disagree: a relative $ref resolves against the $id of the file it appears in, not against wherever you fetched it, so a schema served anywhere other than the path its own $id names has references that resolve to nothing.",
-  "base": "https://blue-core-lod.github.io/bibframe-json",
+  "base": "https://bibframe-json.org",
   "publish": {
     "bibframe_json/v0/context": "v0/context",
     "bibframe_json/v0/schema": "v0/schema",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/Text.json",
+  "$id": "https://bibframe-json.org/v0/schema/linked/Text.json",
   "$comment": "A literal: a plain scalar, or a value object. The scalar branch exists because Text.accept_a_bare_string is a validator, and model_json_schema() emits no validators.",
   "examples": [
     "A short history of Sanskrit literature",

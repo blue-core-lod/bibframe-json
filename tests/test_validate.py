@@ -152,7 +152,7 @@ def test_unmodeled_properties_must_still_be_arrays():
 @pytest.mark.parametrize(
     "value",
     [
-        "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+        "https://bibframe-json.org/v0/context/bibframe.jsonld",
         {"@vocab": "http://id.loc.gov/ontologies/bibframe/"},
         ["https://x/ctx.jsonld", {"@vocab": "http://x/"}],
     ],

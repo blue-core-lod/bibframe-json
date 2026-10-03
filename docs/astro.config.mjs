@@ -12,8 +12,10 @@ import { artifacts } from "./src/integrations/artifacts.mjs";
 // conformance corpus live above it, and Vite refuses to read outside the
 // project root unless told, so the root is widened by one level.
 
-// A project page, so everything is served under a path.
-const BASE = "/bibframe-json";
+// A domain of its own, so the site is at the root and a published URL has no
+// project name in it. The artifacts are what that buys: a $id reads
+// https://bibframe-json.org/v0/schema/linked.json, which says nothing about
+// who hosts it or what the repository is called.
 
 const RESOURCES = ["Work", "Instance", "Hub", "Item"];
 
@@ -51,26 +53,21 @@ function definitions() {
  * the sidebar, so a new definition cannot arrive with a redirect missing.
  */
 function moved() {
-  // Astro applies `base` to the redirect's own path but not to where it
-  // sends you, so the destinations carry it and the keys do not. Without
-  // this every old URL would send a reader to the root of github.io.
-  const to = (path) => `${BASE}${path}`;
   return {
-    "/shape/": to("/linked-description/"),
-    "/cbd/": to("/bounded-description/"),
+    "/shape/": "/linked-description/",
+    "/cbd/": "/bounded-description/",
     ...Object.fromEntries(
-      definitionNames().map((name) => [`/shape/${name}/`, to(`/node/${name}/`)]),
+      definitionNames().map((name) => [`/shape/${name}/`, `/node/${name}/`]),
     ),
   };
 }
 
-// A project page, so the site lives under a path. `base` is what puts
-// public/schema/linked.json at /bibframe-json/schema/linked.json, which is
-// the URL every $id in the repository claims.
+// No `base`: the site is at the root of its own domain, so public/v0/schema/
+// linked.json is served at /v0/schema/linked.json, which is the URL every $id
+// in the repository claims.
 export default defineConfig({
   vite: { server: { fs: { allow: [".."] } } },
-  site: "https://blue-core-lod.github.io",
-  base: BASE,
+  site: "https://bibframe-json.org",
   trailingSlash: "always",
   redirects: moved(),
   integrations: [
@@ -93,7 +90,7 @@ export default defineConfig({
           attrs: {
             rel: "apple-touch-icon",
             sizes: "180x180",
-            href: "/bibframe-json/apple-touch-icon.png",
+            href: "/apple-touch-icon.png",
           },
         },
       ],

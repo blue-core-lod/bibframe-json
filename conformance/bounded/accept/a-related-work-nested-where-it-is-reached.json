@@ -1,7 +1,7 @@
 {
   "description": "a Work reached through bf:relation is described under the relation, not hoisted to the top -- which is where it is in the graph",
   "document": {
-    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"

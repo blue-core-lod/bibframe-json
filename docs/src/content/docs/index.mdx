@@ -16,11 +16,11 @@ JSON-LD and valid RDF. It is meant to simplify, not to replace.
 :::note[Who is it for?]
 *bibframe-json* grew out of the [Blue Core](https://bluecore.info/) project,
 but the JSON schema is meant to be shared by like-minded people working with
-BIBFRAME JSON data. It is published as [v0](/bibframe-json/versioning/), which
+BIBFRAME JSON data. It is published as [v0](/versioning/), which
 means it can still change in ways that break documents written against it. v1 is
 not far off, and is the point at which it becomes something to build on. Until
 then it is as much a provocation as a specification, so if you have ideas or
-concerns please consider [contributing](/bibframe-json/contributing/).
+concerns please consider [contributing](/contributing/).
 :::
 
 Just as the [International Standard for Book
@@ -40,13 +40,13 @@ syntax:
 * `@id` identifies the resource being described, in this case the Instance
 * `@type` lists the classes the identified resource belongs to
 
-You will notice that this is a [linked description](/bibframe-json/linked-description/), so `instanceOf`
-holds the Work's URI and stops there. A [bounded description](/bibframe-json/bounded-description/) of the same Instance embeds that Work instead,
+You will notice that this is a [linked description](/linked-description/), so `instanceOf`
+holds the Work's URI and stops there. A [bounded description](/bounded-description/) of the same Instance embeds that Work instead,
 and is what you would send someone who doesn't want to (or is unable to) fetch
 it.
 
 The record below is cut to the areas ISBD covers. The whole of it is served at
-[`https://blue-core-lod.github.io/bibframe-json/example/linked.json`](https://blue-core-lod.github.io/bibframe-json/example/linked.json).
+[`https://bibframe-json.org/example/linked.json`](https://bibframe-json.org/example/linked.json).
 
 </CatalogCard>
 
@@ -68,10 +68,10 @@ maintains it.
 
 | | |
 | --- | --- |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld`](https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json) | a [linked description](/bibframe-json/linked-description/) of a Work, Instance, Hub or Item |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/bounded.json) | a [bounded description](/bibframe-json/bounded-description/) |
-| [`https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/ontology.json) | BIBFRAME's own domains and ranges |
+| [`https://bibframe-json.org/v0/context/bibframe.jsonld`](https://bibframe-json.org/v0/context/bibframe.jsonld) | the JSON-LD context that produces the shape, 251 terms |
+| [`https://bibframe-json.org/v0/schema/linked.json`](https://bibframe-json.org/v0/schema/linked.json) | a [linked description](/linked-description/) of a Work, Instance, Hub or Item |
+| [`https://bibframe-json.org/v0/schema/bounded.json`](https://bibframe-json.org/v0/schema/bounded.json) | a [bounded description](/bounded-description/) |
+| [`https://bibframe-json.org/v0/schema/ontology.json`](https://bibframe-json.org/v0/schema/ontology.json) | BIBFRAME's own domains and ranges |
 
 The schemas reference each other relatively, `{"$ref": "Ref.json"}` and
 `{"$ref": "linked.json"}`, so they resolve against wherever you serve them
