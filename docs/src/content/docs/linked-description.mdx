@@ -13,8 +13,8 @@ rest.
 
 When the reader cannot follow them, send a [bounded
 description](/bibframe-json/bounded-description/) instead, which embeds the Work the Instance
-instantiates so that nothing needs fetching. `dialect.json` checks a linked
-description and `cbd.json` checks a bounded one, and the only structural
+instantiates so that nothing needs fetching. `linked.json` checks a linked
+description and `bounded.json` checks a bounded one, and the only structural
 difference between them is whether `instanceOf` holds a URI or the Work
 itself.
 
@@ -24,7 +24,7 @@ As a quick illustration here is an abridged JSON Instance:
 
 ```json
 {
-  "@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
+  "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
   "@id": "http://id.loc.gov/resources/instances/23867197",
   "@type": ["Instance"],
   "instanceOf": ["http://id.loc.gov/resources/works/23867197"],
@@ -62,11 +62,11 @@ The schema requires `@context` on the document. Carry it as a URL or carry it
 inlined; the URI below is provisional while this proposal is worked out.
 
 ```json
-"@context": "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+"@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld"
 ```
 
 The requirement reaches the document and nothing else. A nested node carries
-no context of its own, and neither does the Work a CBD embeds.
+no context of its own, and neither does the Work a bounded description embeds.
 
 Without a context the document is JSON that happens to match this shape. With
 one it is also JSON-LD, and `instanceOf` means BIBFRAME's `instanceOf` property
@@ -106,14 +106,14 @@ parses `199X` as a date.
 
 ## The JSON Schema
 
-A resource is checked by `dialect.json`, which comes in two forms from one
+A resource is checked by `linked.json`, which comes in two forms from one
 build: a single bundled file, and one file per definition. The split files are
 the source. Each has a page of its own, listing the properties it names and
 what BIBFRAME says each of them is.
 
 <Definitions />
 
-Start at [`https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json`](https://blue-core-lod.github.io/bibframe-json/schema/dialect/main.json). It
+Start at [`https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/main.json`](https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/main.json). It
 dispatches on `@type` with `if`/`then`, so a failure is reported against the
 resource type the record claims rather than as "the document matched none of
 four types".

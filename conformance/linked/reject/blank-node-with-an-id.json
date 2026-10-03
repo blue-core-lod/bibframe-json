@@ -1,0 +1,18 @@
+{
+  "description": "a parser-assigned _:b label addresses nothing outside its record",
+  "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "subject": [
+      {
+        "@id": "_:b0"
+      }
+    ]
+  },
+  "errors": [
+    "/subject/0"
+  ]
+}

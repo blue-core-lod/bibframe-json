@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 
 import bibframe_json
+from bibframe_json.validate import CURRENT
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = json.loads((ROOT / "artifacts.json").read_text())
@@ -43,7 +44,16 @@ def published() -> dict[str, Path]:
 
 def test_the_mapping_covers_what_it_claims():
     """An empty mapping would make every test below pass by doing nothing."""
-    assert set(PUBLISH.values()) == {"context", "schema", "conformance", "example"}
+    # The context and the schemas carry a version segment; example/ and
+    # conformance/ track the current version and do not. Compared by the tree
+    # each one ends in, so adding a version does not have to be restated here.
+    assert {path.rsplit("/", 1)[-1] for path in PUBLISH.values()} == {
+        "context",
+        "schema",
+        "conformance",
+        "example",
+    }
+    assert f"{CURRENT}/context" in PUBLISH.values(), PUBLISH
     assert len(published()) > 40
 
 
@@ -74,15 +84,15 @@ def test_at_least_the_known_schemas_carry_an_id():
 def test_the_context_is_published_where_bibframe_json_says_it_is():
     """Three things name this URL and they have to agree.
 
-    `CONTEXT_URL` is what a producer writes into a document, `example/cbd.json`
+    `CONTEXT_URL` is what a producer writes into a document, `example/bounded.json`
     is one that did, and this mapping decides where the file lands. A document
     naming a context that is not there is worse than one naming none: a
     JSON-LD processor fails on it, where it would have ignored the absence.
     """
-    served = f"{BASE}/context/bibframe.jsonld"
+    served = f"{BASE}/{CURRENT}/context/bibframe.jsonld"
     assert bibframe_json.CONTEXT_URL == served
-    assert "context/bibframe.jsonld" in published()
-    example = json.loads((ROOT / "example" / "cbd.json").read_text())
+    assert f"{CURRENT}/context/bibframe.jsonld" in published()
+    example = json.loads((ROOT / "example" / "bounded.json").read_text())
     assert example["@context"] == served
 
 
@@ -119,7 +129,7 @@ def test_no_page_quotes_a_relative_path_to_an_artifact():
     """A relative path is not something a reader can use.
 
     The link check below only sees markdown links. This catches the other
-    spelling, a path written as inline code -- `../schema/cbd.json` on the CBD
+    spelling, a path written as inline code -- `../schema/bounded.json` on the bounded description
     page, which survived the conversion to published URLs because it was never
     a link. Those paths mean something to someone in a checkout and nothing to
     anyone reading the site.
@@ -135,7 +145,7 @@ def test_every_artifact_link_in_the_pages_resolves():
     This is the check the link validator cannot do: the targets are files in
     the published trees rather than pages, so it refuses them as relative
     links and looks no further. Getting the depth wrong is silent otherwise --
-    from the site root `../schema/dialect.json` leaves the site.
+    from the site root `../schema/linked.json` leaves the site.
     """
     serving = published()
     assert pages(), "no pages found"

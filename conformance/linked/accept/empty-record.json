@@ -1,0 +1,10 @@
+{
+  "description": "a record that says only what it is",
+  "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ]
+  }
+}

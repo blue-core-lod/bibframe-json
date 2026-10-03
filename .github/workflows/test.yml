@@ -34,7 +34,7 @@ jobs:
         run: uv run pytest
 
       # The committed context and schemas are generated, so an edit to
-      # generate/ or to schema/dialect/ that was not followed by a rebundle leaves
+      # generate/ or to schema/linked/ that was not followed by a rebundle leaves
       # the repo describing a shape it no longer produces. Regenerating and
       # diffing catches that. The generators emit no timestamp, so a clean tree
       # here means the artifacts really do match their inputs.
@@ -42,7 +42,7 @@ jobs:
         run: |
           uv run python generate/from_ontology.py
           uv run python generate/bundle.py
-          git diff --exit-code bibframe_json/context bibframe_json/schema \
+          git diff --exit-code bibframe_json/v0/context bibframe_json/v0/schema \
             bibframe_json/vocabulary.json
 
   docs:

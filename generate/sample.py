@@ -101,8 +101,8 @@ def fetch(kind: str, uris: list[str]) -> int:
     return written
 
 
-def cbd_frame(uri: str) -> dict:
-    """A frame producing the CBD shape schema/cbd.json describes.
+def bounded_frame(uri: str) -> dict:
+    """A frame producing the bounded shape schema/bounded.json describes.
 
     Rooted at the Instance rather than holding every principal resource as a
     sibling: LC's cbd-01.md arranges them side by side under one rdf:RDF,
@@ -126,13 +126,14 @@ def strip_blank_ids(node: object) -> object:
 
     Framing several resources at once makes pyld label every description node
     _:b0, _:b1 and so on, because the same node could be referenced from more
-    than one of them. The dialect says a blank node carries no @id, for the
+    than one of them. The shape says a blank node carries no @id, for the
     reason those labels exist: they are an artefact of this serialization and
     address nothing outside it, so keeping them makes two identical values
     distinguishable by accident.
 
-    With them stripped every CBD member validates as a per-resource document,
-    which is the whole finding: a CBD is an array of resources and not a
+    With them stripped every member validates as a one-resource document,
+    which is the whole finding: the sibling form is an array of resources and
+    not a
     different kind of thing. With them in place, none of them does.
 
     The same labels turn up in stored records that describe something in place
@@ -150,21 +151,21 @@ def strip_blank_ids(node: object) -> object:
     return node
 
 
-def cbds(uris: list[str]) -> int:
-    """The CBD each Instance serves, framed into a shape worth reading.
+def bounded_descriptions(uris: list[str]) -> int:
+    """The bounded description each Instance serves, framed into a shape worth reading.
 
-    `.cbd.jsonld` is served expanded: a flat array of nodes with full property
+    `.bounded.jsonld` is served expanded: a flat array of nodes with full property
     URIs, no @context and no nesting -- an RDF dump rather than something
     anyone would consume, and LC's own is the same. Framing it gives the shape
-    schema/cbd.json describes: the Instance, with its Work embedded and
+    schema/bounded.json describes: the Instance, with its Work embedded and
     everything else described where it is referenced.
     """
-    into = CORPUS / "cbd"
+    into = CORPUS / "bounded"
     into.mkdir(parents=True, exist_ok=True)
     written = 0
     for uri in uris:
         try:
-            expanded = get(f"{uri}.cbd.jsonld")
+            expanded = get(f"{uri}.bounded.jsonld")
         except (OSError, ValueError) as error:
             print(f"  skipped {uri}: {error}")
             continue
@@ -174,7 +175,7 @@ def cbds(uris: list[str]) -> int:
         # compacts to a bare value. 57 of 59 records tripped on exactly that.
         resource = uri.replace("/api/", "/")
         framed = strip_blank_ids(
-            _as_arrays(jsonld.frame(expanded, cbd_frame(resource)))
+            _as_arrays(jsonld.frame(expanded, bounded_frame(resource)))
         )
         # Naming the context, not carrying it: framing has to be handed the
         # terms, and pyld returns them inlined, so every record came back with
@@ -183,7 +184,7 @@ def cbds(uris: list[str]) -> int:
         # the recommended shape should be in it.
         if isinstance(framed, dict):
             framed["@context"] = CONTEXT_URL
-        (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.cbd.json").write_text(
+        (into / f"{uri.rstrip('/').rsplit('/', 1)[-1]}.bounded.json").write_text(
             json.dumps(framed, indent=2, ensure_ascii=False) + "\n"
         )
         written += 1

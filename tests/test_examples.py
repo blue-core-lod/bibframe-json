@@ -14,8 +14,8 @@ import pytest
 
 import bibframe_json
 
-DIALECT = bibframe_json.schema("dialect")
-DEFINITIONS = sorted(DIALECT["$defs"])
+LINKED = bibframe_json.schema("linked")
+DEFINITIONS = sorted(LINKED["$defs"])
 
 
 def validator_for(name: str) -> jsonschema.protocols.Validator:
@@ -26,9 +26,9 @@ def validator_for(name: str) -> jsonschema.protocols.Validator:
     """
     return jsonschema.Draft202012Validator(
         {
-            "$schema": DIALECT["$schema"],
-            "$id": DIALECT["$id"],
-            "$defs": DIALECT["$defs"],
+            "$schema": LINKED["$schema"],
+            "$id": LINKED["$id"],
+            "$defs": LINKED["$defs"],
             "$ref": f"#/$defs/{name}",
         }
     )
@@ -42,7 +42,7 @@ def test_most_definitions_carry_an_example():
     here that is not a real record.
     """
     with_examples = [
-        name for name in DEFINITIONS if DIALECT["$defs"][name].get("examples")
+        name for name in DEFINITIONS if LINKED["$defs"][name].get("examples")
     ]
     assert len(with_examples) >= 13
     without = set(DEFINITIONS) - set(with_examples)
@@ -54,12 +54,12 @@ def test_most_definitions_carry_an_example():
     [
         (name, i)
         for name in DEFINITIONS
-        for i, _ in enumerate(DIALECT["$defs"][name].get("examples", []))
+        for i, _ in enumerate(LINKED["$defs"][name].get("examples", []))
     ],
     ids=lambda value: str(value),
 )
 def test_an_example_validates_against_its_own_definition(name: str, index: int):
-    example = DIALECT["$defs"][name]["examples"][index]
+    example = LINKED["$defs"][name]["examples"][index]
     # str() on a ValidationError already names the failing path and the rule,
     # and asking for the fields individually only makes the type checker
     # unhappy: iter_errors is typed as yielding object.
@@ -80,11 +80,11 @@ def test_the_split_files_and_the_bundle_agree_on_examples():
     from pathlib import Path
 
     folder = (
-        Path(__file__).resolve().parent.parent / "bibframe_json" / "schema" / "dialect"
+        Path(__file__).resolve().parent.parent / "bibframe_json" / "schema" / "linked"
     )
     for path in folder.glob("*.json"):
         if path.stem == "main":
             continue
         written = json.loads(path.read_text()).get("examples")
-        bundled = DIALECT["$defs"].get(path.stem, {}).get("examples")
+        bundled = LINKED["$defs"].get(path.stem, {}).get("examples")
         assert written == bundled, f"{path.stem}: {written!r} != {bundled!r}"

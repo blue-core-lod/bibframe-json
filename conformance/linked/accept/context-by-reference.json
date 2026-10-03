@@ -1,0 +1,10 @@
+{
+  "description": "or name it by URL",
+  "document": {
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld"
+  }
+}

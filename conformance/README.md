@@ -5,16 +5,16 @@ against the one in this repository. It is JSON rather than Python so that a
 second implementation, in any language, can prove it agrees.
 
 ```
-dialect/accept/<name>.json    a linked description, which must validate
-dialect/reject/<name>.json    a linked description, which must not, and where it fails
-cbd/accept/<name>.json        a bounded description, which must validate
-cbd/reject/<name>.json        ... which must not
+linked/accept/<name>.json    a linked description, which must validate
+linked/reject/<name>.json    a linked description, which must not, and where it fails
+bounded/accept/<name>.json        a bounded description, which must validate
+bounded/reject/<name>.json        ... which must not
 ```
 
 A directory per schema, because a document is either a linked
-description or a bounded one, and the structural rules differ. `dialect/` cases
-are checked against `schema/dialect.json` and `cbd/` cases against
-`schema/cbd.json`.
+description or a bounded one, and the structural rules differ. `linked/` cases
+are checked against `schema/linked.json` and `bounded/` cases against
+`schema/bounded.json`.
 
 Every case is one self-contained file. There is no manifest to keep in step
 with the documents.
@@ -60,8 +60,8 @@ still look right from a count of passes and failures.
 If you are writing a reader and not only a validator, two further properties
 hold, and `tests/test_conformance.py` asserts both:
 
-- every document under `dialect/accept/` **parses**
-- every document under `dialect/reject/` **also parses**
+- every document under `linked/accept/` **parses**
+- every document under `linked/reject/` **also parses**
 
 The second one is intended. These documents carry defects in the shape, not in
 the JSON, and a blank node keeping its `@id` reads fine. Parsing and judging
@@ -84,11 +84,11 @@ validate every `document` against that schema, and compare the paths.
 Three things, and the last of them is why it is JSON rather than test code.
 
 **It checks this implementation.** `tests/test_conformance.py` runs every case
-against `schema/dialect.json` and against the Python reader, on every commit.
+against `schema/linked.json` and against the Python reader, on every commit.
 
 **It serves as the specification in practice.** The `description` in each file
 states its rule more briefly than the schema or the prose does. Run
-`ls reject/` for a fair answer to what this dialect requires.
+`ls reject/` for a fair answer to what this shape requires.
 
 **It is how a second implementation proves it agrees.** A schema tells you what
 one validator thinks. A corpus tells two validators whether they think the same
@@ -121,9 +121,9 @@ thing that shows the point, and change any real URIs to `https://x/1` unless
 the URI is what the case is about.
 
 ```sh
-cp conformance/dialect/reject/blank-node-with-an-id.json \
-   conformance/dialect/reject/my-case.json
-$EDITOR conformance/dialect/reject/my-case.json
+cp conformance/linked/reject/blank-node-with-an-id.json \
+   conformance/linked/reject/my-case.json
+$EDITOR conformance/linked/reject/my-case.json
 uv run pytest tests/test_conformance.py          # if you have Python to hand
 ```
 

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/AdminMetadata.json",
+  "additionalProperties": {
+    "description": "Every property is an array, even holding one value. This is the guarantee the whole shape rests on.",
+    "type": "array"
+  },
+  "description": "How the record itself came to be, rather than what it describes.",
+  "examples": [
+    {
+      "@type": [
+        "AdminMetadata"
+      ],
+      "descriptionAuthentication": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/marcauthen/pcc"
+        }
+      ],
+      "descriptionLanguage": [
+        {
+          "@id": "http://id.loc.gov/vocabulary/languages/eng"
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "@id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "@type": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "$comment": "An array when a node has several types, a string when it has one. @type is a keyword, so no @container reaches it."
+    },
+    "rdfs:label": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "agent": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "date": {
+      "items": {
+        "$ref": "Text.json"
+      },
+      "type": "array"
+    },
+    "status": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "derivedFrom": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "descriptionConventions": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "generationProcess": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    },
+    "descriptionLevel": {
+      "items": {
+        "$ref": "Ref.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "AdminMetadata",
+  "type": "object",
+  "patternProperties": {
+    "^@": {
+      "description": "A JSON-LD keyword is not a property, so the array rule does not reach it. @context is the reason: it is a vocabulary rather than data."
+    }
+  },
+  "not": {
+    "description": "a blank node must not carry an @id",
+    "required": [
+      "@id"
+    ],
+    "properties": {
+      "@id": {
+        "pattern": "^_:"
+      }
+    }
+  }
+}

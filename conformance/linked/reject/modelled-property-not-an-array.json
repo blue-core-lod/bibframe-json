@@ -1,0 +1,16 @@
+{
+  "description": "the same rule for a property the schema does name",
+  "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@id": "https://x/1",
+    "@type": [
+      "Work"
+    ],
+    "subject": {
+      "@id": "https://x/2"
+    }
+  },
+  "errors": [
+    "/subject"
+  ]
+}

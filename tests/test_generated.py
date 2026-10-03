@@ -202,10 +202,10 @@ def test_only_always_reference_properties_are_coerced_to_id():
     sometimes embeds a node it would produce a mix of strings and objects,
     which is the same inconsistency in different clothing.
 
-    This is cbd-01.md's list, minus rdf:type. schema/cbd.json requires these to
+    This is cbd-01.md's list, minus rdf:type. schema/bounded.json requires these to
     be bare strings, so a context in the same repository that produced nodes
     would contradict it. hasInstance was excluded here for a while on the
-    strength of a measurement over CBD documents, where a referenced Instance
+    strength of a measurement over bounded descriptions, where a referenced Instance
     is in the document by definition and so is never a bare reference in the
     RDF -- the wrong population for the question. See from_ontology.py.
     """

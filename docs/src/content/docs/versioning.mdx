@@ -1,0 +1,56 @@
+---
+title: Versioning
+---
+
+The context and the schemas are published under a version segment:
+
+```
+https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld
+https://blue-core-lod.github.io/bibframe-json/v0/schema/linked.json
+```
+
+A document names a context and a `$ref` resolves against a `$id`, so both are
+promises. The segment is what lets a promise made today still hold after the
+shape has moved on.
+
+It sits above the trees rather than inside them, so a schema's references
+never change: the split files stay siblings within their version, and
+`{"$ref": "Work.json"}` resolves the same whether there is one version or six.
+
+## What moves it
+
+Only a change that invalidates documents written against the version before
+it. Removing a term, renaming one, or changing a term's `@type` or
+`@container`, because each of those changes what the same JSON means. Adding a
+term does not, and neither does a new definition, a clearer description or a
+tightened constraint that nothing conforming was relying on.
+
+`example/` and `conformance/` carry no version. They are illustration and test
+material that tracks the current version; nothing names them in a document.
+
+## v0 is not settled
+
+**v0 may change in place, without notice.** It is here so that the shape can
+be used and argued with, not so that it can be built on. Freezing starts at
+v1: from then on a version's bytes never change, and v0 stays served as it was
+last published.
+
+The Python package follows ordinary semantic versioning and moves for any
+change, including shipping a new artifact version. Adding v1 while v0 is still
+shipped is additive, so it is a minor release; a major release means dropping
+a version or changing the Python API.
+
+## Asking for a particular version
+
+```python
+import bibframe_json
+
+bibframe_json.VERSIONS          # ("v0",) oldest first
+bibframe_json.CURRENT           # "v0", the one written today
+bibframe_json.context("v0")     # that version's context
+bibframe_json.schema("linked", "v0")
+bibframe_json.context_url("v0")
+```
+
+Asking for a version the package does not ship raises `ValueError` rather
+than reading a path that happens not to exist.

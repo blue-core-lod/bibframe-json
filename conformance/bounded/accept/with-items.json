@@ -1,0 +1,49 @@
+{
+  "description": "an Item is described in place too, under the Instance that holds it",
+  "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@id": "https://x/instances/1",
+    "@type": [
+      "Instance"
+    ],
+    "title": [
+      {
+        "@type": [
+          "Title"
+        ],
+        "mainTitle": [
+          "A work"
+        ]
+      }
+    ],
+    "instanceOf": [
+      {
+        "@id": "https://x/works/1",
+        "@type": [
+          "Work"
+        ],
+        "title": [
+          {
+            "@type": [
+              "Title"
+            ],
+            "mainTitle": [
+              "A work"
+            ]
+          }
+        ]
+      }
+    ],
+    "hasItem": [
+      {
+        "@id": "https://x/items/1",
+        "@type": [
+          "Item"
+        ],
+        "itemOf": [
+          "https://x/instances/1"
+        ]
+      }
+    ]
+  }
+}

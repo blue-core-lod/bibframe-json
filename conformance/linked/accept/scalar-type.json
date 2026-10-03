@@ -1,0 +1,18 @@
+{
+  "description": "@type as a string, which a node with one type carries",
+  "document": {
+    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@id": "https://x/1",
+    "@type": [
+      "Instance"
+    ],
+    "extent": [
+      {
+        "@type": "Extent",
+        "rdfs:label": [
+          "ix, 319 pages"
+        ]
+      }
+    ]
+  }
+}

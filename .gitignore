@@ -14,7 +14,7 @@ dist/
 corpus/
 
 # LC's description of how they serialize CBD documents. Reference material,
-# not ours to redistribute; conformance/cbd/ is where its rules are written
+# not ours to redistribute; conformance/bounded/ is where its rules are written
 # down in a form this repository owns.
 cbd-01.md
 
@@ -26,7 +26,6 @@ dist/
 # The trees the artifacts integration copies into docs/public/, named one by
 # one rather than ignoring the directory: the icons live there too and are
 # ours. Keep in step with the publish map in artifacts.json.
-docs/public/context/
-docs/public/schema/
+docs/public/v0/
 docs/public/conformance/
 docs/public/example/

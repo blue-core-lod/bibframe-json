@@ -7,7 +7,7 @@ package does; the dispatch tests that lived here moved with the models.
 import jsonschema
 import pytest
 
-from bibframe_json import CONTEXT_URL, DIALECT, ONTOLOGY, context, schema, validate
+from bibframe_json import CONTEXT_URL, LINKED, ONTOLOGY, context, schema, validate
 
 CLEAN = {
     "@context": CONTEXT_URL,
@@ -20,7 +20,7 @@ CLEAN = {
 # --- the artifacts are reachable from an install -----------------------------
 
 
-@pytest.mark.parametrize("name", [DIALECT, ONTOLOGY])
+@pytest.mark.parametrize("name", [LINKED, ONTOLOGY])
 def test_schemas_load_through_the_package(name):
     """Read through importlib.resources, not a relative path.
 
@@ -50,18 +50,18 @@ def test_a_clean_record_has_no_findings():
 
 def test_layers_can_be_asked_for_separately():
     record = {**CLEAN, "subject": [{"@id": "_:b0"}], "mainTitle": ["x"]}
-    assert {f.layer for f in validate(record)} == {DIALECT, ONTOLOGY}
-    assert {f.layer for f in validate(record, ontology=False)} == {DIALECT}
-    assert {f.layer for f in validate(record, dialect=False)} == {ONTOLOGY}
-    assert validate(record, dialect=False, ontology=False) == []
+    assert {f.layer for f in validate(record)} == {LINKED, ONTOLOGY}
+    assert {f.layer for f in validate(record, ontology=False)} == {LINKED}
+    assert {f.layer for f in validate(record, shape=False)} == {ONTOLOGY}
+    assert validate(record, shape=False, ontology=False) == []
 
 
-def test_dialect_findings_are_errors_and_ontology_findings_are_not():
+def test_shape_findings_are_errors_and_ontology_findings_are_not():
     """When the data and the ontology disagree the ontology is often the one
     that is behind, so its findings are warnings."""
     record = {**CLEAN, "subject": [{"@id": "_:b0"}], "mainTitle": ["x"]}
     by_layer = {f.layer: f for f in validate(record)}
-    assert by_layer[DIALECT].is_error
+    assert by_layer[LINKED].is_error
     assert not by_layer[ONTOLOGY].is_error
 
 
@@ -152,7 +152,7 @@ def test_unmodeled_properties_must_still_be_arrays():
 @pytest.mark.parametrize(
     "value",
     [
-        "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld",
+        "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
         {"@vocab": "http://id.loc.gov/ontologies/bibframe/"},
         ["https://x/ctx.jsonld", {"@vocab": "http://x/"}],
     ],
@@ -233,7 +233,7 @@ def test_a_failure_is_reported_at_the_path_it_happened():
     Asserted against jsonschema directly rather than through validate(), since
     the point is what happens *without* the wrapper this package provides.
     """
-    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    linked = jsonschema.Draft202012Validator(schema(LINKED))
     record = {
         "@context": CONTEXT_URL,
         "@id": "https://x/1",
@@ -241,7 +241,7 @@ def test_a_failure_is_reported_at_the_path_it_happened():
         "subject": [{"@id": "_:b0"}],
         "bflc:aap": "not a list",
     }
-    paths = {"/".join(str(p) for p in e.path) for e in dialect.iter_errors(record)}
+    paths = {"/".join(str(p) for p in e.path) for e in linked.iter_errors(record)}
     assert paths == {"subject/0", "bflc:aap"}
 
 
@@ -266,14 +266,14 @@ def test_the_dispatch_reaches_the_type_the_record_claims(types, claimed):
     string it is not false but vacuously true, which would send every scalar
     @type down whichever branch came first.
     """
-    dialect = jsonschema.Draft202012Validator(schema(DIALECT))
+    linked = jsonschema.Draft202012Validator(schema(LINKED))
     record = {
         "@context": CONTEXT_URL,
         "@id": "https://x/1",
         "@type": types,
         "hasExpression": [{"@id": "_:b0"}],
     }
-    reached_hub = bool(list(dialect.iter_errors(record)))
+    reached_hub = bool(list(linked.iter_errors(record)))
     assert reached_hub == (claimed == "Hub")
 
 
@@ -284,7 +284,7 @@ def test_every_definition_says_what_it_is():
     One line each: model_json_schema copies a whole docstring in, and those are
     written for someone reading models.py.
     """
-    for name, definition in schema(DIALECT)["$defs"].items():
+    for name, definition in schema(LINKED)["$defs"].items():
         body = definition["anyOf"][1] if "anyOf" in definition else definition
         described = body.get("description", "")
         assert described, name

@@ -1,9 +1,12 @@
 """Validate a record against the shipped JSON Schemas.
 
 `validate()` checks a record against the two JSON Schemas in
-`bibframe_json/schema/`. That is where the guarantees live:
+`bibframe_json/<version>/schema/`. That is where the guarantees live:
 
-    dialect    the shape: arrays, references, value objects, blank nodes.
+    linked     the shape of one resource: arrays, references, value
+               objects, blank nodes.
+
+    bounded    the same, plus the Work embedded where it is referenced.
                Errors -- a document that breaks these cannot be read reliably.
 
     ontology   BIBFRAME's own domains and ranges, read as constraints.
@@ -25,24 +28,63 @@ from typing import Any, NamedTuple
 import jsonschema
 from referencing import Registry, Resource
 
-DIALECT = "dialect"
-CBD = "cbd"
+LINKED = "linked"
+BOUNDED = "bounded"
 ONTOLOGY = "ontology"
 
-# Where context() is published. A document that names its context rather than
-# inlining it -- which is what a document leaving your system should do -- has
-# to name this exact URL, because a relative $ref and a context reference both
-# resolve against where the file actually is. Anything that writes it needs
-# the same string, so there is one.
-CONTEXT_URL = "https://blue-core-lod.github.io/bibframe-json/context/bibframe.jsonld"
+# Every artifact version this package ships, oldest first, and the one it
+# writes. A version is a path segment in the published URLs and moves only
+# when the context or the schemas change in a way that invalidates documents
+# written against the previous one. The package's own version on PyPI is
+# ordinary semver and moves for any change at all, including adding a version
+# here -- which is additive, because the old one is still shipped.
+#
+# v0 is the pre-release and is allowed to change in place. Freezing starts at
+# v1: from then on a version's bytes never change, because a document naming
+# one is entitled to find what it was written against.
+VERSIONS = ("v0",)
+CURRENT = VERSIONS[-1]
+
+# Where the artifacts are published. The version sits above the trees so that
+# a relative $ref never changes: the schemas stay siblings inside a version,
+# and {"$ref": "linked.json"} resolves within it exactly as it did when there
+# was no version at all.
+BASE = "https://blue-core-lod.github.io/bibframe-json"
+
+
+def context_url(version: str = CURRENT) -> str:
+    """Where a version's context is published.
+
+    A document that names its context rather than inlining it -- which is what
+    a document leaving your system should do -- has to name this exact URL,
+    because a relative $ref and a context reference both resolve against where
+    the file actually is. Anything that writes one needs the same string, so
+    there is one place that builds it.
+    """
+    _check(version)
+    return f"{BASE}/{version}/context/bibframe.jsonld"
+
+
+def _check(version: str) -> None:
+    if version not in VERSIONS:
+        raise ValueError(
+            f"no such version: {version!r}; shipped: {', '.join(VERSIONS)}"
+        )
+
+
+# The current version's context URL, for callers that do not care about
+# versions. Kept as a constant because it is what a producer writes into a
+# document, and a constant is easier to grep for than a call.
+CONTEXT_URL = context_url(CURRENT)
 
 
 class Finding(NamedTuple):
     """One thing wrong with a record.
 
-    `layer` is "dialect", "cbd" or "ontology", and it is the part a caller most
+    `layer` is "linked", "bounded" or "ontology", and it is the part a caller most
     needs:
-    a dialect finding is a defect in the shape, an ontology finding is a
+    a linked or bounded finding is a defect in the shape, an ontology
+    finding is a
     disagreement with BIBFRAME that may well be the ontology's fault.
     """
 
@@ -52,7 +94,7 @@ class Finding(NamedTuple):
 
     @property
     def is_error(self) -> bool:
-        return self.layer in (DIALECT, CBD)
+        return self.layer in (LINKED, BOUNDED)
 
     def __str__(self) -> str:
         where = self.path or "the record"
@@ -60,28 +102,83 @@ class Finding(NamedTuple):
 
 
 @cache
-def schema(name: str) -> dict[str, Any]:
+def schema(name: str, version: str = CURRENT) -> dict[str, Any]:
     """One of the shipped schemas, by name.
 
     Read through importlib.resources rather than a relative path, so it works
     from an installed package and not only from a checkout. The schemas live
     inside bibframe_json/ for the same reason.
     """
-    if name not in (DIALECT, CBD, ONTOLOGY):
+    if name not in (LINKED, BOUNDED, ONTOLOGY):
         raise ValueError(f"no such schema: {name!r}")
-    text = (files("bibframe_json") / "schema" / f"{name}.json").read_text()
+    _check(version)
+    text = (files("bibframe_json") / version / "schema" / f"{name}.json").read_text()
     return json.loads(text)
 
 
 @cache
-def context() -> dict[str, Any]:
+def context(version: str = CURRENT) -> dict[str, Any]:
     """The JSON-LD context that produces this shape.
 
     Shipped so a consumer can frame their own records into it, or point a
     JSON-LD processor at the same terms this library assumes.
     """
-    text = (files("bibframe_json") / "context" / "bibframe.jsonld").read_text()
+    _check(version)
+    text = (
+        files("bibframe_json") / version / "context" / "bibframe.jsonld"
+    ).read_text()
     return json.loads(text)
+
+
+def context_for(url: str) -> dict[str, Any] | None:
+    """The shipped context a published URL names, or None if it names none.
+
+    So that nothing has to go to the network to read a document that names its
+    context. rdflib fetches a remote @context while parsing and pyld fetches
+    one while framing, which is slow enough that `bluecore_models` strips the
+    context on write and puts a hardcoded one back on read -- losing, in the
+    process, any record of which version framed the document.
+
+    With this the URL can stay in the document and still cost nothing:
+
+        url = document.pop("@context")
+        graph.parse(data=document, format="json-ld", context=context_for(url))
+
+    See document_loader() for the pyld half.
+    """
+    for version in VERSIONS:
+        if url == context_url(version):
+            return context(version)
+    return None
+
+
+def document_loader(fallback: Any = None) -> Any:
+    """A pyld document loader that answers for the shipped contexts offline.
+
+        from pyld import jsonld
+        jsonld.set_document_loader(bibframe_json.document_loader())
+
+    Anything this package does not ship falls through to pyld's own loader, so
+    installing this does not stop a caller resolving someone else's context --
+    it only stops the network being asked for one we already have on disk.
+    """
+    from pyld import jsonld
+
+    if fallback is None:
+        fallback = jsonld.get_document_loader()
+
+    def load(url: str, options: dict | None = None) -> dict:
+        shipped = context_for(url)
+        if shipped is None:
+            return fallback(url, options or {})
+        return {
+            "contentType": "application/ld+json",
+            "contextUrl": None,
+            "documentUrl": url,
+            "document": shipped,
+        }
+
+    return load
 
 
 @cache
@@ -90,16 +187,16 @@ def registry() -> Registry:
 
     Hand this to a validator to check against one of them yourself:
 
-        jsonschema.Draft202012Validator(schema("cbd"), registry=registry())
+        jsonschema.Draft202012Validator(schema("bounded"), registry=registry())
 
-    cbd.json says `{"$ref": "dialect.json"}` rather than carrying a copy of
+    bounded.json says `{"$ref": "linked.json"}` rather than carrying a copy of
     every definition, so something has to resolve that. A relative reference
-    resolves against the enclosing $id, which is how the split dialect files
+    resolves against the enclosing $id, which is how the split definition files
     refer to each other too, and this registry is what turns those URIs back
     into the files on disk. Nothing is fetched.
     """
     known: Registry = Registry()
-    for name in (DIALECT, CBD, ONTOLOGY):
+    for name in (LINKED, BOUNDED, ONTOLOGY):
         known = Resource.from_contents(schema(name)) @ known
     return known
 
@@ -112,7 +209,7 @@ def _validator(name: str) -> jsonschema.protocols.Validator:
 def _causes(error: jsonschema.ValidationError, depth: int = 0) -> Iterator:
     """The errors that actually explain a failure.
 
-    Both schemas use anyOf -- the dialect over four resource types and over the
+    Both schemas use anyOf -- the linked schema over four resource types and over the
     shapes a literal or a reference may take, the ontology over string-or-array
     @type. jsonschema reports the anyOf itself, whose message is the whole record
     printed back at you with "is not valid under any of the given schemas". The
@@ -172,9 +269,10 @@ def _describe(error: jsonschema.ValidationError) -> str:
 def _embeds_its_work(record: object) -> bool:
     """Whether bf:instanceOf holds a Work rather than a URI naming one.
 
-    The one structural difference between a stored record and a CBD, so it is
+    The one structural difference between a stored record and a BOUNDED, so it is
     what tells them apart. A bare URI is a reference to a row elsewhere; an
-    object is the Work itself, which is what makes a CBD self-explaining.
+    object is the Work itself, which is what makes a bounded description
+    explain itself.
     """
     if not isinstance(record, dict):
         return False
@@ -186,7 +284,7 @@ def _embeds_its_work(record: object) -> bool:
 def validate(
     record: dict[str, Any],
     *,
-    dialect: bool = True,
+    shape: bool = True,
     ontology: bool = True,
     kind: str | None = None,
 ) -> list[Finding]:
@@ -195,14 +293,15 @@ def validate(
         for finding in validate(record):
             print(finding)
 
-    Either layer can be asked for alone. `dialect=True, ontology=False` is the
+    Either layer can be asked for alone. `shape=True, ontology=False` is the
     useful gate in a pipeline, since those are the guarantees a consumer depends
     on; ontology-only is the interesting report to run across a corpus.
 
-    Which structural schema applies is worked out from the document -- a CBD
-    embeds its Work where a stored record names it -- and `kind=CBD` says so
-    outright where that guess cannot help, since a CBD whose Work has gone
-    missing is indistinguishable from a stored record.
+    Which structural schema applies is worked out from the document -- a
+    bounded description embeds its Work where a linked one names it -- and
+    `kind=BOUNDED` says so outright where that guess cannot help, since a
+    bounded description whose Work has gone missing is indistinguishable from
+    a linked one.
 
     Findings are deduplicated by path and message, because an anyOf can surface
     the same cause through more than one branch.
@@ -219,11 +318,11 @@ def validate(
     # not have to say which kind it holds and the answer is in the document.
     #
     # `kind` overrides that, and is worth having where the guess cannot help:
-    # a CBD whose Work has gone missing looks exactly like a stored record, so
-    # asking for CBD is the only way to be told about it.
-    structural = kind or (CBD if _embeds_its_work(record) else DIALECT)
+    # a bounded description whose Work has gone missing looks exactly like a
+    # linked one, so asking for BOUNDED is the only way to be told about it.
+    structural = kind or (BOUNDED if _embeds_its_work(record) else LINKED)
     layers = [
-        name for name, wanted in ((structural, dialect), (ONTOLOGY, ontology)) if wanted
+        name for name, wanted in ((structural, shape), (ONTOLOGY, ontology)) if wanted
     ]
     for layer in layers:
         for error in _validator(layer).iter_errors(record):

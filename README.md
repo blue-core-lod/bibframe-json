@@ -17,14 +17,14 @@ in any language to the same standard.
 ```sh
 uv run pytest                              # the library and the schemas
 uv run python generate/from_ontology.py    # context, ontology schema, vocabulary
-uv run python generate/bundle.py           # dialect.json, bundled from schema/dialect/
+uv run python generate/bundle.py           # linked.json, bundled from schema/linked/
 cd docs && npm install && npm run dev      # the documentation site
 ```
 
 The context, the ontology schema and `bibframe_json/vocabulary.json` are
 generated from the BIBFRAME vocabulary vendored at `generate/bibframe.rdf`.
-`bibframe_json/schema/dialect/` is written by hand, one file per definition,
-and `schema/dialect.json` is those files bundled into one. CI regenerates and
+`bibframe_json/schema/linked/` is written by hand, one file per definition,
+and `schema/linked.json` is those files bundled into one. CI regenerates and
 diffs, so an edit to a generator that was not followed by a rebuild fails.
 
 `generate/rebase.py` moves every `$id` and published URL to a different host in

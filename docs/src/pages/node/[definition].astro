@@ -39,13 +39,13 @@ type Property = {
 };
 
 const schemas = import.meta.glob<Schema>(
-  "../../../../bibframe_json/schema/dialect/*.json",
+  "../../../../bibframe_json/v0/schema/linked/*.json",
   { eager: true, import: "default" },
 );
 
 export function getStaticPaths() {
   const files = import.meta.glob<Schema>(
-    "../../../../bibframe_json/schema/dialect/*.json",
+    "../../../../bibframe_json/v0/schema/linked/*.json",
     { eager: true, import: "default" },
   );
   return Object.keys(files)
@@ -291,12 +291,12 @@ const headings = [
   <h2 id="the-schema">The schema</h2>
 
   <p>
-    <a href={url(`schema/dialect/${definition}.json`)}>
-      <code>{url(`schema/dialect/${definition}.json`)}</code>
+    <a href={url(`schema/linked/${definition}.json`)}>
+      <code>{url(`schema/linked/${definition}.json`)}</code>
     </a>{" "}
     is this definition on its own, and{" "}
-    <a href={url("schema/dialect.json")}>
-      <code>{url("schema/dialect.json")}</code>
+    <a href={url("schema/linked.json")}>
+      <code>{url("schema/linked.json")}</code>
     </a>{" "}
     is the whole shape with every definition inlined. They are checked against
     each other over the conformance corpus, so either is safe to depend on.

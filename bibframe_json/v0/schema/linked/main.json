@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/main.json",
+  "title": "Blue Core's JSON shape, per resource type",
+  "$comment": "Written by hand, one definition per file, and bundled into linked.json beside them by generate/bundle.py.\n\nStructural only: it says nothing about which BIBFRAME types may appear where, which is schema/ontology.json's job. A record can satisfy this and still put an Agent where a Title belongs.\n\nOpen by design. BIBFRAME has 226 properties and the data uses 136; additionalProperties is not restricted, so a property with no field here passes rather than failing.",
+  "required": [
+    "@context"
+  ],
+  "if": {
+    "required": [
+      "@type"
+    ],
+    "properties": {
+      "@type": {
+        "anyOf": [
+          {
+            "type": "array",
+            "contains": {
+              "const": "Hub"
+            }
+          },
+          {
+            "const": "Hub"
+          }
+        ]
+      }
+    }
+  },
+  "then": {
+    "$ref": "Hub.json"
+  },
+  "else": {
+    "if": {
+      "required": [
+        "@type"
+      ],
+      "properties": {
+        "@type": {
+          "anyOf": [
+            {
+              "type": "array",
+              "contains": {
+                "const": "Instance"
+              }
+            },
+            {
+              "const": "Instance"
+            }
+          ]
+        }
+      }
+    },
+    "then": {
+      "$ref": "Instance.json"
+    },
+    "else": {
+      "if": {
+        "required": [
+          "@type"
+        ],
+        "properties": {
+          "@type": {
+            "anyOf": [
+              {
+                "type": "array",
+                "contains": {
+                  "const": "Item"
+                }
+              },
+              {
+                "const": "Item"
+              }
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "Item.json"
+      },
+      "else": {
+        "$ref": "Work.json"
+      }
+    }
+  }
+}
