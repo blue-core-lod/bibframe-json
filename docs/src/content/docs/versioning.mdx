@@ -45,17 +45,25 @@ So expect `v0.1`, `v0.2` and onward. Each one is a real move, and each one is
 the source of a migration. At v1 the shape becomes something to build on, and
 from there the version is major only.
 
-## The package version
+## The package version is a separate number
 
-While the package is on 0.x the two numbers move together. `0.2.0` ships both
-`v0.1` and `v0.2`, so you can hold each side of a migration, and the version in
-a URL says which release introduced it.
+The artifact version describes the shape, and every language binding shares
+it. A package version describes one binding's API. The Python package moves
+when `validate()` or `document_loader()` changes, which has nothing to do with
+whether the schemas moved, and the npm and Ruby packages will keep their own
+numbers for the same reason.
 
-From `1.0.0` they come apart. The artifact version moves only on a breaking
-change to the context or the schemas. The package version is ordinary semantic
-versioning: shipping a new artifact version alongside the old ones is
-additive, so it is a minor release, and a major release means dropping an
-artifact version or changing the Python API.
+Shipping a new artifact version alongside the old ones is additive, so it is a
+minor release. Dropping one, or changing the API, is major.
+
+Ask a package what it ships rather than inferring it from the number.
+In Python that is `bibframe_json.VERSIONS`.
+
+For history, where each artifact version first appeared:
+
+| artifact | first shipped in |
+| --- | --- |
+| `v0.1` | `bibframe-json` 0.1.0 (Python) |
 
 ## Asking for a particular version
 
