@@ -49,7 +49,7 @@ CURRENT = VERSIONS[-1]
 # a relative $ref never changes: the schemas stay siblings inside a version,
 # and {"$ref": "linked.json"} resolves within it exactly as it did when there
 # was no version at all.
-BASE = "https://blue-core-lod.github.io/bibframe-json"
+BASE = "https://bibframe-json.org"
 
 
 def context_url(version: str = CURRENT) -> str:

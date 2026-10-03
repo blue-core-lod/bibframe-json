@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://blue-core-lod.github.io/bibframe-json"
+BASE = "https://bibframe-json.org"
 
 
 def rebase(new_base: str) -> None:

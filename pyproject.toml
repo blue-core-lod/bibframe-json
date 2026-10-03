@@ -5,12 +5,33 @@ description = "Read and validate one opinionated JSON expression of a BIBFRAME r
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
+keywords = ["bibframe", "json-ld", "json-schema", "linked-data", "marc", "cataloging"]
+
+# Alpha, and deliberately so: the artifacts are published under v0, which is
+# allowed to change in place until v1.
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Markup",
+]
 dependencies = [
     "jsonschema>=4.23",
     # bounded.json references linked.json rather than inlining it, so resolving
     # between the shipped schemas is part of reading them
     "referencing",
 ]
+
+# PyPI shows these beside the description, and without them the listing is a
+# dead end: the artifacts this package exists to ship are on the web, and the
+# conversation about them is on the issue tracker.
+[project.urls]
+Documentation = "https://bibframe-json.org"
+Source = "https://github.com/blue-core-lod/bibframe-json"
+Issues = "https://github.com/blue-core-lod/bibframe-json/issues"
 
 [dependency-groups]
 dev = [

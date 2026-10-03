@@ -103,7 +103,7 @@ def test_the_files_reference_each_other_relatively():
     for path in sorted(SPLIT.glob("*.json")):
         contents = path.read_text()
         assert (
-            f'"$id": "https://blue-core-lod.github.io/bibframe-json/v0/schema/linked/{path.name}"'
+            f'"$id": "https://bibframe-json.org/v0/schema/linked/{path.name}"'
             in contents
         )
         for ref in json.loads(contents).get("$defs", {}):

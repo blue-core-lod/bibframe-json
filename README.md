@@ -10,7 +10,15 @@ It ships a JSON-LD context that produces the shape, JSON Schemas that check
 it, and a corpus of documents with expected verdicts so you can hold a reader
 in any language to the same standard.
 
-**Documentation: <https://blue-core-lod.github.io/bibframe-json/>**
+**Documentation: <https://bibframe-json.org/>**
+
+It grew out of the [Blue Core](https://bluecore.info/) project, and the schema
+is meant to be shared by anyone working with BIBFRAME JSON data.
+
+The artifacts are published under **v0**, which means they can still change in
+ways that break documents written against them. v1 is the point at which this
+becomes something to build on. See
+[Versioning](https://bibframe-json.org/versioning/).
 
 ## Working on it
 

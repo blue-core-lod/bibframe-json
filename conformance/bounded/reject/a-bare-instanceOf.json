@@ -1,7 +1,7 @@
 {
   "description": "that is a linked description, where the Work is a resource of its own; a bounded description embeds it",
   "document": {
-    "@context": "https://blue-core-lod.github.io/bibframe-json/v0/context/bibframe.jsonld",
+    "@context": "https://bibframe-json.org/v0/context/bibframe.jsonld",
     "@id": "https://x/instances/1",
     "@type": [
       "Instance"
