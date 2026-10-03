@@ -60,12 +60,31 @@ pre.astro-code {
    used to take its colors from the theme, which made it a panel in the dark
    and a faint outline in the light. Cards are not either of those.
 
-   The stock is muted rather than bright, so that in dark mode it reads as
-   paper under a lamp and not as a lightbox. */
+   What does change between themes is the light falling on it. At full
+   brightness on a near-black page the card measured 15:1 against the
+   background and read as a lightbox rather than as paper. The dark values
+   below are the same six colors at 80%, so every relationship that was
+   chosen -- ink to stock, red to stock -- survives and only the lamp is
+   turned down. That brings the card to 9.4:1.
+
+   80% rather than less because it is the floor: the delimiters need 4.5:1
+   against the stock at this size, they sit at 4.6:1 here, and 75% puts them
+   at 4.4:1. Dimming further means the red stops being readable before the
+   card stops glaring.
+
+   Named rather than dimmed with a filter, because a filter would drop
+   subpixel antialiasing on a card that is entirely small monospace text. */
 .card {
-    background: #ece9dd;
-    color: #23211e;
-    border: 1px solid #cdc7b6;
+    --stock: #ece9dd;
+    --ink: #23211e;
+    --edge: #cdc7b6;
+    --behind-near: #e4e0d2;
+    --behind-far: #dbd6c6;
+    --mark: #a8322b;
+
+    background: var(--stock);
+    color: var(--ink);
+    border: 1px solid var(--edge);
     border-radius: 0;
     position: relative;
     /* Two more cards behind this one, the way it sat in the drawer, then the
@@ -73,14 +92,24 @@ pre.astro-code {
        inset one draws its face, the flush one its edge. Same motif as the
        favicon, which is a card edge and nothing else. */
     box-shadow:
-        5px 5px 0 -1px #e4e0d2,
-        5px 5px 0 0 #cdc7b6,
-        10px 10px 0 -1px #dbd6c6,
-        10px 10px 0 0 #cdc7b6,
+        5px 5px 0 -1px var(--behind-near),
+        5px 5px 0 0 var(--edge),
+        10px 10px 0 -1px var(--behind-far),
+        10px 10px 0 0 var(--edge),
         0 14px 28px -12px rgb(24 22 20 / 45%);
     /* a card's margins, which are wider than a panel's padding */
     padding: 2rem 2.2rem 2.4rem;
     max-width: min(46rem, calc(100% - 12px));
+}
+
+/* The same card, under less light. */
+:root[data-theme="dark"] .card {
+    --stock: #bdbab1;
+    --ink: #1c1a18;
+    --edge: #a49f92;
+    --behind-near: #b6b3a8;
+    --behind-far: #afab9e;
+    --mark: #862822;
 }
 
 /* The delimiters stay quiet. A wash and a bold weight made a teaching
@@ -88,10 +117,10 @@ pre.astro-code {
    and catalogers do. So: the red, at the text's own weight, for readers who
    notice it, and nothing pointing at it for readers who don't.
 
-   Fixed rather than themed, because the stock it sits on no longer follows
-   the page. */
+   It dims with the stock rather than with the page, because what it has to
+   stay legible against is the card. */
 .card .d {
-    color: #a8322b;
+    color: var(--mark);
 }
 
 .card .description {
