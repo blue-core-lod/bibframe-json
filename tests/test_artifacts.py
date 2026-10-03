@@ -239,8 +239,11 @@ def test_the_version_in_the_mapping_is_the_one_the_package_writes():
     version and every produced document names another.
     """
     assert VERSION == CURRENT
-    assert all(target.startswith(f"{VERSION}/") for target in PUBLISH.values()
-               if target.split("/")[0].startswith("v"))
+    assert all(
+        target.startswith(f"{VERSION}/")
+        for target in PUBLISH.values()
+        if target.split("/")[0].startswith("v")
+    )
 
 
 def test_no_link_in_the_built_site_is_broken():
