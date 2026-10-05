@@ -62,9 +62,15 @@ def test_the_recipe_produces_what_it_claims():
     shape. An example pipeline that does not produce a conforming document
     would be worse than no pipeline, since the reader has no way to tell.
 
-    bounded.json comes back identical, which is the stronger claim: the shipped
+    Both come back identical, which is the claim worth making: a shipped
     example is reproducible by the published recipe rather than by something
     only this repository has.
+
+    This used to assert that of bounded.json alone, and linked.json failed it
+    silently. linked.json came from a stored record whose descriptionLevel was
+    a {"@id": ...} wrapper, while the context it names declares that property
+    @type: @id, so the recipe emits a bare URI. Both spellings validate, which
+    is why only a round trip finds it.
     """
     from pyld import jsonld
 
@@ -73,16 +79,12 @@ def test_the_recipe_produces_what_it_claims():
     terms = bibframe_json.context()["@context"]
     for name in ("linked", "bounded"):
         record = json.loads((ROOT / "example" / f"{name}.json").read_text())
-        expanded = jsonld.expand({**record, "@context": terms})
-        produced = produce(expanded, record["@id"])
+        produced = produce(jsonld.expand({**record, "@context": terms}), record["@id"])
         findings = bibframe_json.validate(produced, ontology=False)
         assert findings == [], f"{name}: " + "\n".join(str(f) for f in findings)
-
-    bounded = json.loads((ROOT / "example" / "bounded.json").read_text())
-    again = produce(jsonld.expand({**bounded, "@context": terms}), bounded["@id"])
-    assert again == bounded, (
-        "example/bounded.json is no longer what the recipe produces"
-    )
+        assert produced == record, (
+            f"example/{name}.json is no longer what the recipe produces"
+        )
 
 
 def test_the_recipe_leaves_a_value_object_alone():
