@@ -3,7 +3,8 @@ title: Validating
 description: Check a record against the shipped JSON Schemas, from Python, JavaScript or Ruby.
 ---
 
-Three schemas, and which you want depends on what you are holding.
+There are three schemas, and which you want depends on what data you are trying to
+validate.
 
 | Schema | Checks |
 | --- | --- |
@@ -11,7 +12,7 @@ Three schemas, and which you want depends on what you are holding.
 | [`https://bibframe-json.org/v0.1/schema/bounded.json`](https://bibframe-json.org/v0.1/schema/bounded.json) | a [bounded description](/bounded-description/): an Instance with its Work embedded |
 | [`https://bibframe-json.org/v0.1/schema/ontology.json`](https://bibframe-json.org/v0.1/schema/ontology.json) | BIBFRAME's own domains and ranges. Warnings, not errors. Where the data and the ontology disagree, the ontology is usually the one behind |
 
-They are draft 2020-12 and reference nothing outside themselves, so any
+They are [draft 2020-12] and reference nothing outside themselves, so any
 validator will run them. One thing to know before you start: `bounded.json` says
 `{"$ref": "linked.json"}` rather than carrying a copy of every definition, so
 a validator needs both files loaded and something to resolve between them.
@@ -123,10 +124,10 @@ than as "the document matched none of four types". Every definition carries a
 one-line `description`, and so do the rules with something to explain, so a
 validator that surfaces annotations will show them.
 
-The last mile of message quality does not travel. A reference may be a bare URI
-or a node, and a literal may be a bare string or a value object, so both are an
-`anyOf`. When one branch fails, a validator can say only that the value matched
-neither. Finding the branch you meant takes a short walk into `error.context`,
-around fifteen lines in any language, and `validate()` does it in `_causes()`.
-If you already know what you are holding, point straight at the type instead,
-`linked.json#/$defs/Work`, and the errors localise without any of that.
+A reference may be a bare URI or a node, and a literal may be a bare string or a
+value object, so both are an `anyOf`. When one branch fails, a validator can say
+only that the value matched neither. Finding the branch you meant takes a short
+walk into `error.context`. If you already know what you are validating,
+point straight at the type instead, `linked.json#/$defs/Work`.
+
+[draft 2020-12]: https://json-schema.org/draft/2020-12
