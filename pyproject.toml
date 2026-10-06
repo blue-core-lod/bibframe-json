@@ -7,8 +7,9 @@ requires-python = ">=3.12"
 license = "MIT"
 keywords = ["bibframe", "json-ld", "json-schema", "linked-data", "marc", "cataloging"]
 
-# Alpha, and deliberately so: the artifacts are published under v0, which is
-# allowed to change in place until v1.
+# Alpha, and deliberately so: several artifact versions are expected before v1,
+# and each one may break documents written against the one before it. Published
+# versions themselves never change -- see docs/src/content/docs/versioning.mdx.
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
