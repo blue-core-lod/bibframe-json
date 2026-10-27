@@ -74,24 +74,14 @@ jobs:
           uv run python generate/bundle.py
           git diff --exit-code bibframe_json/v0.1/context bibframe_json/v0.1/schema
 
-      - name: Bump patch version
-        id: bump_version
+      # No version bump. uv.lock is not in the wheel and the runtime
+      # dependencies are open ranges, so a lock-only change would release the
+      # same package under a new number. A dependency that forces a real change
+      # gets one deliberately, and a release with it.
+      - name: Date
+        id: date
         if: steps.check_changes.outputs.changed == 'true'
-        run: |
-          NEW_VERSION=$(python3 -c "
-          import re
-          with open('pyproject.toml') as f:
-              content = f.read()
-          m = re.search(r'version = \"(\d+)\.(\d+)\.(\d+)\"', content)
-          major, minor, patch = m.groups()
-          print(f'{major}.{minor}.{int(patch) + 1}')
-          ")
-          sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$NEW_VERSION\"/" pyproject.toml
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Sync lockfile with bumped version
-        if: steps.check_changes.outputs.changed == 'true'
-        run: uv lock
+        run: echo "today=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         id: create_pr
@@ -101,20 +91,19 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: dependency-updates
           base: main
-          title: 'Weekly dependency updates (${{ steps.bump_version.outputs.new_version }})'
+          title: 'Weekly dependency updates (${{ steps.date.outputs.today }})'
           body: |
             Weekly automated dependency updates.
 
             - Updated `uv.lock` via `uv lock --upgrade`
-            - Bumped patch version to `${{ steps.bump_version.outputs.new_version }}`
 
-            Publishing happens on release, so merging this prepares the next
-            version rather than releasing it.
+            The lock file is not part of the published package, so this does
+            not bump the version or call for a release.
 
             Note this updates the Python dependencies only. The vendored
             BIBFRAME ontology tracks upstream separately -- replace
             `generate/bibframe.rdf` and regenerate to pick up a new release.
-          commit-message: 'Update dependencies and bump patch version to ${{ steps.bump_version.outputs.new_version }}'
+          commit-message: 'Update dependencies'
           labels: dependencies
 
       # Skipped rather than failed when no webhook is configured.
@@ -123,7 +112,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
-          NEW_VERSION: ${{ steps.bump_version.outputs.new_version }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
@@ -131,7 +119,7 @@ jobs:
             exit 0
           fi
           curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\": \"$REPO_NAME dependency update PR opened: <$PR_URL|v$NEW_VERSION>\"}" \
+            --data "{\"text\": \"$REPO_NAME dependency update PR opened: <$PR_URL|view PR>\"}" \
             "$SLACK_WEBHOOK_URL"
 
       - name: Notify Slack on failure
